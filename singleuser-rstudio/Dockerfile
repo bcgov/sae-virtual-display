@@ -21,6 +21,7 @@ RUN curl https://winswitch.org/gpg.asc | apt-key add - \
 RUN apt-get update && apt-get install -y \
         dbus-x11 \
         fluxbox \
+        xfvb \
         google-chrome-stable \
         libudev-dev \
         python-avahi \
@@ -63,9 +64,9 @@ USER $NB_USER
 ##
 WORKDIR /home/$NB_USER
 
-RUN curl -v -O https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh
-RUN chmod +x ./Anaconda3-2019.10-Linux-x86_64.sh
-RUN ./Anaconda3-2019.10-Linux-x86_64.sh -b
+RUN curl -v -O https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh && \
+    chmod +x ./Anaconda3-2019.10-Linux-x86_64.sh && \
+    ./Anaconda3-2019.10-Linux-x86_64.sh -b
 
 ENV PATH=$PATH:/home/$NB_USER/anaconda3/bin
 
@@ -75,25 +76,21 @@ RUN conda update --prefix /home/jovyan/anaconda3 anaconda
 RUN conda config --add channels conda-forge; \
     conda config --add channels anaconda
 
-RUN conda install r-essentials r-tictoc r-rpostgres --yes
+RUN conda install r-essentials r-tictoc r-rpostgres r-rstudioapi openjdk --yes
 RUN conda install -c conda-forge/label/main r-sparklyr --yes
-RUN conda install r-rstudioapi --yes
-RUN conda install openjdk --yes
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
 USER root
 
 RUN curl -L -O https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.1335-amd64.deb \
-&& DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-1.2.1335-amd64.deb \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-1.2.1335-amd64.deb \
  && rm ./rstudio-1.2.1335-amd64.deb
 
 COPY artifacts/start-wrapper.sh /usr/local/bin
 COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
 RUN chmod +x /usr/local/bin/launcher.sh \
  && chmod +x /usr/local/bin/start-wrapper.sh
-
-RUN apt-get install -y xvfb
 
 USER $NB_USER
 
