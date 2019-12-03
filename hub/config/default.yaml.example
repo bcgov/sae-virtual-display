@@ -1,0 +1,48 @@
+---
+auth:
+  type: dummy
+  dummy:
+    password: 'mypassword'
+  whitelist:
+    users:
+      - demo-user
+      
+hub:
+  cookieSecret: acf2213e4e7464107afbecfc701e44c2c5b8132dadc046125f95a13032f814ee
+  extraEnv:
+    JUPYTER_ENABLE_LAB: 1
+  image:
+    name: ikethecoder/vdi_hub
+    tag: latest
+  imagePullPolicy: Always
+
+prePuller:
+  hook:
+    enabled: false
+proxy:
+  https:
+    enabled: false
+  secretToken: c5cd1bda51ccfbf50c634a2f4fb58b15e60934a195c59d3a8f8e47870cf82bc9
+
+rbac:
+  enabled: false
+
+singleuser:
+  cloudMetadata:
+    enabled: True
+  defaultUrl: "/lab"
+  image:
+    name: ikethecoder/vdi_rstudio
+    pullPolicy: IfNotPresent
+    tag: latest
+  homeMountPath: /opt/app-root/src
+  storage:
+    home_mount_path: /opt/app-root/src
+    dynamic:
+      storageClass: gluster-file
+    type: dynamic
+
+ingress:
+  enabled: True
+  hosts:
+    - hub.site.local
