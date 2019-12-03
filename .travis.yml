@@ -5,7 +5,7 @@ services:
 - docker
 matrix:
   include:
-  - name: Virtual Display HUB
+  - name: Hub
     stage: VDI
     language: python
     python:
@@ -18,7 +18,21 @@ matrix:
     script:
     - |-
       cd /home/travis/build/bcgov/sae-virtual-display/hub
-      bash docker_quayio_push vdi-hub
+      bash ../.travis/docker_quayio_push vdi-hub
+  - name: Gatekeeper
+    stage: VDI
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/gatekeeper
+      bash ../.travis/docker_quayio_push vdi-gatekeeper
+  - name: RStudio
+    stage: VDI
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/singleuser-rstudio
+      bash ../.travis/docker_quayio_push vdi-session-rstudio
 env:
   global:
   - secure: "0shDUUQjlUiHfzGviWZEKgngwhCqFC1EDnBXVUm/oWMcmqBRcWo3VF+GvfxSXrts8FlUvas5ZUCZlQTRn3NVfnEdhkjUexU8XhOv5wSVk8CV57duPLBtIrJ9xi69mr8o4IN+LKn4JsnewyBYZ36BQEUkQyD/E+90hzeVehy9mPVn98rcZC2zQe5JFYUpu8pgv5PgCnSFx+uAPtgozkhbI8IRdQpzitBH3sZT9pjMbf2MdSjRKep20K9dF+xsu1uWN9tIOx7tvv9IyhxBGzkElcfsa3vNiqf90KHLlY+ic00vCg+e2+n6Gk4tlhJ92ao8LiJ4DMn9H/F3V4q0SfmbhNE4LS1R1GS0fJe2gxs2dGxlfqxq600VrDIlLtL+vFM0a5l6szRSejSLn9kuyuh9bbM1VR160LqZzJuWnB4dky2ZfUn4g8x+mrEGiRQfcQ92oP8B0NjtdasR/ki7it6pwLiHweZ3YENvPqs3ZPSUqSSVWMri2lSoaVpv6hikkV39GlfDwl8GVJ2pU9FYBj7wA1XDNmLqJyYF1R5IQ8Az4Mg66h1gw579sRRDmkJyftbqC37Fe2cXu7C3eGid3Nj2nonHgd8QEOdwiivXhKuxLH7vuOeBxw/EfhDm2XjdYZN8G46O9nIhZ1TLgPgxsLWrfwR/oU54Lg6QUR2MOVmE2mM="
