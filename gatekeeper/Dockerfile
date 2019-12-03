@@ -42,7 +42,7 @@ RUN curl -L -O https://xpra.org/dists/xenial/main/binary-amd64/xpra_2.5.3-r23270
  && rm ./xpra_2.5.3-r23270-1_amd64.deb
 
 
-COPY src/requirements.txt /gatekeeper/
+COPY lib/requirements.txt /gatekeeper/
 RUN (cd /gatekeeper && pip3 install -r requirements.txt)
 RUN mkdir -p /var/www/htdocs && echo 'ok' > /var/www/htdocs/index.html
 RUN wget -O - https://openresty.org/package/pubkey.gpg | apt-key add -
