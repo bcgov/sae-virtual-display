@@ -21,7 +21,7 @@ RUN curl https://winswitch.org/gpg.asc | apt-key add - \
 RUN apt-get update && apt-get install -y \
         dbus-x11 \
         fluxbox \
-        xfvb \
+        xvfb \
         google-chrome-stable \
         libudev-dev \
         python-avahi \
