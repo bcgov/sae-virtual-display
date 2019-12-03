@@ -17,7 +17,9 @@ docker push $QUAYIO_BASE/$QUAYIO_REPO
 if [ ! -z "$TRAVIS_BRANCH" ]; then
     echo "Tagging image $QUAYIO_REPO with ${TRAVIS_BRANCH/\//-} on Quay..."
     docker tag $QUAYIO_BASE/$QUAYIO_REPO $QUAYIO_BASE/$QUAYIO_REPO:${TRAVIS_BRANCH/\//-}
+    docker tag $QUAYIO_BASE/$QUAYIO_REPO $QUAYIO_BASE/$QUAYIO_REPO:$TRAVIS_COMMIT
     docker push $QUAYIO_BASE/$QUAYIO_REPO:${TRAVIS_BRANCH/\//-}
+    docker push $QUAYIO_BASE/$QUAYIO_REPO:$TRAVIS_COMMIT
 fi
 
 if [ "$TRAVIS_BRANCH" == "$TRAVIS_TAG" ]; then
