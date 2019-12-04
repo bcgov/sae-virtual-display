@@ -1,31 +1,59 @@
-{% extends "page.html" %}
-{% if announcement_home %}
-  {% set announcement = announcement_home %}
-{% endif %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
 
-{% block main %}
+    <title>Workbench</title>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<div class="container">
-  <div class="row">
-    <div class="text-center">
-      {% if user.running %}
-      <a id="stop" role="button" class="btn btn-lg btn-danger">Stop My VDI Session</a>
-      {% endif %}
-      <a id="start" role="button" class="btn btn-lg btn-primary" href="{{ url }}">
-      {% if not user.active %}
-      Start
-      {% endif %}
-        My VDI Session
-      </a>
-    </div>
-  </div>
-</div>
+    <link rel="stylesheet" href="{{ static_url("css/reset.css") }}"
+    type="text/css" /> <link rel="stylesheet" href="{{
+    static_url("css/atlaskit-reduced-ui.css") }}" type="text/css"/>
+    <style>
+      body {
+        background: #eee;
+      }
 
-{% endblock %}
+      #main {
+        width: 100vw;
+        position: relative;
+      }
+    </style>
+  </head>
 
-{% block script %}
-{{ super() }}
-<script type="text/javascript">
-require(["home"]);
-</script>
-{% endblock %}
+  <body>
+    <div id="main">Loading...</div>
+    <noscript>
+      <div id="noscript">
+        JupyterHub requires JavaScript.<br />
+        Please enable it to proceed.
+      </div>
+    </noscript>
+    <script
+      type="text/javascript"
+      src="{{ static_url('js/bundle.js') }}"
+    ></script>
+    <script>
+      (function(config) {
+        workbench.run(config);
+      })({
+        announcement: '{{ announcement | safe }}',
+        staticURL: '{{static_url('')}}',
+        user: '{{user.name}}',
+        apps: [
+          {
+            name: 'notebook',
+            label: 'Jupyter Notebook',
+            image: '{{static_url('images/notebook-logo.png')}}',
+          },
+          {
+            name: 'r',
+            label: 'R Studio',
+            image: '{{static_url('images/rstudio-logo.png')}}',
+          },
+        ]
+      })
+    </script>
+  </body>
+</html>
