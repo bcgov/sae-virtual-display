@@ -5,7 +5,7 @@ COPY ./ui /app/
 WORKDIR /app
 
 RUN npm install
-RUN npm build
+RUN npm run build
 
 FROM jupyterhub/k8s-hub:0.8.2
 
