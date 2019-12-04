@@ -1,3 +1,5 @@
 **.DS_STORE
 .DS_Store
-hub/node_modules
+node_modules
+hub/ui/assets/static/js/bundle.js
+hub/ui/assets/static/js/bundle.js.map

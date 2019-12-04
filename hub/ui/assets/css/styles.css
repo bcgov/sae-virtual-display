@@ -1,0 +1,47 @@
+a {
+  color: #1a5a96;
+}
+
+.btn-primary {
+  background-color: #1a5a96;
+}
+
+.btn-jupyter {
+  background-color: #f3bd48;
+  border-color: #fcba19;
+}
+
+.navbar-default {
+  border-radius: 0;
+  background-color: #003366;
+  border: none;
+}
+
+.navbar-default .navbar-brand {
+  color: #fff;
+}
+
+.navbar-default a.navbar-brand:hover {
+  color: #fff;
+  opacity: 0.75;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-default .navbar-nav > li > a.active,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default p.navbar-text {
+  color: #fff;
+}
+
+.announcement {
+  background-color: #fef8ed;
+  border-left: 10px solid #f3bd48;
+  margin-bottom: 36px;
+}
+
+.app-icon {
+  padding: 10px;
+}
