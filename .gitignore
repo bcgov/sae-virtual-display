@@ -1,5 +1,5 @@
 **.DS_STORE
 .DS_Store
 node_modules
-hub/ui/assets/static/js/bundle.js
-hub/ui/assets/static/js/bundle.js.map
+hub/ui/assets/js/bundle.js
+hub/ui/assets/js/bundle.js.map
