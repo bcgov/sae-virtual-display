@@ -18,9 +18,9 @@ COPY ./k8sspawner /home/jovyan/k8sspawner
 RUN pip3 install -e /home/jovyan/k8sspawner
 
 COPY ./templates /usr/local/share/jupyterhub/templates/
-COPY --from=builder /app/static/css /usr/local/share/jupyterhub/static/css/
-COPY --from=builder /app/static/images /usr/local/share/jupyterhub/static/images/
-COPY --from=builder /app/static/favicon.ico /usr/local/share/jupyterhub/static/
-COPY --from=builder /app/static/js/bundle.js /usr/local/share/jupyterhub/static/js/
+COPY --from=builder /app/assets/static/css /usr/local/share/jupyterhub/static/css/
+COPY --from=builder /app/assets/static/images /usr/local/share/jupyterhub/static/images/
+COPY --from=builder /app/assets/static/favicon.ico /usr/local/share/jupyterhub/static/
+COPY --from=builder /app/assets/static/js/bundle.js /usr/local/share/jupyterhub/static/js/
 
 USER ${NB_USER}
