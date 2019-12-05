@@ -19,7 +19,7 @@ export const Container = styled.div`
   background: #eee;
 
   & > div {
-    width: 400px;
+    width: 600px;
   }
 `;
 

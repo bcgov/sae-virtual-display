@@ -55,7 +55,7 @@ function Dashboard() {
               <ak-grid class="app-grid">
                 <input type="hidden" name="image" value={app}/>
                 {apps.map(d => (
-                  <ak-grid-column size="6" key={d.name}>
+                  <ak-grid-column size="4" key={d.name}>
                     <AppOption
                       onClick={_ => setApp(d.name)}
                       selected={d.name === app}
