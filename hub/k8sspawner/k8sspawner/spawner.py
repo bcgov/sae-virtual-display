@@ -23,10 +23,8 @@ from k8sspawner.gen_identity import GenIdentity
 class K8sSpawner(KubeSpawner):
     @gen.coroutine
     def get_options_form(self):
-        self.log.info("get_options_form/ user " + str(self.user))
-        auth_state = yield self.user.get_auth_state()
 
-        self.log.info("get_options_form/ oauth_user " + json.dumps(auth_state))
+        auth_state = yield self.user.get_auth_state()
 
         if not auth_state or not auth_state['oauth_user'] or not auth_state['oauth_user']['groups']:
             return
@@ -118,9 +116,6 @@ class K8sSpawner(KubeSpawner):
 
         self.log.info("oauth_user " + json.dumps(auth_state))
 
-        #project = self.user_options['project'][0].lower().replace("_", "-").replace("/", "")
-
-
         gen = GenIdentity()
 
         user_profile = auth_state['oauth_user']
@@ -188,8 +183,6 @@ class K8sSpawner(KubeSpawner):
         return super().get_pvc_manifest()
 
     def _expand_user_properties(self, template):
-        self.log.info("user = " + str(self.user))
-
         self.options_form = self.get_options_form
         # Make sure username and servername match the restrictions for DNS labels
         safe_chars = set(string.ascii_lowercase + string.digits)
