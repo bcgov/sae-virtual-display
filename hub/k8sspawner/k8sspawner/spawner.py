@@ -21,9 +21,9 @@ from kubernetes.client import V1PersistentVolume
 from k8sspawner.gen_identity import GenIdentity
 
 class K8sSpawner(KubeSpawner):
-
     @gen.coroutine
     def get_options_form(self):
+
         auth_state = yield self.user.get_auth_state()
 
         if not auth_state or not auth_state['oauth_user'] or not auth_state['oauth_user']['groups']:
@@ -31,28 +31,11 @@ class K8sSpawner(KubeSpawner):
 
         groups = auth_state['oauth_user']['groups']
 
-        form = '<div>Welcome ' + self.user.name.capitalize() + " select your project: <br />"
-
-        first = True
-
-        for group in groups:
-            #if group.find("project") == 0:
-                form += '<input required="required" type="radio" '
-                if first:
-                    form += 'checked="checked" '
-                    first = False
-                form +='name="project" value="' + group.lower() + '">' + group.replace("_", " ").title() + '<br />'
-
-        form += '<div>Select your application: <br />'
-        for vdi in ["notebook", "browser", "rstudio"]:
-                form += '<input required="required" type="radio" '
-                form +='name="image" value="' + vdi + '">' + vdi + '<br />'
-        form += '</div>'
-
-        if first:
-            return ''
-
-        return form
+        options = {
+            "projects": groups,
+            "applications": ["notebook", "browser", "rstudio"]
+        }
+        return json.dumps(options)
 
     def set_image_options(self, images):
         self.image_options = images
@@ -132,9 +115,6 @@ class K8sSpawner(KubeSpawner):
         auth_state = yield self.user.get_auth_state()
 
         self.log.info("oauth_user " + json.dumps(auth_state))
-
-        #project = self.user_options['project'][0].lower().replace("_", "-").replace("/", "")
-
 
         gen = GenIdentity()
 

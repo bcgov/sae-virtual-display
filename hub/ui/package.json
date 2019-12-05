@@ -1,0 +1,52 @@
+{
+  "name": "jupyter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "rollup -c --watch",
+    "build": "NODE_ENV=production rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@atlaskit/breadcrumbs": "^9.2.1",
+    "@atlaskit/button": "^13.3.2",
+    "@atlaskit/css-reset": "^5.0.8",
+    "@atlaskit/icon": "^19.0.7",
+    "@atlaskit/icon-file-type": "^5.0.0",
+    "@atlaskit/lozenge": "^9.0.7",
+    "@atlaskit/page-header": "^9.0.13",
+    "@atlaskit/reduced-ui-pack": "^12.0.6",
+    "@atlaskit/section-message": "^4.1.1",
+    "@atlaskit/select": "^10.1.2",
+    "@atlaskit/spinner": "^12.1.1",
+    "@atlaskit/tag": "^9.0.9",
+    "@atlaskit/tag-group": "^9.0.5",
+    "classnames": "^2.2.6",
+    "humps": "^2.0.1",
+    "react": "^16.10.0",
+    "react-dom": "^16.10.0",
+    "react-router-dom": "^5.1.0",
+    "styled-components": "^4.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-react": "^7.0.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "prettier": "^1.18.2",
+    "rollup": "^1.27.8",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^5.1.2"
+  }
+}
