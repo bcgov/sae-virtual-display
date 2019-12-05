@@ -43,6 +43,7 @@ function Dashboard() {
             <div className="ak-field-group">
               <label>Select a Project</label>
               <Select
+                name="project"
                 value={project}
                 onChange={setProject}
                 placeholder="Select your Project"
@@ -52,6 +53,7 @@ function Dashboard() {
             <div className="ak-field-group">
               <label>Select an Application</label>
               <ak-grid class="app-grid">
+                <input type="hidden" name="image" value={app}/>
                 {apps.map(d => (
                   <ak-grid-column size="6" key={d.name}>
                     <AppOption
