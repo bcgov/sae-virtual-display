@@ -1,31 +1,72 @@
-{% extends "page.html" %}
-{% if announcement_spawn %}
-  {% set announcement = announcement_spawn %}
-{% endif %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
 
-{% block main %}
+    <title>Workbench</title>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<div class="container">
-  {% block heading %}
-  <div class="row text-center">
-    <h1>Spawner Options</h1>
-  </div>
-  {% endblock %}
-  <div class="row col-sm-offset-2 col-sm-8">
-    {% if for_user and user.name != for_user.name -%}
-      <p>Spawning server for {{ for_user.name }}</p>
-    {% endif -%}
-    {% if error_message -%}
-      <p class="spawn-error-msg text-danger">
-        Error: {{error_message}}
-      </p>
-    {% endif %}
-    <form enctype="multipart/form-data" id="spawn_form" action="{{url}}" method="post" role="form">
-      {{spawner_options_form | safe}}
-      <br>
-      <input type="submit" value="Spawn" class="btn btn-jupyter form-control">
-    </form>
-  </div>
-</div>
+    <link rel="stylesheet" href="{{ static_url("css/reset.css") }}"
+    type="text/css" /> <link rel="stylesheet" href="{{
+    static_url("css/atlaskit-reduced-ui.css") }}" type="text/css"/>
+    <style>
+      body {
+        background: #eee;
+      }
 
-{% endblock %}
+      #main {
+        width: 100vw;
+        position: relative;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div id="main">Loading...</div>
+    <noscript>
+      <div id="noscript">
+        JupyterHub requires JavaScript.<br />
+        Please enable it to proceed.
+      </div>
+    </noscript>
+    <script
+      type="text/javascript"
+      src="{{ static_url('js/bundle.js') }}"
+    ></script>
+    <script>
+      var spawn_options = {{spawner_options_form | safe}}
+
+      var app_def = {
+          notebook: {
+            label: 'Jupyter Notebook',
+            image: '{{static_url('images/notebook-logo.png')}}'
+          },
+          rstudio: {
+            label: 'R Studio',
+            image: '{{static_url('images/rstudio-logo.png')}}'
+          },
+          browser: {
+            label: 'Chrome Browser',
+            image: '{{static_url('images/chrome-logo.png')}}'
+          }
+      }
+      
+      var apps = spawn_options.applications.map(m => {
+          return { name: m, label: app_def[m].label, image: app_def[m].image }
+      });
+
+      (function(config) {
+        workbench.run(config);
+      })({
+        announcement: '{{ announcement | safe }}',
+        staticURL: '{{static_url('')}}',
+        formAction: '{{url}}',
+        user: '{{user.name}}',
+        apps: apps,
+        projects: spawn_options.projects
+      })
+    </script>
+  </body>
+</html>

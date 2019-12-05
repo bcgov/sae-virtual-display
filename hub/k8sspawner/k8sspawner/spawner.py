@@ -21,38 +21,23 @@ from kubernetes.client import V1PersistentVolume
 from k8sspawner.gen_identity import GenIdentity
 
 class K8sSpawner(KubeSpawner):
-
     @gen.coroutine
     def get_options_form(self):
+        self.log.info("get_options_form/ user " + str(self.user))
         auth_state = yield self.user.get_auth_state()
+
+        self.log.info("get_options_form/ oauth_user " + json.dumps(auth_state))
 
         if not auth_state or not auth_state['oauth_user'] or not auth_state['oauth_user']['groups']:
             return
 
         groups = auth_state['oauth_user']['groups']
 
-        form = '<div>Welcome ' + self.user.name.capitalize() + " select your project: <br />"
-
-        first = True
-
-        for group in groups:
-            #if group.find("project") == 0:
-                form += '<input required="required" type="radio" '
-                if first:
-                    form += 'checked="checked" '
-                    first = False
-                form +='name="project" value="' + group.lower() + '">' + group.replace("_", " ").title() + '<br />'
-
-        form += '<div>Select your application: <br />'
-        for vdi in ["notebook", "browser", "rstudio"]:
-                form += '<input required="required" type="radio" '
-                form +='name="image" value="' + vdi + '">' + vdi + '<br />'
-        form += '</div>'
-
-        if first:
-            return ''
-
-        return form
+        options = {
+            "projects": groups,
+            "applications": ["notebook", "browser", "rstudio"]
+        }
+        return json.dumps(options)
 
     def set_image_options(self, images):
         self.image_options = images
@@ -203,6 +188,8 @@ class K8sSpawner(KubeSpawner):
         return super().get_pvc_manifest()
 
     def _expand_user_properties(self, template):
+        self.log.info("user = " + str(self.user))
+
         self.options_form = self.get_options_form
         # Make sure username and servername match the restrictions for DNS labels
         safe_chars = set(string.ascii_lowercase + string.digits)

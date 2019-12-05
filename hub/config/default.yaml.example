@@ -1,11 +1,11 @@
 ---
 auth:
-  type: dummy
-  dummy:
-    password: 'mypassword'
-  whitelist:
-    users:
-      - demo-user
+  type: custom
+  custom:
+    className: simauthenticator.simauthenticator.DummyAuthenticator
+  state:
+      enabled: True
+      cryptoKey: c5cd1bda51ccfbf50c634a2f4fb58b15e60934a195c59d3a8f8e47870cf82bc9
       
 hub:
   cookieSecret: acf2213e4e7464107afbecfc701e44c2c5b8132dadc046125f95a13032f814ee
@@ -15,10 +15,22 @@ hub:
     name: ikethecoder/vdi_hub
     tag: latest
   imagePullPolicy: Always
+  extraConfig:
+    config: |
+      c.JupyterHub.spawner_class = 'k8sspawner.K8sSpawner'
+
+      c.ConfigurableHTTPProxy.should_start = True
+      # c.JupyterHub.spawner_class = 'k8sspawner.K8sSpawner'
+      # from z2jh import get_config
+      # c.K8sSpawner.cmd = ['jupyter-labhub']
+      #c.K8sSpawner.user_storage_capacity = '2Gi' ## ? Doesn't seem to work
+      #c.KubeSpawner.user_storage_capacity = '2Gi' ## ? Doesn't seem to work
+      c.KubeSpawner.pvc_name_template = 'claim'
 
 prePuller:
   hook:
     enabled: false
+
 proxy:
   https:
     enabled: false

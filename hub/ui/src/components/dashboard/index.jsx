@@ -19,11 +19,13 @@ import {
 function Dashboard() {
   const [project, setProject] = useState('');
   const [app, setApp] = useState('');
-  const { announcement, apps } = useContext(WorkbenchContext);
+  const { announcement, apps, projects, formAction } = useContext(WorkbenchContext);
 
   useEffect(() => {
     document.title = 'Workbench | Dashboard';
   }, []);
+
+  var projectOptions = projects.map(p => { return { value: p, label: p}; });
 
   return (
     <>
@@ -37,23 +39,14 @@ function Dashboard() {
           <Header>
             <h3>Which application would you like to use?</h3>
           </Header>
-          <form onSubmit={e => e.preventDefault()}>
+          <form action={formAction} method="POST">
             <div className="ak-field-group">
               <label>Select a Project</label>
               <Select
                 value={project}
                 onChange={setProject}
                 placeholder="Select your Project"
-                options={[
-                  {
-                    value: '/project1',
-                    label: '/project1',
-                  },
-                  {
-                    value: '/project2',
-                    label: '/project2',
-                  },
-                ]}
+                options={projectOptions}
               />
             </div>
             <div className="ak-field-group">
@@ -85,6 +78,7 @@ function Dashboard() {
             </div>
             <Footer>
               <Button
+                type="submit"
                 appearance="primary"
                 id="Workbench-spawn-btn"
                 className="btn btn-primary pull-right"

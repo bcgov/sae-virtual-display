@@ -16,29 +16,25 @@ Consider using `virtualenv` to isolate this Python environment from other Python
 
 ```
 docker build . -t vdi-hub
-docker tag vdi-hub ikethecoder/vdi-hub:0.8.2.1
-docker tag vdi-hub ikethecoder/vdi-hub:latest
-docker push ikethecoder/vdi-hub
 
 ```
 
-## Helm
+## Local Testing
 
-For both below helm commands make a copy of values.yaml within the helm/policy-api directory
-and modify it to contain the values specific for your deployment.
-
-### Helm Install (Kubernetes)
-
-``` sh
-helm install jupyterhub/jupyterhub --name=jupyterhub -f config/default.yaml
-
-helm install --name ocwa-policy-api --namespace ocwa ./helm/policy-api -f ./helm/policy-api/config.yaml
 ```
-
-### Helm Update (Kubernetes)
-
-``` sh
-helm upgrade --name ocwa-policy-api ./helm/policy-api  -f ./helm/policy-api/config.yaml
+cp config/default.yaml.example config/default.yaml
+docker run -ti --rm -p 5002:5002 \
+ -v `pwd`/config/kubeconfig:/root/.kube/config \
+ -v `pwd`/config/default.yaml:/etc/jupyterhub/config/values.yaml \
+ -e HUB_SERVICE_HOST=localhost \
+ -e HUB_SERVICE_PORT=5000 \
+ -e PROXY_API_SERVICE_HOST=localhost \
+ -e PROXY_API_SERVICE_PORT=5001 \
+ -e PROXY_PUBLIC_SERVICE_HOST=0.0.0.0 \
+ -e PROXY_PUBLIC_SERVICE_PORT=5002 \
+ -e CONFIGPROXY_AUTH_TOKEN=s3cr3t \
+ -e JUPYTERHUB_CRYPT_KEY=00000000000000000000000000000000 \
+  vdi-hub
 ```
 
 ## Test
