@@ -1,0 +1,4 @@
+config==0.4.2
+gevent==1.4.0
+#jwt==0.6.1
+requests==2.22.0

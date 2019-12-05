@@ -27,4 +27,8 @@ export XPRA_SCALING=0
 
 xpra start :100 --use-display --bind-tcp=127.0.0.1:5000 --start-new-commands=no --resize-display=yes --fake-xinerama=no --pulseaudio=off --printing=no --mdns=no --webcam=no --clipboard=no --file-transfer=no --open-files=no --pulseaudio=no --speaker=off --printing=no --microphone=off --html=on
 
+sleep 2
+
+tail -f /run/user/1000/xpra/:100.log &
+
 (cd /gatekeeper; python3 ./gatekeeper.py)
