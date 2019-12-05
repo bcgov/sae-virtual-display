@@ -31,6 +31,9 @@ while True:
         jwt = json.loads(jwt_str)
 
         gen.generate(jwt['access_token'], jwt['refresh_token'], 'users-bbsae-xyz', user_project_id)
+    except KeyboardInterrupt:
+        log.error("Keyboard Interrupted.  Exiting..")
+        sys.exit(1)
     except:
         print("Unexpected error:", sys.exc_info())
 

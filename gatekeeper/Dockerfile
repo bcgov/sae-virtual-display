@@ -62,7 +62,7 @@ COPY lib /gatekeeper
 COPY artifacts/openresty.conf /etc/openresty/nginx.conf
 RUN chown -R $NB_USER:$NB_USER /usr/local/openresty
 
-COPY artifacts/start-gatekeeper.sh /usr/local/bin/launcher.sh
+COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
 RUN chmod +x /usr/local/bin/launcher.sh
 
 RUN mkdir -p /run/user/1000/xpra \
