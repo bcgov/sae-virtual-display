@@ -48,7 +48,11 @@ class GenIdentity():
         self.info("refresh response %s" % x.text)
 
         j = x.json()
-        return j['access_token']        
+
+        self.info("New token expires in %s minutes" % (int(j['expires_in'])/60))
+        self.info("New refresh token expires in %s minutes" % (int(j['refresh_expires_in'])/60))
+
+        return j['access_token'], int(j['expires_in']), j['refresh_token'], int(j['refresh_expires_in'])       
 
     # def jwt_info(self, access_token, refresh_token):
 
@@ -69,12 +73,12 @@ class GenIdentity():
 
         x = requests.post(url, data = json.dumps(payload), headers = headers )   
         self.info("status_code %s" % x.status_code)
-        if x.status_code == 400 and 'token is expired' in x.text:
-            self.info("text %s" % x.text)
-            if attempt == 2:
-                raise Exception("Failed to login to Vault even after JWT refresh")
-            access_token = self.refresh_jwt_token(refresh_token)
-            return self.vault_login (vault_addr, access_token, refresh_token, 2)
+        # if x.status_code == 400 and 'token is expired' in x.text:
+        #     self.info("text %s" % x.text)
+        #     if attempt == 2:
+        #         raise Exception("Failed to login to Vault even after JWT refresh")
+        #     access_token, refresh_token = self.refresh_jwt_token(refresh_token)
+        #     return self.vault_login (vault_addr, access_token, refresh_token, 2)
 
         if x.status_code != 200:
             self.info("text %s" % x.text)
@@ -85,7 +89,7 @@ class GenIdentity():
         j = x.json()
         vault_token = j['auth']['client_token']
 
-        return access_token, vault_token
+        return vault_token
 
 
     def generate(self, access_token, refresh_token, role, user_project_id):
@@ -93,7 +97,7 @@ class GenIdentity():
 
         #self.jwt_info (access_token, refresh_token)
         
-        access_token, vault_token = self.vault_login (os.environ['VAULT_ADDR'], access_token, refresh_token, 1)
+        vault_token = self.vault_login (os.environ['VAULT_ADDR'], access_token, refresh_token, 1)
 
         # {
         #     "role": "dev-role",

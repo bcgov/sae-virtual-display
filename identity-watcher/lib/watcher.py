@@ -23,7 +23,20 @@ user_project_id = os.environ["USER_PROJECT_ID"]
 
 log.info("Identity Watcher Started for %s" % user_project_id)
 
+sleep_time = 60
+
+if 'REFRESH_TOKEN_PATH' in os.environ:
+    log.info("Read %s", os.environ['REFRESH_TOKEN_PATH'])
+    with open(os.environ['REFRESH_TOKEN_PATH']) as f:
+        refresh_token = f.read()
+        log.info(refresh_token)
+else:
+    jwt_str = os.environ['JWT']
+    jwt = json.loads(jwt_str)
+    refresh_token = jwt['refresh_token']
+
 while True:
+
     try:
         log.info("--")
         log.info("--")
@@ -31,22 +44,14 @@ while True:
         log.info("Check Identity...")
         gen = GenIdentity()
 
-        if 'REFRESH_TOKEN_PATH' in os.environ:
-            log.info("Read %s", os.environ['REFRESH_TOKEN_PATH'])
-            with open(os.environ['REFRESH_TOKEN_PATH']) as f:
-                refresh_token = f.read()
-                log.info(refresh_token)
+        log.info("Refreshing Token")
+        access_token, expires_on, refresh_token, refresh_expires_on = gen.refresh_jwt_token(refresh_token)
 
-            log.info("Refreshing Token")
-            access_token = gen.refresh_jwt_token(refresh_token)
-            log.info("Access Token Refreshed - %s" % access_token)
-            secret_data = gen.generate(access_token, refresh_token, 'users-bbsae-xyz', user_project_id)
-            install_files (secret_data)
-        else:
-            jwt_str = os.environ['JWT']
-            jwt = json.loads(jwt_str)
-            secret_data = gen.generate(jwt['access_token'], jwt['refresh_token'], 'users-bbsae-xyz', user_project_id)
-            install_files (secret_data)
+        sleep_time = min(expires_on, refresh_expires_on) - 30 # 30 second buffer
+
+        log.info("Access Token Refreshed - new sleep time %d - %s" % (sleep_time, access_token))
+        secret_data = gen.generate(access_token, refresh_token, 'users-bbsae-xyz', user_project_id)
+        install_files (secret_data)
         
     except KeyboardInterrupt:
         log.error("Keyboard Interrupted.  Exiting..")
@@ -55,5 +60,5 @@ while True:
         log.error("Unexpected error")
         log.error(str(sys.exc_info()))
 
-    log.info("Sleep 60 seconds...")
-    time.sleep(60)
+    log.info("Sleeping %d minutes..." % int(sleep_time/60))
+    time.sleep(sleep_time)
