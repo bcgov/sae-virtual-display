@@ -9,21 +9,21 @@ def install_files(secret_data):
     log.info("Writing Minio details..")
     with open("/tmp-auth-minio/config.json", "w") as f:
         log.info("WRITE /tmp-auth-minio/config.json")
-        f.write(base64.b64encode(secret_data["mc-config.json"]))
+        f.write(base64.b64encode(secret_data["mc-config.json"]).encode('utf-8'))
 
     log.info("Writing Postgres details..")
     for k in secret_data.keys():
         if k.startswith("postgresql."):
             with open("/tmp-pki-postgres/%s" % k, "w") as f:
                 log.info("WRITE /tmp-pki-postgres/%s" % k)
-                f.write(base64.b64encode(secret_data[k]))
+                f.write(base64.b64encode(secret_data[k]).encode('utf-8'))
 
     log.info("Writing Browser NSSDB details..")
     for k in secret_data.keys():
         if not (k.startswith("postgresql.") or k == "refresh_token"):
             with open("/tmp-pki-nssdb/%s" % k, "w") as f:
                 log.info("WRITE /tmp-pki-nssdb/%s" % k)
-                f.write(base64.b64encode(secret_data[k]))
+                f.write(base64.b64encode(secret_data[k]).encode('utf-8'))
 
     access = [
         "chown -R 1000:1000 /tmp-auth-minio/*",
