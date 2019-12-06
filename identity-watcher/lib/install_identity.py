@@ -1,4 +1,6 @@
 import os
+import sys
+import traceback
 import base64
 import logging
 from command import call
@@ -12,21 +14,21 @@ def install_files(secret_data):
 
     log.info("Writing Minio details..")
     with open("/tmp-auth-minio/config.json", "w") as f:
-        log.info("WRITE /tmp-auth-minio/config.json")
+        log.info("Updating file: /tmp-auth-minio/config.json")
         f.write(encoded_content(secret_data["mc-config.json"]))
 
     log.info("Writing Postgres details..")
     for k in secret_data.keys():
         if k.startswith("postgresql."):
             with open("/tmp-pki-postgres/%s" % k, "w") as f:
-                log.info("WRITE /tmp-pki-postgres/%s" % k)
+                log.info("Updating file:  /tmp-pki-postgres/%s" % k)
                 f.write(encoded_content(secret_data[k]))
 
     log.info("Writing Browser NSSDB details..")
     for k in secret_data.keys():
         if not (k.startswith("postgresql.") or k == "refresh_token"):
             with open("/tmp-pki-nssdb/%s" % k, "w") as f:
-                log.info("WRITE /tmp-pki-nssdb/%s" % k)
+                log.info("Updating file:  /tmp-pki-nssdb/%s" % k)
                 f.write(encoded_content(secret_data[k]))
 
     log.info("Setting access..")
@@ -40,4 +42,11 @@ def install_files(secret_data):
     ]
 
     for cmd in access:
-        call(cmd)
+        try:
+            call(cmd)
+        except subprocess.CalledProcessError err:
+            log.error("Failed to update access for %s" % cmd)
+            log.error(str(sys.exc_info()))
+            tb = traceback.format_exc()
+            log.error(str(tb))
+   

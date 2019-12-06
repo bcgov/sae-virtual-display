@@ -3,7 +3,7 @@ from gevent import monkey
 # Patch Sockets to make requests asynchronous
 monkey.patch_all()
 
-import logging, time, os, json, sys, signal, config
+import traceback, logging, time, os, json, sys, signal, config
 
 from gen_identity import GenIdentity
 from install_identity import install_files
@@ -59,6 +59,8 @@ while True:
     except:
         log.error("Unexpected error")
         log.error(str(sys.exc_info()))
+        tb = traceback.format_exc()
+        log.error(str(tb))
 
     log.info("Sleeping %d minutes..." % int(sleep_time/60))
     time.sleep(sleep_time)

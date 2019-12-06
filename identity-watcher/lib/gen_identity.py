@@ -45,12 +45,10 @@ class GenIdentity():
             self.info("text %s" % x.text)
             raise Exception("Failed to refresh token from OIDC provider")
 
-        self.info("refresh response %s" % x.text)
-
         j = x.json()
 
-        self.info("New token expires in %s minutes" % (int(j['expires_in'])/60))
-        self.info("New refresh token expires in %s minutes" % (int(j['refresh_expires_in'])/60))
+        self.info("New token expires in %s minutes" % round(int(j['expires_in'])/60))
+        self.info("New refresh token expires in %s minutes" % round(int(j['refresh_expires_in'])/60))
 
         return j['access_token'], int(j['expires_in']), j['refresh_token'], int(j['refresh_expires_in'])       
 
