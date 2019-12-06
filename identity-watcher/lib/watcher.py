@@ -29,6 +29,7 @@ while True:
         gen = GenIdentity()
 
         if 'REFRESH_TOKEN_PATH' in os.environ:
+            log.info("Read %s", os.environ['REFRESH_TOKEN_PATH'])
             with open(os.environ['REFRESH_TOKEN_PATH']) as f:
                 refresh_token = f.read()
                 log.info(refresh_token)
