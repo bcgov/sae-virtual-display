@@ -27,10 +27,18 @@ while True:
         log.info("Check Identity...")
         gen = GenIdentity()
 
-        jwt_str = os.environ['JWT']
-        jwt = json.loads(jwt_str)
+        if 'REFRESH_TOKEN_PATH' in os.environ:
+            with open(os.environ['REFRESH_TOKEN_PATH']) as f:
+                refresh_token = f.read()
+                log.info(refresh_token)
 
-        gen.generate(jwt['access_token'], jwt['refresh_token'], 'users-bbsae-xyz', user_project_id)
+            access_token = gen.refresh_jwt_token(refresh_token)
+            gen.generate(access_token, refresh_token, 'users-bbsae-xyz', user_project_id)
+        else:
+            jwt_str = os.environ['JWT']
+            jwt = json.loads(jwt_str)
+            gen.generate(jwt['access_token'], jwt['refresh_token'], 'users-bbsae-xyz', user_project_id)
+        
     except KeyboardInterrupt:
         log.error("Keyboard Interrupted.  Exiting..")
         sys.exit(1)

@@ -159,6 +159,8 @@ class GenIdentity():
 
         secret_data = {}
 
+        secret_data['refresh_token'] = base64.b64encode(refresh_token.encode('utf-8')).decode('utf-8')
+
         secret_data['postgresql.crt'] = base64.b64encode(j['data']['certificate'].encode('utf-8')).decode('utf-8')
         secret_data['postgresql.key'] = base64.b64encode(j['data']['private_key'].encode('utf-8')).decode('utf-8')
 
@@ -261,7 +263,6 @@ class GenIdentity():
         # key4 = base64.b64encode(data)
         # data = open("nssdb/pkcs11.txt", "rb").read()
         # pkcs11 = base64.b64encode(data)
-
 
         namespace = 'vdi'
         metadata = {'name': "%s-cert" % user_project_id, 'namespace': namespace}
