@@ -6,6 +6,7 @@ monkey.patch_all()
 import logging, time, os, json, sys, signal, config
 
 from gen_identity import GenIdentity
+from install_identity import install_files
 
 log = logging.getLogger(__name__)
 
@@ -33,11 +34,13 @@ while True:
                 log.info(refresh_token)
 
             access_token = gen.refresh_jwt_token(refresh_token)
-            gen.generate(access_token, refresh_token, 'users-bbsae-xyz', user_project_id)
+            secret_data = gen.generate(access_token, refresh_token, 'users-bbsae-xyz', user_project_id)
+            install_files (secret_data)
         else:
             jwt_str = os.environ['JWT']
             jwt = json.loads(jwt_str)
-            gen.generate(jwt['access_token'], jwt['refresh_token'], 'users-bbsae-xyz', user_project_id)
+            secret_data = gen.generate(jwt['access_token'], jwt['refresh_token'], 'users-bbsae-xyz', user_project_id)
+            install_files (secret_data)
         
     except KeyboardInterrupt:
         log.error("Keyboard Interrupted.  Exiting..")

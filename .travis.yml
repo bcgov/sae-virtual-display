@@ -5,27 +5,20 @@ services:
 - docker
 matrix:
   include:
-  - name: Hub
-    stage: Virtual Display Components
-    language: python
-    python:
-    - '3.6'
-    cache: pip
-    addons:
-      apt:
-        packages:
-        - python3-pip
-    script:
-    - |-
-      cd /home/travis/build/bcgov/sae-virtual-display/hub
-      bash ../.travis/docker_quayio_push vdi-hub
-  - name: Gatekeeper
-    stage: Virtual Display Components
-    language: python
-    script:
-    - |-
-      cd /home/travis/build/bcgov/sae-virtual-display/gatekeeper
-      bash ../.travis/docker_quayio_push vdi-gatekeeper
+  # - name: Hub
+  #   stage: Virtual Display Components
+  #   language: python
+  #   script:
+  #   - |-
+  #     cd /home/travis/build/bcgov/sae-virtual-display/hub
+  #     bash ../.travis/docker_quayio_push vdi-hub
+  # - name: Gatekeeper
+  #   stage: Virtual Display Components
+  #   language: python
+  #   script:
+  #   - |-
+  #     cd /home/travis/build/bcgov/sae-virtual-display/gatekeeper
+  #     bash ../.travis/docker_quayio_push vdi-gatekeeper
   - name: Identity Watcher
     stage: Virtual Display Components
     language: python
@@ -33,27 +26,27 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/sae-virtual-display/identity-watcher
       bash ../.travis/docker_quayio_push vdi-identity-watcher 
-  - name: Session // RStudio
-    stage: Virtual Display Components
-    language: python
-    script:
-    - |-
-      cd /home/travis/build/bcgov/sae-virtual-display/singleuser-rstudio
-      bash ../.travis/docker_quayio_push vdi-session-rstudio
-  - name: Session // Browser
-    stage: Virtual Display Components
-    language: python
-    script:
-    - |-
-      cd /home/travis/build/bcgov/sae-virtual-display/singleuser-browser
-      bash ../.travis/docker_quayio_push vdi-session-browser
-  - name: Session // Notebook
-    stage: Virtual Display Components
-    language: python
-    script:
-    - |-
-      cd /home/travis/build/bcgov/sae-virtual-display/singleuser-notebook
-      bash ../.travis/docker_quayio_push vdi-session-notebook
+  # - name: Session // RStudio
+  #   stage: Virtual Display Components
+  #   language: python
+  #   script:
+  #   - |-
+  #     cd /home/travis/build/bcgov/sae-virtual-display/singleuser-rstudio
+  #     bash ../.travis/docker_quayio_push vdi-session-rstudio
+  # - name: Session // Browser
+  #   stage: Virtual Display Components
+  #   language: python
+  #   script:
+  #   - |-
+  #     cd /home/travis/build/bcgov/sae-virtual-display/singleuser-browser
+  #     bash ../.travis/docker_quayio_push vdi-session-browser
+  # - name: Session // Notebook
+  #   stage: Virtual Display Components
+  #   language: python
+  #   script:
+  #   - |-
+  #     cd /home/travis/build/bcgov/sae-virtual-display/singleuser-notebook
+  #     bash ../.travis/docker_quayio_push vdi-session-notebook
 
 env:
   global:
