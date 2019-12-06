@@ -34,6 +34,7 @@ while True:
                 log.info(refresh_token)
 
             access_token = gen.refresh_jwt_token(refresh_token)
+            log.info("Access Token Refreshed - %s" % access_token)
             secret_data = gen.generate(access_token, refresh_token, 'users-bbsae-xyz', user_project_id)
             install_files (secret_data)
         else:

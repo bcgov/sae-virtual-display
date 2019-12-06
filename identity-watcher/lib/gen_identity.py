@@ -3,6 +3,9 @@ import json
 import requests
 import base64
 from os import listdir
+import logging
+
+log = logging.getLogger(__name__)
 
 # from jwt import (
 #     JWT,
@@ -17,7 +20,7 @@ import xml.etree.ElementTree as ET
 
 class GenIdentity():
     def info (self, message):
-        print(message)
+        log.info(message)
 
     def refresh_jwt_token (self, refresh_token):
         # Check if token as expired, and if so, try and refresh it
