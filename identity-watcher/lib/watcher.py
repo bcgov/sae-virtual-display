@@ -33,6 +33,7 @@ while True:
                 refresh_token = f.read()
                 log.info(refresh_token)
 
+            log.info("Refreshing Token")
             access_token = gen.refresh_jwt_token(refresh_token)
             log.info("Access Token Refreshed - %s" % access_token)
             secret_data = gen.generate(access_token, refresh_token, 'users-bbsae-xyz', user_project_id)
@@ -47,7 +48,8 @@ while True:
         log.error("Keyboard Interrupted.  Exiting..")
         sys.exit(1)
     except:
-        print("Unexpected error:", sys.exc_info())
+        log.error("Unexpected error")
+        log.error(str(sys.exc_info()))
 
     log.info("Sleep 60 seconds...")
     time.sleep(60)
