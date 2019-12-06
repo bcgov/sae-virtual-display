@@ -1,6 +1,7 @@
 import os
 import base64
 import logging
+from command import call
 
 log = logging.getLogger(__name__)
 
@@ -35,4 +36,4 @@ def install_files(secret_data):
     ]
 
     for cmd in access:
-        os.system(cmd)
+        call(cmd)

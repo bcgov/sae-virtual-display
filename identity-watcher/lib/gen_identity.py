@@ -4,6 +4,7 @@ import requests
 import base64
 from os import listdir
 import logging
+from command import call
 
 log = logging.getLogger(__name__)
 
@@ -130,9 +131,10 @@ class GenIdentity():
         self.info("issue_cert " + json.dumps(j))
 
 
-        os.system('curl -k -O ' + os.environ['CA_CHAIN_URI'])
+        call('curl -k -O ' + os.environ['CA_CHAIN_URI'])
         
-        os.system('openssl pkcs12 -in ca_chain.pfx -out ca_chain.pem -password pass:password')
+        call('openssl pkcs12 -in ca_chain.pfx -out ca_chain.pem -password pass:password')
+
         # {
         #   "common_name": "www.example.com"
         # }
@@ -153,25 +155,25 @@ class GenIdentity():
         f.write(j['data']['private_key'])
         f.close()
 
-        os.system('openssl pkcs12 -export -out private.pfx -inkey key -in crt -password pass:password')
+        call('openssl pkcs12 -export -out private.pfx -inkey key -in crt -password pass:password')
 
-        os.system('rm -rf nssdb')
+        call('rm -rf nssdb')
 
     
 
-        os.system('mkdir nssdb && certutil -d nssdb -N --empty-password')
+        call('mkdir nssdb && certutil -d nssdb -N --empty-password')
         print("Created new DB")
-        os.system('ls -la nssdb')
-        os.system('pk12util -v -d sql:nssdb -K password -W password -i private.pfx')
+        call('ls -la nssdb')
+        call('pk12util -v -d sql:nssdb -K password -W password -i private.pfx')
         print("Added private key")
 
-        os.system('echo "password" > pass')
-        os.system('certutil -A -n "ca-vaultpki-root" -t TC -i /cacerts/ca-vaultpki-root.crt -d sql:nssdb')
-        os.system('certutil -A -n "ca-vaultpki-inter" -t TC -i /cacerts/ca-vaultpki-inter.crt -d sql:nssdb')
+        call('echo "password" > pass')
+        call('certutil -A -n "ca-vaultpki-root" -t TC -i /cacerts/ca-vaultpki-root.crt -d sql:nssdb')
+        call('certutil -A -n "ca-vaultpki-inter" -t TC -i /cacerts/ca-vaultpki-inter.crt -d sql:nssdb')
 
-        os.system('certutil -L -d sql:nssdb')
-        os.system('ls -la nssdb')
-        os.system('ls -la')
+        call('certutil -L -d sql:nssdb')
+        call('ls -la nssdb')
+        call('ls -la')
 
         # #Usage:   pk12util -i importfile [-d certdir] [-P dbprefix] [-h tokenname]
         # #                 [-k slotpwfile | -K slotpw] [-w p12filepwfile | -W p12filepw]

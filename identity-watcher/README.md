@@ -21,8 +21,8 @@ docker push ikethecoder/vdi-identity-watcher
 |  REFRESH_TOKEN_PATH (optional) | If provided, the file specified has a refresh token, which is used to get an access token from the OAUTH provider |
 |  USER_PROJECT_ID | A unique identifier for the user for a particular project |
 |  OAUTH2_TOKEN_URL | OIDC provider's token endpoint |
-|  CLIENT_ID | OIDC client ID used for refreshing the JWT token |
-|  CLIENT_SECRET | OIDC client Secret used for refreshing the JWT token  |
+|  OAUTH2_CLIENT_ID | OIDC client ID used for refreshing the JWT token |
+|  OAUTH2_CLIENT_SECRET | OIDC client Secret used for refreshing the JWT token  |
 |  CA_CHAIN_URI | The CA chain used for securing Minio in the cluster. |
 |  VAULT_ADDR | The URL to access Vault  |
 |  MINIO_ADDR | The URL for accessing Minio |

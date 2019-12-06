@@ -7,7 +7,7 @@ import logging, time, os, json, sys, signal, config
 
 from gen_identity import GenIdentity
 from install_identity import install_files
-
+from command import call
 log = logging.getLogger(__name__)
 
 conf = config.Config()
