@@ -25,6 +25,9 @@ log.info("Identity Watcher Started for %s" % user_project_id)
 
 while True:
     try:
+        log.info("--")
+        log.info("--")
+        log.info("--")
         log.info("Check Identity...")
         gen = GenIdentity()
 
