@@ -161,7 +161,9 @@ class GenIdentity():
 
     
 
-        call('mkdir nssdb && certutil -d nssdb -N --empty-password')
+        call('mkdir nssdb')
+        call('certutil -d nssdb -N --empty-password')
+
         print("Created new DB")
         call('ls -la nssdb')
         call('pk12util -v -d sql:nssdb -K password -W password -i private.pfx')
