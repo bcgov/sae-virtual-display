@@ -45,6 +45,8 @@ class GenIdentity():
             self.info("text %s" % x.text)
             raise Exception("Failed to refresh token from OIDC provider")
 
+        self.info("refresh response %s" % x.text)
+
         j = x.json()
         return j['access_token']        
 
@@ -77,6 +79,8 @@ class GenIdentity():
         if x.status_code != 200:
             self.info("text %s" % x.text)
             raise Exception("Failed to login")
+
+        self.info("vault login %s" % x.text)
 
         j = x.json()
         vault_token = j['auth']['client_token']
