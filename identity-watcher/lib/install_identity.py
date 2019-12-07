@@ -34,12 +34,13 @@ def install_files(secret_data):
 
     log.info("Setting access..")
     access = [
-        "chown -R 1000:1000 /tmp-auth-minio/*",
-        "chmod -R 0700 /tmp-auth-minio/*",
-        "chown 1000:1000 /tmp-pki-postgres/*",
-        "chmod 600 /tmp-pki-postgres/*",
-        "chown 1000:1000 /tmp-pki-nssdb/*",
-        "chmod 600 /tmp-pki-nssdb/*"
+        "ls -la /",
+        "chown -R 1000:1000 /tmp-auth-minio",
+        "chmod -R 0700 /tmp-auth-minio",
+        "chown -R 1000:1000 /tmp-pki-postgres",
+        "chmod -R 600 /tmp-pki-postgres",
+        "chown -R 1000:1000 /tmp-pki-nssdb",
+        "chmod -R 600 /tmp-pki-nssdb"
     ]
 
     for cmd in access:
