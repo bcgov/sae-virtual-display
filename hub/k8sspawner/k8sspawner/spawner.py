@@ -46,7 +46,7 @@ class K8sSpawner(KubeSpawner):
         """
         labels = self._build_common_labels(self._expand_all(self.storage_extra_labels))
 
-        annotations = {}#self._build_common_annotations({})
+        annotations = self._build_common_annotations({})
 
         #del annotations["hub.jupyter.org/username"]
 
@@ -54,6 +54,7 @@ class K8sSpawner(KubeSpawner):
         pvcDict['name'] = self.pvc_name
         pvcDict['storage_class'] = self.storage_class
         pvcDict['access_modes'] = self.storage_access_modes
+        pvcDict['selector'] = self.storage_selector
         pvcDict['storage'] = self.storage_capacity
         pvcDict['labels'] = labels
         pvcDict['annotations'] = annotations
