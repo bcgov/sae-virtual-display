@@ -3,6 +3,7 @@ import sys
 import traceback
 import base64
 import logging
+import subprocess
 from command import call
 
 log = logging.getLogger(__name__)
@@ -44,7 +45,7 @@ def install_files(secret_data):
     for cmd in access:
         try:
             call(cmd)
-        except subprocess.CalledProcessError err:
+        except subprocess.CalledProcessError as ex:
             log.error("Failed to update access for %s" % cmd)
             log.error(str(sys.exc_info()))
             tb = traceback.format_exc()
