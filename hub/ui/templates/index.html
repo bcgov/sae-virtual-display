@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Workbench</title>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/css/reset.css" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="/css/atlaskit-reduced-ui.css"
+      type="text/css"
+    />
+    <style>
+      body {
+        background: #eee;
+      }
+
+      #main {
+        width: 100vw;
+        position: relative;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="main">Loading...</div>
+    <noscript>
+      <div id="noscript">
+        JupyterHub requires JavaScript.<br />
+        Please enable it to proceed.
+      </div>
+    </noscript>
+    <script type="text/javascript" src="/bundle.js"></script>
+    <script>
+      const appDef = {
+        notebook: {
+          label: 'Jupyter Notebook',
+          image: '/images/notebook-logo.png',
+        },
+        rstudio: {
+          label: 'R Studio',
+          image: '/images/rstudio-logo.png',
+        },
+        browser: {
+          label: 'Chrome Browser',
+          image: '/images/browser-logo.png',
+        },
+      };
+      const spawnOptions = {
+        projects: [
+          '/exporterstg',
+          '/project_1',
+          '/project_2',
+          '/sre-users',
+          '/99-t05',
+        ],
+        applications: ['notebook', 'browser', 'rstudio'],
+      };
+      const apps = spawnOptions.applications.map(m => ({
+        name: m,
+        ...appDef[m],
+      }));
+
+      (function(config) {
+        workbench.default(config);
+      })({
+        announcement: '',
+        staticURL: '/',
+        formAction: '/spawn',
+        user: 'jjones',
+        apps,
+        projects: spawnOptions.projects,
+      });
+    </script>
+  </body>
+</html>

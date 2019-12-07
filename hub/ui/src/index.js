@@ -13,7 +13,4 @@ function run(config) {
   );
 }
 
-export default {
-  name: 'workbench',
-  run,
-};
+export default run;
