@@ -50,4 +50,6 @@ def install_files(secret_data):
             log.error(str(sys.exc_info()))
             tb = traceback.format_exc()
             log.error(str(tb))
+            log.error("Return code %d" % ex.returncode)
+            log.error("Return stdout/stderr %s" % ex.output)
    

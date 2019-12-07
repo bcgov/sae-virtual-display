@@ -17,11 +17,12 @@ USER root
 RUN apt-get update && apt-get install -y libnss3-tools
 
 # Needed for running proxy when testing locally - not needed when deployed with HELM
-RUN apt-get update && apt-get install -y nodejs npm
+RUN apt-get update && apt-get install -y libssl1.0-dev nodejs-dev node-gyp nodejs npm
 RUN npm install -g configurable-http-proxy
 COPY ./simauthenticator /home/jovyan/simauthenticator
 RUN pip3 install -e /home/jovyan/simauthenticator
 
+RUN pip3 install jupyterhub_kubespawner==0.11.1
 COPY ./k8sspawner /home/jovyan/k8sspawner
 RUN pip3 install -e /home/jovyan/k8sspawner
 

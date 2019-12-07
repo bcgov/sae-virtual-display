@@ -5,13 +5,13 @@ services:
 - docker
 matrix:
   include:
-  # - name: Hub
-  #   stage: Virtual Display Components
-  #   language: python
-  #   script:
-  #   - |-
-  #     cd /home/travis/build/bcgov/sae-virtual-display/hub
-  #     bash ../.travis/docker_quayio_push vdi-hub
+  - name: Hub
+    stage: Virtual Display Components
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/hub
+      bash ../.travis/docker_quayio_push vdi-hub
   # - name: Gatekeeper
   #   stage: Virtual Display Components
   #   language: python
