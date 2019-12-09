@@ -175,11 +175,11 @@ class GenIdentity():
         call('pk12util -v -d sql:nssdb -K password -W password -i private.pfx')
         print("Added private key")
 
-        # call('echo "password" > pass')
-        # call('certutil -A -n "ca-vaultpki-root" -t TC -i /cacerts/ca-vaultpki-root.crt -d sql:nssdb')
-        # call('certutil -A -n "ca-vaultpki-inter" -t TC -i /cacerts/ca-vaultpki-inter.crt -d sql:nssdb')
+        call('echo "password" > pass')
+        call('certutil -A -n "ca-vaultpki-root" -t TC -i /cacerts/ca-vaultpki-root.crt -d sql:nssdb')
+        call('certutil -A -n "ca-vaultpki-inter" -t TC -i /cacerts/ca-vaultpki-inter.crt -d sql:nssdb')
 
-        # call('certutil -L -d sql:nssdb')
+        call('certutil -L -d sql:nssdb')
 
         # #Usage:   pk12util -i importfile [-d certdir] [-P dbprefix] [-h tokenname]
         # #                 [-k slotpwfile | -K slotpw] [-w p12filepwfile | -W p12filepw]
