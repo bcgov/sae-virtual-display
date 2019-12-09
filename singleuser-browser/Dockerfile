@@ -43,4 +43,6 @@ RUN chmod +x /usr/local/bin/launcher.sh \
 
 USER $NB_USER
 
+WORKDIR /home/$NB_USER
+
 ENTRYPOINT ["/usr/local/bin/start-wrapper.sh"]

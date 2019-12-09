@@ -94,13 +94,14 @@ class K8sSpawner(KubeSpawner):
         return make_pvc(**pvcDict)
 
     def get_pv_manifest(self, volume):
-        spec = {"capacity": {
-                        "storage": volume['storage_size']
-                    },
-                    "accessModes": volume['accessModes'],
-                    "persistentVolumeReclaimPolicy": "Delete",
-                    "storageClassName": volume['storage_class']
-                }
+        spec = {
+            "capacity": {
+                "storage": volume['storage_size']
+            },
+            "accessModes": volume['accessModes'],
+            "persistentVolumeReclaimPolicy": "Retain",
+            "storageClassName": volume['storage_class']
+        }
         metadata = {
             "name": volume['name']
         }
