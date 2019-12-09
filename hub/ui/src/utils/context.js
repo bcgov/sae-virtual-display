@@ -1,10 +1,12 @@
 import React from 'react';
 
 export const config = {
+  announcement: '',
+  formAction: '/spawn',
   staticURL: '/',
-  user: {},
+  user: '',
   apps: [],
-  projects: []
+  projects: [],
 };
 
 const WorkbenchContext = React.createContext(config);

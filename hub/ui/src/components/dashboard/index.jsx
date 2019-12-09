@@ -19,13 +19,17 @@ import {
 function Dashboard() {
   const [project, setProject] = useState('');
   const [app, setApp] = useState('');
-  const { announcement, apps, projects, formAction } = useContext(WorkbenchContext);
+  const { announcement, apps, projects, formAction } = useContext(
+    WorkbenchContext
+  );
 
   useEffect(() => {
-    document.title = 'Workbench | Dashboard';
+    document.title = 'SAE Virtual Display | Dashboard';
   }, []);
 
-  var projectOptions = projects.map(p => { return { value: p, label: p}; });
+  var projectOptions = projects.map(p => {
+    return { value: p, label: p };
+  });
 
   return (
     <>
@@ -53,7 +57,7 @@ function Dashboard() {
             <div className="ak-field-group">
               <label>Select an Application</label>
               <ak-grid class="app-grid">
-                <input type="hidden" name="image" value={app}/>
+                <input type="hidden" name="image" value={app} />
                 {apps.map(d => (
                   <ak-grid-column size="4" key={d.name}>
                     <AppOption

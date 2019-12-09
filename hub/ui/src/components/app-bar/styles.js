@@ -64,6 +64,11 @@ export const Container = styled.nav`
   }
 `;
 
+export const Icon = styled.div`
+  display: inline-block;
+  margin-right: 10px;
+`;
+
 export const Brand = styled(Link)`
   display: inline-flex;
   align-items: center;

@@ -44,6 +44,7 @@ export const AppOption = styled.div`
   position: relative;
   border-radius: 4px;
   border: 2px solid ${props => (props.selected ? selectedColor : '#fff')};
+  cursor: pointer;
 
   :hover {
     background-color: #eee;
