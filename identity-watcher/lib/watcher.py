@@ -34,6 +34,7 @@ else:
     jwt_str = os.environ['JWT']
     jwt = json.loads(jwt_str)
     refresh_token = jwt['refresh_token']
+    log.info(refresh_token)
 
 errors = 0
 
