@@ -12,13 +12,13 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/sae-virtual-display/hub
       bash ../.travis/docker_quayio_push vdi-hub
-  # - name: Gatekeeper
-  #   stage: Virtual Display Components
-  #   language: python
-  #   script:
-  #   - |-
-  #     cd /home/travis/build/bcgov/sae-virtual-display/gatekeeper
-  #     bash ../.travis/docker_quayio_push vdi-gatekeeper
+  - name: Gatekeeper
+    stage: Virtual Display Components
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/gatekeeper
+      bash ../.travis/docker_quayio_push vdi-gatekeeper
   - name: Identity Watcher
     stage: Virtual Display Components
     language: python
@@ -33,20 +33,20 @@ matrix:
   #   - |-
   #     cd /home/travis/build/bcgov/sae-virtual-display/singleuser-rstudio
   #     bash ../.travis/docker_quayio_push vdi-session-rstudio
-  # - name: Session // Browser
-  #   stage: Virtual Display Components
-  #   language: python
-  #   script:
-  #   - |-
-  #     cd /home/travis/build/bcgov/sae-virtual-display/singleuser-browser
-  #     bash ../.travis/docker_quayio_push vdi-session-browser
-  # - name: Session // Notebook
-  #   stage: Virtual Display Components
-  #   language: python
-  #   script:
-  #   - |-
-  #     cd /home/travis/build/bcgov/sae-virtual-display/singleuser-notebook
-  #     bash ../.travis/docker_quayio_push vdi-session-notebook
+  - name: Session // Browser
+    stage: Virtual Display Components
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/singleuser-browser
+      bash ../.travis/docker_quayio_push vdi-session-browser
+  - name: Session // Notebook
+    stage: Virtual Display Components
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/singleuser-notebook
+      bash ../.travis/docker_quayio_push vdi-session-notebook
 
 env:
   global:
