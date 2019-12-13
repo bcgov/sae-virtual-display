@@ -77,15 +77,15 @@ RUN conda config --add channels conda-forge; \
     conda config --add channels anaconda
 
 RUN conda install r-essentials r-tictoc r-rpostgres r-rstudioapi openjdk --yes
-RUN conda install -c conda-forge/label/main r-sparklyr --yes
+RUN conda install -c conda-forge/label/main libiconv r-sparklyr --yes
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
 USER root
 
-RUN curl -L -O https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.1335-amd64.deb \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-1.2.1335-amd64.deb \
- && rm ./rstudio-1.2.1335-amd64.deb
+RUN curl -L -O https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.5019-amd64.deb \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-1.2.5019-amd64.deb \
+ && rm ./rstudio-1.2.5019-amd64.deb
 
 COPY artifacts/start-wrapper.sh /usr/local/bin
 COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
