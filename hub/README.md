@@ -39,15 +39,3 @@ docker run -ti --rm -p 5002:5002 \
 
 ## Test
 
-``` sh
-pip install '.[test]'
-pytest --verbose
-```
-
-Run with coverage support. The report will be generated in htmlcov/index.html.
-
-``` sh
-coverage run -m pytest
-coverage report
-coverage html
-```
