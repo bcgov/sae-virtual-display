@@ -10,6 +10,8 @@ RUN npm run build
 
 
 FROM jupyterhub/k8s-hub:0.8.2
+#FROM jupyterhub/k8s-hub:0.9.0-alpha.1.088.1350ad7
+# 0.9.0-alpha.1.095.3e95dc3
 
 USER root
 
