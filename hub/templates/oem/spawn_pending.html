@@ -15,6 +15,7 @@
         </div>
       </div>
       <p id="progress-message"></p>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
@@ -23,6 +24,7 @@
         <div id="progress-log"></div>
       </details>
     </div>
+  </div>
 </div>
 
 {% endblock %}
@@ -33,7 +35,7 @@
 require(["jquery"], function ($) {
   $("#refresh").click(function () {
     window.location.reload();
-  })
+  });
 
   // hook up event-stream for progress
   var evtSource = new EventSource("{{ progress_url }}");
@@ -83,7 +85,7 @@ require(["jquery"], function ($) {
       // open event log for debugging
       $('#progress-details').prop('open', true);
     }
-  }
+  };
 
 });
 </script>
