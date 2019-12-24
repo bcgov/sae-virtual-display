@@ -28,8 +28,8 @@ RUN pip3 install jupyterhub_kubespawner==0.11.1
 COPY ./k8sspawner /home/jovyan/k8sspawner
 RUN pip3 install -e /home/jovyan/k8sspawner
 
-#COPY ./templates /usr/local/share/jupyterhub/templates/
-#COPY --from=builder /app/assets/ /usr/local/share/jupyterhub/static/
+COPY ./templates /usr/local/share/jupyterhub/templates/
+COPY --from=builder /app/assets/ /usr/local/share/jupyterhub/static/
 
 
 USER ${NB_USER}
