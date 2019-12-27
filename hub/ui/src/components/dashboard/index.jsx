@@ -27,6 +27,26 @@ function Dashboard() {
 
   var projectOptions = projects.map(p => { return { value: p, label: p}; });
 
+  projectSelection = (
+    <div className="ak-field-group">
+        <label>Select a Project</label>
+        <Select
+        name="project"
+        value={project}
+        onChange={setProject}
+        placeholder="Select your Project"
+        options={projectOptions}
+        />
+    </div>
+  )
+  if (project.length == 1) {
+    projectSelection = (
+        <div className="ak-field-group">
+            <label>Project</label>
+            <div>{project}</div>
+        </div>
+    )
+  }
   return (
     <>
       {announcement && (
@@ -40,16 +60,7 @@ function Dashboard() {
             <h3>Which application would you like to use?</h3>
           </Header>
           <form action={formAction} method="POST">
-            <div className="ak-field-group">
-              <label>Select a Project</label>
-              <Select
-                name="project"
-                value={project}
-                onChange={setProject}
-                placeholder="Select your Project"
-                options={projectOptions}
-              />
-            </div>
+            {projectSelection}
             <div className="ak-field-group">
               <label>Select an Application</label>
               <ak-grid class="app-grid">
