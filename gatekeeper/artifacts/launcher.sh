@@ -15,12 +15,6 @@ echo "Listening on port 8888"
 echo "Waiting for DISPLAY to be ready..."
 while [[ ! $(DISPLAY=:100 xset -q) ]]; do echo "Waiting 2 seconds..."; sleep 2; done
 
-# echo "Starting XPRA FOR $JUPYTERHUB_USER"
-# mkdir -p /usr/share/xpra/user/$JUPYTERHUB_USER
-# cp -RL /usr/share/xpra/www/* /usr/share/xpra/user/$JUPYTERHUB_USER/.
-# cp /usr/share/xpra/www/icons/* /usr/share/xpra/user/$JUPYTERHUB_USER/.
-# mv /usr/share/xpra/user /usr/share/xpra/www/.
-
 export XPRA_PRINTERS_GENERIC=0
 export XPRA_CUPS_DBUS=0
 export XPRA_SCALING=0
