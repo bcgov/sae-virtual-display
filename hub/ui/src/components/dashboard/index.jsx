@@ -27,9 +27,9 @@ function Dashboard() {
 
   var projectOptions = projects.map(p => { return { value: p, label: p}; });
 
-  projectSelection = (
+  var projectSelection = (
     <div className="ak-field-group">
-        <label>Select a Project</label>
+        <label>Select your Project</label>
         <Select
         name="project"
         value={project}
@@ -39,6 +39,7 @@ function Dashboard() {
         />
     </div>
   )
+
   if (projects.length == 1) {
     projectSelection = (
         <div className="ak-field-group">
@@ -47,6 +48,7 @@ function Dashboard() {
         </div>
     )
   }
+
   return (
     <>
       {announcement && (
