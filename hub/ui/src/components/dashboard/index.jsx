@@ -39,7 +39,7 @@ function Dashboard() {
         />
     </div>
   )
-  if (project.length == 1) {
+  if (projects.length == 1) {
     projectSelection = (
         <div className="ak-field-group">
             <label>Project</label>
