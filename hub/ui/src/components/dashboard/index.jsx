@@ -44,7 +44,8 @@ function Dashboard() {
     projectSelection = (
         <div className="ak-field-group">
             <label>Project</label>
-            <div>{project}</div>
+            <input type="hidden" name="project" value={projects[0]}/>
+            <div>{projects[0]}</div>
         </div>
     )
   }
