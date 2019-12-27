@@ -40,15 +40,15 @@ function Dashboard() {
     </div>
   )
 
-  if (projects.length == 1) {
-    projectSelection = (
-        <div className="ak-field-group">
-            <label>Project</label>
-            <input type="hidden" name="project" value={projects[0]}/>
-            <div>{projects[0]}</div>
-        </div>
-    )
-  }
+//   if (projects.length == 1) {
+//     projectSelection = (
+//         <div className="ak-field-group">
+//             <label>Project</label>
+//             <input type="hidden" name="project" value={projects[0]}/>
+//             <div>{projects[0]}</div>
+//         </div>
+//     )
+//   }
 
   return (
     <>
