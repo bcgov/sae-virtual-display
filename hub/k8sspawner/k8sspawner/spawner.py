@@ -10,6 +10,7 @@ import string
 import escapism
 import json
 import requests
+import urllib.parse
 
 from tornado import gen
 
@@ -91,7 +92,9 @@ class K8sSpawner(KubeSpawner):
 
         print(pvcDict)
         
-        return make_pvc(**pvcDict)
+        pvc = make_pvc(**pvcDict)
+        pvc.spec.persistentVolumeReclaimPolicy = 'Retain'
+        return pvc
 
     # def get_pv_manifest(self, volume):
     #     spec = {
@@ -117,6 +120,7 @@ class K8sSpawner(KubeSpawner):
         auth_state = yield self.user.get_auth_state()
 
         self.log.info("oauth_user " + json.dumps(auth_state))
+        self.log.info(".. as user " + self.user.name)
 
         user_profile = auth_state['oauth_user']
 
@@ -198,34 +202,21 @@ class K8sSpawner(KubeSpawner):
         else:
             servername = ''
 
-        # auth_state = yield self.user.get_auth_state()
-
-        # self.log.info("XX / Done.. user_profile")
-        # user_profile = auth_state['oauth_user']
-        # self.log.info("XX / Done.. groups")
-        # groups = user_profile['groups']
-
-        # if len(self.user_groups) == 1:
-        #     self.log.info("XX / Done.. using from auth_state")
-        #     project = self.user_groups[0].lower().replace("_", "-").replace("/", "")
-        #     self.log.info("XX / Done.. project is " + project)
-        # else:
         if 'project' in self.user_options:
-            project = self.user_options['project'][0].lower().replace("_", "-").replace("/", "")
+            project = escapism.escape(self.user_options['project'][0].lower().replace("/", ""), safe=safe_chars, escape_char='-')
         else:
             project = ''
         
-        userN = ''
-        unAndGroups = self.user.name.lower().split("-")
-        if (len(unAndGroups) >= 1):
-            userN = unAndGroups[0]
+        username = urllib.parse.unquote(self.user.name)
 
-        # If user name ends with the project then do not bother using it to form the new identity
-        if len(project) > 0 and self.user.name.lower().endswith(project) == False:
-            userN = "%s-%s" % (self.user.name, project)
+        userN = username.lower()
+
+        # Special handling for a naming convention for users having the project ID at the end
+        if len(project) > 0 and username.lower().endswith(project) == True:
+            userN = username.split("-")[0]
 
         legacy_escaped_username = ''.join([s if s in safe_chars else '-' for s in userN.lower()])
-        safe_username = escapism.escape(userN, safe=safe_chars, escape_char='-').lower()
+        safe_username = escapism.escape(userN, safe=safe_chars, escape_char='-')
 
         formatDict = {}
 
