@@ -19,13 +19,13 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/sae-virtual-display/gatekeeper
       bash ../.travis/docker_quayio_push vdi-gatekeeper
-  # - name: Identity Watcher
-  #   stage: Virtual Display Components
-  #   language: python
-  #   script:
-  #   - |-
-  #     cd /home/travis/build/bcgov/sae-virtual-display/identity-watcher
-  #     bash ../.travis/docker_quayio_push vdi-identity-watcher 
+  - name: Identity Watcher
+    stage: Virtual Display Components
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/identity-watcher
+      bash ../.travis/docker_quayio_push vdi-identity-watcher 
   # - name: Init User Identity
   #   stage: Virtual Display Components
   #   language: python
