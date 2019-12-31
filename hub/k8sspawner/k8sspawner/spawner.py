@@ -195,6 +195,7 @@ class K8sSpawner(KubeSpawner):
         else:
             servername = ''
 
+        auth_state = yield self.user.get_auth_state()
         # self.log.info("XX / Doing auth_state stuff")
         # auth_state = yield self.user.get_auth_state()
 
@@ -203,12 +204,12 @@ class K8sSpawner(KubeSpawner):
         # self.log.info("XX / Done.. groups")
         # groups = user_profile['groups']
 
-        if len(self.user_groups) == 1:
-            self.log.info("XX / Done.. using from auth_state")
-            project = self.user_groups[0].lower().replace("_", "-").replace("/", "")
-            self.log.info("XX / Done.. project is " + project)
-        else:
-            project = self.user_options['project'][0].lower().replace("_", "-").replace("/", "")
+        # if len(self.user_groups) == 1:
+        #     self.log.info("XX / Done.. using from auth_state")
+        #     project = self.user_groups[0].lower().replace("_", "-").replace("/", "")
+        #     self.log.info("XX / Done.. project is " + project)
+        # else:
+        project = self.user_options['project'][0].lower().replace("_", "-").replace("/", "")
 
         userN = ''
         unAndGroups = self.user.name.lower().split("-")
