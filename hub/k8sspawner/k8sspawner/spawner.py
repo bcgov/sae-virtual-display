@@ -116,13 +116,14 @@ class K8sSpawner(KubeSpawner):
         # and register the certificate
         auth_state = yield self.user.get_auth_state()
 
-        self.userdata = auth_state['oauth_user']
-
         self.log.info("oauth_user " + json.dumps(auth_state))
 
-        gen = GenIdentity()
-
         user_profile = auth_state['oauth_user']
+
+        # Force the selected project to be the user's group from the auth_state
+        self.user_options['project'] = user_profile['groups']
+
+        gen = GenIdentity()
 
         token = auth_state['access_token']
 
@@ -196,8 +197,6 @@ class K8sSpawner(KubeSpawner):
             servername = '-{}'.format(self.name)
         else:
             servername = ''
-
-        self.log.info("XX / Doing auth_state stuff " + str(self.userdata))
 
         # auth_state = yield self.user.get_auth_state()
 
