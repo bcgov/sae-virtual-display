@@ -9,9 +9,9 @@ COPY ./ui /app/
 RUN npm run build
 
 
-#FROM jupyterhub/k8s-hub:0.8.2
-FROM jupyterhub/k8s-hub:0.9.0-alpha.1.088.1350ad7
-# 0.9.0-alpha.1.095.3e95dc3
+FROM jupyterhub/k8s-hub:0.9.0-beta.2.000.bed779e
+# Previous 0.9.0-alpha.1.088.1350ad7
+# 0.9.0-beta.2 includes 1.1.0b1 (support for auth_state_hook)
 
 USER root
 
