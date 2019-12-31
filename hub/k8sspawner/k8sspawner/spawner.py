@@ -154,6 +154,8 @@ class K8sSpawner(KubeSpawner):
             else:
                 raise
 
+        self.pod_name = self._expand_user_properties(self.pod_name_template)
+
         self.volume_mounts = self._expand_all(self.volume_mounts)
         self.volumes = self._expand_all(self.volumes)
 
