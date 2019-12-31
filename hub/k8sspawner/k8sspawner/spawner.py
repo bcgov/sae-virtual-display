@@ -116,6 +116,8 @@ class K8sSpawner(KubeSpawner):
         # and register the certificate
         auth_state = yield self.user.get_auth_state()
 
+        self.userdata = auth_state['oauth_user']
+
         self.log.info("oauth_user " + json.dumps(auth_state))
 
         gen = GenIdentity()
@@ -195,8 +197,8 @@ class K8sSpawner(KubeSpawner):
         else:
             servername = ''
 
-        auth_state = yield self.user.get_auth_state()
-        # self.log.info("XX / Doing auth_state stuff")
+        self.log.info("XX / Doing auth_state stuff " + str(self.userdata))
+
         # auth_state = yield self.user.get_auth_state()
 
         # self.log.info("XX / Done.. user_profile")
