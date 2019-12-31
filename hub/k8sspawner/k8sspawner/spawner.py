@@ -203,7 +203,7 @@ class K8sSpawner(KubeSpawner):
             servername = ''
 
         if 'project' in self.user_options:
-            project = escapism.escape(self.user_options['project'][0].lower().replace("/", ""), safe=safe_chars, escape_char='-')
+            project = self.user_options['project'][0].lower().replace("/", "").replace("_","-")
         else:
             project = ''
         
@@ -215,14 +215,14 @@ class K8sSpawner(KubeSpawner):
         if len(project) > 0 and username.lower().endswith(project) == True:
             userN = username.split("-")[0]
 
-        legacy_escaped_username = ''.join([s if s in safe_chars else '-' for s in userN.lower()])
-        safe_username = escapism.escape(userN, safe=safe_chars, escape_char='-')
+        safe_username = ''.join([s if s in safe_chars else '-' for s in userN])
+        #safe_username = escapism.escape(userN, safe=safe_chars, escape_char='-')
 
         formatDict = {}
 
         formatDict['userid'] = self.user.id
         formatDict['username'] = safe_username
-        formatDict['legacy_escape_username'] = legacy_escaped_username
+        #formatDict['legacy_escape_username'] = legacy_escaped_username
         formatDict['servername'] = servername
         formatDict['group'] = project
 
