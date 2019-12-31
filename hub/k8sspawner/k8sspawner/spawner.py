@@ -210,8 +210,11 @@ class K8sSpawner(KubeSpawner):
         #     project = self.user_groups[0].lower().replace("_", "-").replace("/", "")
         #     self.log.info("XX / Done.. project is " + project)
         # else:
-        project = self.user_options['project'][0].lower().replace("_", "-").replace("/", "")
-
+        if 'project' in self.user_options:
+            project = self.user_options['project'][0].lower().replace("_", "-").replace("/", "")
+        else:
+            project = ''
+        
         userN = ''
         unAndGroups = self.user.name.lower().split("-")
         if (len(unAndGroups) >= 1):
