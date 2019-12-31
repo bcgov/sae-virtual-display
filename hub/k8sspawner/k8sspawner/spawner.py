@@ -195,10 +195,15 @@ class K8sSpawner(KubeSpawner):
         else:
             servername = ''
 
-        try:
+        auth_state = yield self.user.get_auth_state()
+
+        groups = auth_state['oauth_user']['groups']
+        self.log.info("expand_user_properties: Groups " + str(groups))
+
+        if len(groups) == 1:
+            project = groups[0]
+        else:
             project = self.user_options['project'][0].lower().replace("_", "-").replace("/", "")
-        except Exception:
-            project = ''
 
         userN = ''
         unAndGroups = self.user.name.lower().split("-")
