@@ -76,8 +76,8 @@ RUN conda update --prefix /home/jovyan/anaconda3 anaconda
 RUN conda config --add channels conda-forge; \
     conda config --add channels anaconda
 
-RUN conda install r-essentials r-tictoc r-rpostgres r-rstudioapi openjdk --yes
-RUN conda install -c conda-forge/label/main libiconv r-sparklyr --yes
+RUN conda install r-essentials r-tictoc r-rstudioapi openjdk --yes
+RUN conda install -c conda-forge/label/main libiconv r-dbi r-sparklyr r-rpostgres --yes
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
