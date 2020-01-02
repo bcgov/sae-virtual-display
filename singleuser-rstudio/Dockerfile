@@ -87,7 +87,7 @@ RUN curl -L -O https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.50
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-1.2.5019-amd64.deb \
  && rm ./rstudio-1.2.5019-amd64.deb
 
-RUN curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.11.699/aws-java-sdk-1.11.699.jar \
+RUN curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar \
  && mv aws-java-sdk-*.jar /spark/spark-2.4.4-bin-hadoop2.7/jars/.
 
 RUN curl -O https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.7/hadoop-aws-2.7.7.jar \
