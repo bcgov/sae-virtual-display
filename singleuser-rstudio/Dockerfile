@@ -76,8 +76,8 @@ RUN conda update --prefix /home/jovyan/anaconda3 anaconda
 RUN conda config --add channels conda-forge; \
     conda config --add channels anaconda
 
-RUN conda install r-essentials r-tictoc r-rstudioapi openjdk --yes
-RUN conda install -c conda-forge/label/main libiconv r-dbi r-sparklyr r-rpostgres --yes
+RUN conda install r-essentials r-tictoc r-rstudioapi --yes
+RUN conda install -c conda-forge/label/main scalapack openjdk libiconv r-dbi r-sparklyr r-rpostgres --yes
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
@@ -112,7 +112,7 @@ USER $NB_USER
 
 ENV LANG=en_US.UTF8
 ENV XDR_RUNTIME_DIR=/tmp/runtime-jovyan
-ENV SPARK_HOME=/spark/spark-2.4.4-bin-hadoop2.7
+ENV SPARK_HOME=/spark/spark-3.0.0-preview2-bin-hadoop3.2
 ENV PATH=$PATH:$SPARK_HOME/bin
 
 ENTRYPOINT ["/usr/local/bin/start-wrapper.sh"]
