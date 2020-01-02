@@ -90,7 +90,7 @@ RUN curl -L -O https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.50
 RUN curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.11.699/aws-java-sdk-1.11.699.jar \
  && mv aws-java-sdk-*.jar /spark/spark-2.4.4-bin-hadoop2.7/jars/.
 
-RUN curl -O https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.1/hadoop-aws-3.2.1.jar \
+RUN curl -O https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.7/hadoop-aws-2.7.7.jar \
  && mv hadoop-aws-*.jar /spark/spark-2.4.4-bin-hadoop2.7/jars/.
 
 COPY artifacts/start-wrapper.sh /usr/local/bin
