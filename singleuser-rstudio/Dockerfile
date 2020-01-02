@@ -54,7 +54,7 @@ RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc &&
 ##
 ## Spark
 ##
-RUN wget -c http://muug.ca/mirror/apache-dist/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz
+RUN wget -c https://www-us.apache.org/dist/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz
 RUN mkdir /spark && tar -zxvf /spark-2.4.4-bin-hadoop2.7.tgz -C /spark/
 
 USER $NB_USER
