@@ -54,8 +54,8 @@ RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc &&
 ##
 ## Spark
 ##
-RUN wget -c http://apache.mirror.colo-serv.net/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz
-RUN mkdir /spark && tar -zxvf /spark-2.4.4-bin-hadoop2.7.tgz -C /spark/
+RUN wget -c http://apache.mirror.colo-serv.net/spark/spark-3.0.0-preview2/spark-3.0.0-preview2-bin-hadoop3.2.tgz
+RUN mkdir /spark && tar -zxvf /spark-3.0.0-preview2-bin-hadoop3.2.tgz -C /spark/
 
 USER $NB_USER
 
@@ -87,23 +87,19 @@ RUN curl -L -O https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.50
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-1.2.5019-amd64.deb \
  && rm ./rstudio-1.2.5019-amd64.deb
 
-RUN curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.10.6/aws-java-sdk-1.10.6.jar \
- && mv aws-java-sdk-*.jar /spark/spark-2.4.4-bin-hadoop2.7/jars/.
+RUN curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.11.699/aws-java-sdk-1.11.699.jar \
+ && mv aws-java-sdk-*.jar /spark/spark-3.0.0-preview2-bin-hadoop3.2/jars/.
 
-RUN curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.10.6/aws-java-sdk-s3-1.10.6.jar \
- && mv aws-java-sdk-*.jar /spark/spark-2.4.4-bin-hadoop2.7/jars/.
+RUN curl -O https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.1/hadoop-aws-3.2.1.jar \
+ && mv hadoop-aws-*.jar /spark/spark-3.0.0-preview2-bin-hadoop3.2/jars/.
 
-RUN curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-sts/1.10.6/aws-java-sdk-sts-1.10.6.jar \
- && mv aws-java-sdk-*.jar /spark/spark-2.4.4-bin-hadoop2.7/jars/.
 
-# Path style access added in 2.8.0
-RUN curl -O https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.8.0/hadoop-aws-2.8.0.jar \
- && mv hadoop-aws-*.jar /spark/spark-2.4.4-bin-hadoop2.7/jars/.
+###### Attempt 1
 
 # RUN curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.15/aws-java-sdk-1.7.15.jar \
 #  && mv aws-java-sdk-*.jar /spark/spark-2.4.4-bin-hadoop2.7/jars/.
 
-# # Path style access added in 2.8.0
+# # Works, BUT gives error due to vhost style S3 URLs; path style access added in 2.8.0
 # RUN curl -O https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.7/hadoop-aws-2.7.7.jar \
 #  && mv hadoop-aws-*.jar /spark/spark-2.4.4-bin-hadoop2.7/jars/.
 
