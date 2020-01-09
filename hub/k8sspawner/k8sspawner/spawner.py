@@ -28,13 +28,18 @@ class K8sSpawner(KubeSpawner):
         auth_state = yield self.user.get_auth_state()
 
         if not auth_state or not auth_state['oauth_user'] or not auth_state['oauth_user']['groups']:
-            return json.dumps({"projects":"", "applications": ["notebook", "browser", "rstudio"]})
-
-        groups = auth_state['oauth_user']['groups']
+            groups = []
+        else:
+            groups = auth_state['oauth_user']['groups']
 
         options = {
             "projects": groups,
-            "applications": ["notebook", "browser", "rstudio"]
+            "applications": [
+                {"name":"notebook", "app":"notebook", "label":"JupyterLab"}, 
+                {"name":"browser", "app":"browser", "label":"Chrome Browser"},
+                {"name":"rstudio", "app":"rstudio", "label":"RStudio (1.2.5019)"},
+                {"name":"rstudio-edge", "app":"rstudio", "label":"RStudio (EDGE)"}
+            ]
         }
         return json.dumps(options)
 

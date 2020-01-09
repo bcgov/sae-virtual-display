@@ -38,23 +38,21 @@
     <script>
       var spawn_options = {{spawner_options_form | safe}}
 
-      var app_def = {
+      var logos_def = {
           notebook: {
-            label: 'Jupyter Notebook',
             image: '{{static_url('images/notebook-logo.png')}}'
           },
           rstudio: {
-            label: 'R Studio',
             image: '{{static_url('images/rstudio-logo.png')}}'
           },
           browser: {
-            label: 'Chrome Browser',
             image: '{{static_url('images/browser-logo.png')}}'
           }
       }
       
       var apps = spawn_options.applications.map(m => {
-          return { name: m, label: app_def[m].label, image: app_def[m].image }
+          m.image = logos_def[m.app].image;
+          return m;
       });
 
       (function(config) {
