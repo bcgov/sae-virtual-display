@@ -4,6 +4,7 @@
 # so that the Spark workers can communicate with the driver running in POD
 export SPARK_DRIVER_HOST=`hostname -I | xargs`
 export SPARK_MASTER_URL="spark://spark-master-svc:7077"
+export SPARK_DIST_CLASSPATH=$(hadoop classpath)
 
 alias s3sync='mc mirror minio/ /home/jovyan/work/ProjectGroupShare'
 
