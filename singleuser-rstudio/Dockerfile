@@ -72,7 +72,7 @@ RUN conda init
 RUN conda config --add channels conda-forge && \
     conda config --add channels anaconda && \
     conda install r-essentials r-tictoc r-rstudioapi openjdk --yes && \
-    conda install -c conda-forge/label/main scalapack libiconv r-arrow r-ggplot2 r-devtools r-microbenchmark r-dbi r-sparklyr r-rpostgres --yes
+    conda install -c conda-forge/label/main scalapack libiconv arrow-cpp r-arrow r-ggplot2 r-devtools r-microbenchmark r-dbi r-sparklyr r-rpostgres --yes
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
