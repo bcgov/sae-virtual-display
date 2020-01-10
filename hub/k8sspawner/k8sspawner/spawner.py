@@ -11,7 +11,9 @@ import escapism
 import json
 import requests
 import urllib.parse
-
+from traitlets import (
+    List
+)
 from tornado import gen
 
 from kubespawner.spawner import KubeSpawner
@@ -22,6 +24,14 @@ from kubernetes.client import V1PersistentVolume
 from k8sspawner.gen_identity import GenIdentity
 
 class K8sSpawner(KubeSpawner):
+    vdi_applications = List(
+        [],
+        config=True,
+        help="""
+        List of Virtual Display applications that can be selected.
+        """
+    )
+
     @gen.coroutine
     def get_options_form(self):
 
@@ -31,6 +41,9 @@ class K8sSpawner(KubeSpawner):
             groups = []
         else:
             groups = auth_state['oauth_user']['groups']
+
+        print("VDI APPLICATIONS")
+        print(json.dumps(self.vdi_applications))
 
         options = {
             "projects": groups,
