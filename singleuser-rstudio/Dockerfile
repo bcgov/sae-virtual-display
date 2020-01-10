@@ -69,13 +69,10 @@ RUN conda init
 #RUN conda update -n base -c defaults conda
 #RUN conda update --prefix /home/$NB_USER/miniconda3 miniconda3
 
-RUN conda config --add channels conda-forge; \
-    conda config --add channels anaconda
-
-RUN conda install r-essentials r-tictoc r-rstudioapi openjdk --yes
-RUN conda install -c conda-forge/label/main scalapack libiconv r-arrow r-dbi r-sparklyr r-rpostgres --yes
-
-# r-devtools r-microbenchmark r-ggplot2
+RUN conda config --add channels conda-forge && \
+    conda config --add channels anaconda && \
+    conda install r-essentials r-tictoc r-rstudioapi openjdk --yes && \
+    conda install -c conda-forge/label/main scalapack libiconv r-arrow r-ggplot2 r-devtools r-microbenchmark r-dbi r-sparklyr r-rpostgres --yes
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
@@ -103,7 +100,8 @@ RUN mkdir -p $HADOOP_HOME && \
   | gunzip \
   | tar -x -C /tmp/ \
  && mv /tmp/hadoop-$HADOOP_VERSION/* ${HADOOP_HOME} \
- && rm -rf $HADOOP_HOME/share/doc
+ && rm -rf $HADOOP_HOME/share/doc \
+ && rmdir /tmp/hadoop-$HADOOP_VERSION
 
 ENV SPARK_VERSION=2.4.4
 ENV SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-without-hadoop
@@ -116,7 +114,8 @@ RUN mkdir -p $SPARK_HOME && \
   "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz" \
   | gunzip \
   | tar x -C /tmp/ \
-  && mv /tmp/$SPARK_PACKAGE/* ${SPARK_HOME}
+  && mv /tmp/$SPARK_PACKAGE/* ${SPARK_HOME} \
+  && rmdir /tmp/$SPARK_PACKAGE
 
 #ENV AWS_SDK_VERSION=1.11.699
 ENV AWS_SDK_VERSION=1.10.77
@@ -132,14 +131,17 @@ RUN curl -sO https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOO
 ##
 ## Add the runtime scripts to start the X-Windows emulator and RStudio
 ##
+ENV LANG=en_US.UTF8
+ENV JAVA_HOME=/home/$NB_USER/miniconda3
+ENV XDG_RUNTIME_DIR=/tmp/runtime-$NB_USER
+
 COPY artifacts/start-wrapper.sh /usr/local/bin
 COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
 RUN chmod +x /usr/local/bin/launcher.sh \
- && chmod +x /usr/local/bin/start-wrapper.sh
+ && chmod +x /usr/local/bin/start-wrapper.sh \
+ && mkdir $XDG_RUNTIME_DIR \
+ && chmod 0700 $XDG_RUNTIME_DIR \
+ && chown $NB_USER $XDG_RUNTIME_DIR
 
 USER $NB_USER
-
-ENV LANG=en_US.UTF8
-ENV XDR_RUNTIME_DIR=/tmp/runtime-jovyan
-
 ENTRYPOINT ["/usr/local/bin/start-wrapper.sh"]
