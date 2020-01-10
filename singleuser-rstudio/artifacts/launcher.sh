@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/bash -i
+
+# -i is needed to bootstrap CONDA to get the proper R version
 
 # Because the singleuser POD does not have DNS records created for it, we use an IP address
 # so that the Spark workers can communicate with the driver running in POD

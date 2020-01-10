@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get -y install python3-pip libnss3-tools curl
+RUN apt-get update && apt-get -y install python3-pip libnss3-tools curl openjdk-8-jre-headless
 
 COPY lib/requirements.txt /identity-watcher/
 RUN (cd /identity-watcher && pip3 install -r requirements.txt)

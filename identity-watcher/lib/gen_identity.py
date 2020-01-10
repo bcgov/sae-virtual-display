@@ -181,6 +181,9 @@ class GenIdentity():
 
         call('certutil -L -d sql:nssdb')
 
+        # Install the Root CA into the JAVA keystore
+        call('keytool -trustcacerts -noprompt -keystore jre_cacerts -storepass changeit -alias root -import -file /cacerts/ca-vaultpki-root.crt')
+
         # #Usage:   pk12util -i importfile [-d certdir] [-P dbprefix] [-h tokenname]
         # #                 [-k slotpwfile | -K slotpw] [-w p12filepwfile | -W p12filepw]
         # #                 [-v]
@@ -282,6 +285,10 @@ class GenIdentity():
             data = open("nssdb/%s" % f, "rb").read()   
             b64 = base64.b64encode(data)
             secret_data[f] = b64.decode('utf-8')
+
+        data = open("jre_cacerts", "rb").read()   
+        b64 = base64.b64encode(data)
+        secret_data["jre_cacerts"] = b64.decode('utf-8')
 
         # data = open("nssdb/cert9.db", "rb").read()
         # cert9 = base64.b64encode(data)
