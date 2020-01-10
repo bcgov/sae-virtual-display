@@ -51,7 +51,7 @@
       }
       
       var apps = spawn_options.applications.map(m => {
-          m.image = logos_def[m.app].logo;
+          m.image = logos_def[m.logo].image;
           return m;
       });
 

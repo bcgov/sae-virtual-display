@@ -167,9 +167,9 @@ class K8sSpawner(KubeSpawner):
         self.volumes = self._expand_all(self.volumes)
 
         for a in self.vdi_applications:
-            if a.name == self.user_options['image'][0]:
-                self.log.info("Using image " + a.container)
-                self.image = a.container
+            if a["name"] == self.user_options['image'][0]:
+                self.log.info("Using image " + a["container"])
+                self.image = a["container"]
 
         self.log.info("environment " + json.dumps(self.environment))
         
