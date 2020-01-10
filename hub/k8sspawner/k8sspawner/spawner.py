@@ -42,22 +42,11 @@ class K8sSpawner(KubeSpawner):
         else:
             groups = auth_state['oauth_user']['groups']
 
-        print("VDI APPLICATIONS")
-        print(json.dumps(self.vdi_applications))
-
         options = {
             "projects": groups,
-            "applications": [
-                {"name":"notebook", "app":"notebook", "label":"JupyterLab"}, 
-                {"name":"browser", "app":"browser", "label":"Chrome Browser"},
-                {"name":"rstudio", "app":"rstudio", "label":"RStudio (1.2.5019)"},
-                {"name":"rstudio-edge", "app":"rstudio", "label":"RStudio (EDGE)"}
-            ]
+            "applications": self.vdi_applications
         }
         return json.dumps(options)
-
-    def set_image_options(self, images):
-        self.image_options = images
 
     def get_specific_pvc_manifest(self, volume):
         """
@@ -177,7 +166,10 @@ class K8sSpawner(KubeSpawner):
         self.volume_mounts = self._expand_all(self.volume_mounts)
         self.volumes = self._expand_all(self.volumes)
 
-        self.image = self.image_options[self.user_options['image'][0]]
+        for a in self.vdi_applications:
+            if a.name == self.user_options['image'][0]:
+                self.log.info("Using image " + a.container)
+                self.image = a.container
 
         self.log.info("environment " + json.dumps(self.environment))
         
