@@ -235,7 +235,7 @@ class K8sSpawner(KubeSpawner):
         formatDict['userid'] = self.user.id
         formatDict['username'] = safe_username
         #formatDict['legacy_escape_username'] = legacy_escaped_username
-        formatDict['servername'] = servername
+        formatDict['servername'] = servername.lower().replace("/", "").replace("_","-")
         formatDict['group'] = project
 
         return template.format(**formatDict)
