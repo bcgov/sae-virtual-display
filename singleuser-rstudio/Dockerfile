@@ -85,7 +85,7 @@ RUN apt-get install -y -V apt-transport-https curl gnupg lsb-release
 RUN curl https://dist.apache.org/repos/dist/dev/arrow/KEYS | apt-key add -
 RUN echo "deb [arch=amd64] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main" >> /etc/apt/sources.list.d/apache-arrow.list
 RUN echo "deb-src https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main" >> /etc/apt/sources.list.d/apache-arrow.list
-RUN apt-get update \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
  && apt-get install -y -V libarrow-dev \
  && apt-get install -y -V libarrow-glib-dev \
  && apt-get install -y -V libplasma-dev \
