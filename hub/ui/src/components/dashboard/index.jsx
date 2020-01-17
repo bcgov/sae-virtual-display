@@ -20,16 +20,20 @@ function Dashboard() {
   const [project, setProject] = useState('');
   const [app, setApp] = useState('');
   const { announcement, apps, projects, formAction } = useContext(
-    WorkbenchContext
+    WorkbenchContext,
   );
+  const projectOptions = projects.map(p => {
+    return { value: p, label: p };
+  });
 
   useEffect(() => {
     document.title = 'SAE Virtual Display | Dashboard';
   }, []);
 
-  var projectOptions = projects.map(p => {
-    return { value: p, label: p };
-  });
+  function onSubmit(event) {
+    event.preventDefault();
+    console.log(formAction);
+  }
 
   return (
     <>
@@ -43,7 +47,7 @@ function Dashboard() {
           <Header>
             <h3>Which application would you like to use?</h3>
           </Header>
-          <form action={formAction} method="POST">
+          <form onSubmit={onSubmit}>
             <div className="ak-field-group">
               <label>Select a Project</label>
               <Select

@@ -9,7 +9,7 @@ function run(config) {
     <WorkbenchContext.Provider value={config}>
       <App />
     </WorkbenchContext.Provider>,
-    document.getElementById('main')
+    document.getElementById('main'),
   );
 }
 
