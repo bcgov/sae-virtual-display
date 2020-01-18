@@ -1,14 +1,12 @@
 import React from 'react';
 
-import Img from '../src/components/core/image';
-import Loading from '../src/components/core/loading';
+import Img from './';
 
 export default {
-  title: 'Core',
-  component: Loading,
+  title: 'Core/Image',
+  component: Img,
 };
 
-export const Loader = () => <Loading />;
 export const Image = () => <Img src="http://placehold.it/50" />;
 export const FluidImage = () => (
   <Img fluid src="http://placehold.it/2000x500" />
