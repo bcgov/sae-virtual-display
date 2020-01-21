@@ -1,20 +1,28 @@
 import * as React from 'react';
 
-import { Bar, Container, ProgressText, Track } from './styles';
+import { Bar, Container, HeaderText, ProgressText, Track } from './styles';
 
-function Progress({ value }) {
+function Progress({ message = 'Pending', value = 0 }) {
+  const valueNow = Math.max(value / 100, 0);
+  const width = `${Math.max(value, 0)}%`;
+
   return (
     <Container>
+      <HeaderText>
+        Your server is starting up.
+        <br />
+        You will be redirected automatically when it's ready for you.
+      </HeaderText>
       <Track>
         <Bar
           role="progressbar"
-          aria-valuenow={value}
+          aria-valuenow={valueNow}
           aria-valuemin="0"
           aria-valuemax="100"
-          style={{ width: `${value * 100}%` }}
+          style={{ width }}
         />
       </Track>
-      <ProgressText>Testing 1323</ProgressText>
+      {message && <ProgressText>{message}</ProgressText>}
     </Container>
   );
 }

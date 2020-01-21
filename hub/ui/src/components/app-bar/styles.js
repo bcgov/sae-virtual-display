@@ -1,8 +1,8 @@
+import { appBarHeight } from '@src/shared';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import { extract } from '../../utils/theme';
-import { appBarHeight } from '../shared';
 
 const navButtonTheme = {
   default: {

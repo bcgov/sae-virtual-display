@@ -7,6 +7,7 @@
     "start": "webpack-dev-server --config webpack.dev.js",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
     "test": "jest --updateSnapshot --coverage",
+    "test:watch": "jest --updateSnapshot --coverage --watch",
     "storybook": "start-storybook -s ./assets -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -16,6 +17,7 @@
     "@atlaskit/breadcrumbs": "^9.2.1",
     "@atlaskit/button": "^13.3.2",
     "@atlaskit/css-reset": "^5.0.8",
+    "@atlaskit/dynamic-table": "^13.6.1",
     "@atlaskit/icon": "^19.0.7",
     "@atlaskit/icon-file-type": "^5.0.0",
     "@atlaskit/lozenge": "^9.0.7",

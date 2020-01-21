@@ -1,6 +1,5 @@
-import React, { forwardRef, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Button from '@atlaskit/button';
-import { NavLink } from 'react-router-dom';
 import WorkbenchIcon from '@atlaskit/icon/glyph/dashboard';
 
 import NavButton from './nav-button';

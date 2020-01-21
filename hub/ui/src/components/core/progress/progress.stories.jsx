@@ -7,4 +7,8 @@ export default {
   component: Progress,
 };
 
-export const Basic = () => <Progress value={0.5} />;
+export const Default = () => <Progress />;
+
+export const Basic = () => (
+  <Progress message="Importing (Step 4/5)" value={50} />
+);

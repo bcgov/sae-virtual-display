@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-
-import { appBarHeight } from '../shared';
+import { appBarHeight } from '@src/shared';
 
 export const Main = styled.main`
   width: 100vw;

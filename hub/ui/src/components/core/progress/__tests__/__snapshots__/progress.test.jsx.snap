@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`core/progress should render, with defaults 1`] = `
+.c0 {
+  margin: 20px;
+  text-align: center;
+}
+
+.c2 {
+  height: 1rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+  background-color: #EBECF0;
+  border-radius: 3px;
+}
+
+.c3 {
+  background-color: #0052CC;
+  -webkit-transition: width 0.6s ease;
+  transition: width 0.6s ease;
+}
+
+.c1 {
+  font-size: 0.8571428571428571em;
+  font-style: inherit;
+  line-height: 1.3333333333333333;
+  color: #6B778C;
+  font-weight: 600;
+  margin-top: 16px;
+  margin-bottom: 20px;
+}
+
+.c4 {
+  font-size: 0.7857142857142857em;
+  font-style: inherit;
+  line-height: 1.4545454545454546;
+  color: #6B778C;
+  font-weight: 700;
+  margin-top: 16px;
+  font-weight: 500;
+}
+
+<div
+  class="c0"
+>
+  <p
+    class="c1"
+  >
+    Your server is starting up.
+    <br />
+    You will be redirected automatically when it's ready for you.
+  </p>
+  <div
+    class="c2"
+  >
+    <div
+      aria-valuemax="100"
+      aria-valuemin="0"
+      aria-valuenow="0"
+      class="c3"
+      role="progressbar"
+      style="width: 0%;"
+    />
+  </div>
+  <p
+    class="c4"
+  >
+    Pending
+  </p>
+</div>
+`;
