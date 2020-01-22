@@ -6,6 +6,12 @@ export const head = {
       isSortable: true,
       width: 50,
       content: 'App Name',
+      key: 'name',
+    },
+    {
+      width: 5,
+      content: 'Actions',
+      key: 'url',
     },
   ],
 };
