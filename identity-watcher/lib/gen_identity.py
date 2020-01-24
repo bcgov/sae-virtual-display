@@ -182,6 +182,7 @@ class GenIdentity():
         call('certutil -L -d sql:nssdb')
 
         # Install the Root CA into the JAVA keystore
+        call('rm -f jre_cacerts')
         call('keytool -trustcacerts -noprompt -keystore jre_cacerts -storepass changeit -alias root -import -file /cacerts/ca-vaultpki-root.crt')
 
         # #Usage:   pk12util -i importfile [-d certdir] [-P dbprefix] [-h tokenname]
