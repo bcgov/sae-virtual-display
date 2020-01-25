@@ -54,6 +54,13 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/sae-virtual-display/singleuser-notebook
       bash ../.travis/docker_quayio_push vdi-session-notebook
+  - name: Session // Conda Navigator
+    stage: Virtual Display Components
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/singleuser-navigator
+      bash ../.travis/docker_quayio_push vdi-session-navigator
 
 env:
   global:
