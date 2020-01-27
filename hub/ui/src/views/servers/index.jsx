@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import get from 'lodash/get';
-import NavButton from '@src/components/nav-button';
 import ServersList from '@src/components/servers-list';
 import useApi from '@src/hooks/useApi';
 import WorkbenchContext from '@src/utils/context';
@@ -14,11 +13,6 @@ function ServersView() {
   return (
     <Container>
       <div>
-        <header>
-          <NavButton appearance="primary" href="/spawn">
-            Spawn a New Server
-          </NavButton>
-        </header>
         <ServersList
           apps={apps}
           loading={loading}

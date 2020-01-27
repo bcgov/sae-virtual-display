@@ -31,6 +31,7 @@
     "@atlaskit/tag": "^9.0.9",
     "@atlaskit/tag-group": "^9.0.5",
     "classnames": "^2.2.6",
+    "date-fns": "^2.9.0",
     "humps": "^2.0.1",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",

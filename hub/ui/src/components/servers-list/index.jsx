@@ -1,6 +1,8 @@
 import React from 'react';
 import Button from '@atlaskit/button';
 import DynamicTable from '@atlaskit/dynamic-table';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import parseIso from 'date-fns/parseIso';
 
 import CoreImage from '../core/image';
 
@@ -25,10 +27,14 @@ function ServersList({ apps, data = [], loading }) {
             ),
           },
           {
+            key: 'lastActivity',
+            content: formatDistanceToNow(parseIso(d.lastActivity)),
+          },
+          {
             key: 'url',
             content: (
-              <Button disabled={!d.ready}>
-                {!d.pending ? 'Start' : 'Stop'}
+              <Button appearance="primary" disabled={!d.ready}>
+                {!d.pending ? 'Launch' : 'Stop'}
               </Button>
             ),
           },

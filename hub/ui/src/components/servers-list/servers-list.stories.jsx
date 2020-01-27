@@ -1,4 +1,7 @@
 import React from 'react';
+import { camelizeKeys } from 'humps';
+import db from '../../../db.json';
+import get from 'lodash/get';
 
 import ServersList from './';
 
@@ -19,18 +22,7 @@ const apps = [
     image: '/images/browser-logo.png',
   },
 ];
-const data = [
-  {
-    name: 'rstudio',
-    ready: true,
-    pending: '',
-    url: '/user/jjones/rstudio/',
-    progressUrl: 'http://localhost/',
-    started: '2020-01-09T19:00:04.000Z',
-    lastActivity: '2020-01-09T19:00:04.000Z',
-    state: {},
-  },
-];
+const data = camelizeKeys(get(db, 'users[0].servers', []));
 
 export default {
   title: 'Servers List',
