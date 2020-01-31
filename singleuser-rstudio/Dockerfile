@@ -46,10 +46,11 @@ RUN apt-get update && apt-get install libnss3-tools
 ##
 RUN apt-get update && apt-get install -y postgresql-client
 
-##
-## Minio CLIENT
-##
-RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc && mv mc /usr/local/bin/mc
+### AWS aws2 command for S3/Minio communication
+RUN apt-get update && apt-get install -y curl unzip less
+RUN curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+ && unzip awscliv2.zip \
+ && ./aws/install
 
 ##
 ## Apache Arrow library

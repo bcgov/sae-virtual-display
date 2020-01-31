@@ -5,6 +5,7 @@ import base64
 from os import listdir
 import logging
 from command import call
+from minio_s3 import assume_role_with_web_identity
 
 log = logging.getLogger(__name__)
 
@@ -137,7 +138,7 @@ class GenIdentity():
         self.info("issue_cert " + json.dumps(j))
 
 
-        call('curl -k -O ' + os.environ['CA_CHAIN_URI'])
+        call('curl -f -k -O ' + os.environ['CA_CHAIN_URI'])
         
         call('openssl pkcs12 -in ca_chain.pfx -out ca_chain.pem -password pass:password')
 
@@ -194,93 +195,29 @@ class GenIdentity():
         secret_data['postgresql.crt'] = base64.b64encode(j['data']['certificate'].encode('utf-8')).decode('utf-8')
         secret_data['postgresql.key'] = base64.b64encode(j['data']['private_key'].encode('utf-8')).decode('utf-8')
 
-        # ~/.mc/config.json
-        # MINIO Configuration:
-        # {
-        #         "version": "9",
-        #         "hosts": {
-        #                 "minio": {
-        #                         "url": "",
-        #                         "accessKey": "",
-        #                         "secretKey": "",
-        #                         "api": "s3v4",
-        #                         "lookup": "auto"
-        #                 }
-        #         }
-        # }
-
-        # https://minio.dev18.bbsae.xyz?Action=AssumeRoleWithWebIdentity&DurationSeconds=3600&WebIdentityToken=$JWT_TOKEN&Version=2011-06-15
-    
-
-        payload = {
-            'Action': 'AssumeRoleWithWebIdentity',
-            # 'DurationSeconds': 43200, # 12 hours - max allowed
-            'Version': '2011-06-15', # Always this - it's an AWS spec thing
-            'WebIdentityToken': access_token,
-            'Policy': '{"Version": "2012-10-17","Statement": [{"Action": ["s3:*"],"Effect": "Allow","Resource": ["arn:aws:s3:::*"]}]}'
+        s3_config = {
+            "aws_access_key_id": 'aaa',
+            "aws_secret_access_key": 'bbb',        
+            "endpoint_url": os.environ['MINIO_ADDR']
         }
 
-        url = "%s?%s" % (os.environ['MINIO_ADDR'], urlencode(payload))
+        creds = assume_role_with_web_identity (s3_config, access_token)
 
-        self.info("minio url %s" % url)
+        aws_credentials = """
+[default]
+aws_access_key_id={key}
+aws_secret_access_key={secret}
+aws_session_token={token}
+        """.format(
+            key=creds['AccessKeyId'],
+            secret=creds['SecretAccessKey'],
+            token=creds['SessionToken']
+        )
 
-        headers = {
-            'Content-Type': 'application/json'
-        }
-
-        x = requests.post(url, headers = headers, verify = 'ca_chain.pem')   
-        self.info("status_code %s" % x.status_code)
-        self.info("response %s" % x.content)
-        if x.status_code != 200:
-            self.info("text %s" % x.content)
-            raise Exception("Failed to authenticate with Minio")
-
-        # <AssumeRoleWithWebIdentityResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
-        #   <AssumeRoleWithWebIdentityResult>
-        #     <AssumedRoleUser>
-        #       <Arn></Arn>
-        #       <AssumeRoleId></AssumeRoleId>
-        #     </AssumedRoleUser>
-        #     <Credentials>
-        #       <AccessKeyId>VCM1GZV1TZWH0NAEDRH0</AccessKeyId>
-        #       <SecretAccessKey>1qgtbxqzG+ZTlxTAK7uQBj9hmJD1xV56Zp7Qp51r</SecretAccessKey>
-        #       <Expiration>2019-10-25T00:32:03Z</Expiration>
-        #       <SessionToken>eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NLZXkiOiJWQ00xR1pWMVRaV0gwTkFFRFJIMCIsImFjciI6IjEiLCJhdXRoX3RpbWUiOjAsImF6cCI6IndvcmtiZW5jaCIsImVtYWlsIjoidW5rbm93bkBwb3BkYXRhLmJjLmNhIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE1NzE5NjM1MjMsImZhbWlseV9uYW1lIjoiQ29wZSIsImdpdmVuX25hbWUiOiJBaWRhbiBDb3BlIiwiZ3JvdXBzIjpbIi9leHBvcnRlcnN0ZyIsIi9wcm9qZWN0XzEiLCIvcHJvamVjdF8yIiwiL3NyZS11c2VycyIsIi85OS10MDUiXSwiaWF0IjoxNTcxOTYzMjIzLCJpc3MiOiJodHRwczovL2F1dGhzdGcucG9wZGF0YS5iYy5jYS9hdXRoL3JlYWxtcy9teXBvcGRhdGEiLCJqdGkiOiI5NzBhMDdmNi1mZTY0LTRhZjYtOTdiNC0zOTUxZTE3NmQ2NzgiLCJuYW1lIjoiQWlkYW4gQ29wZSBDb3BlIiwibmJmIjowLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhY29wZS05OS10MDUiLCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzZXNzaW9uX3N0YXRlIjoiOGU5N2MxMTMtMmYzYi00OTk4LWJhMzItMDU2M2RhODRjNDY1Iiwic3ViIjoiZGM2NjBiOTQtYTJmMC00ZGI3LTg2MTgtMjBhNWVmMmQwNmM2IiwidHlwIjoiQmVhcmVyIn0.Ns3R90RlW5wGFydbiDzG71n5FWZgd42JWXDiTAGEyCFbske6S1Q4RNgZcXUn_2t6VXsCLG-SoXV9iR4xjxp5hg</SessionToken>
-        #     </Credentials>
-        #     <SubjectFromWebIdentityToken>dc660b94-a2f0-4db7-8618-20a5ef2d06c6</SubjectFromWebIdentityToken>
-        #   </AssumeRoleWithWebIdentityResult>
-        #   <ResponseMetadata>
-        #     <RequestId>15D0BC405D478442</RequestId>
-        #   </ResponseMetadata>
-        # </AssumeRoleWithWebIdentityResponse>    
-
-        root = ET.fromstring(x.text)
-
-
-        accessKeyId = root[0][1][0].text
-        secretAccessKey = root[0][1][1].text
-        expiration = root[0][1][2].text
-
-        # Not able to get STS to work at the moment, so having to pass in the master keys
-        #
-        minio_secret = {
-            "version": "9",
-            "hosts": {
-                    "minio": {
-                            "url": os.environ['MINIO_ADDR'],
-                            "accessKey": os.environ['MINIO_ACCESS_KEY_ID'], # accessKeyId,
-                            "secretKey": os.environ['MINIO_SECRET_ACCESS_KEY'], # secretAccessKey,
-                            "api": "s3v4",
-                            "lookup": "auto"
-                    }
-            }
-        }
-
-        self.info("minio access key " + accessKeyId)
-        self.info("minio secret " + secretAccessKey)
-        self.info("minio expiration " + expiration)
-
-        secret_data['mc-config.json'] = base64.b64encode(json.dumps(minio_secret).encode('utf-8')).decode('utf-8')
+        self.info("minio/s3 expiration " + creds['Expiration'])
+        self.info("minio/s3 access key " + creds['AccessKeyId'])
+        
+        secret_data['aws-credentials'] = base64.b64encode(aws_credentials).decode('utf-8')
 
         for f in listdir('nssdb'):
             data = open("nssdb/%s" % f, "rb").read()   
