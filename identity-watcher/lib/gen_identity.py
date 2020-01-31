@@ -214,7 +214,7 @@ aws_session_token={token}
             token=creds['SessionToken']
         )
 
-        self.info("minio/s3 expiration " + creds['Expiration'])
+        self.info("minio/s3 expiration " + str(creds['Expiration']))
         self.info("minio/s3 access key " + creds['AccessKeyId'])
         
         secret_data['aws-credentials'] = base64.b64encode(aws_credentials).decode('utf-8')
