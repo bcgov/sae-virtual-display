@@ -35,9 +35,9 @@ def install_files(secret_data):
                 log.info("Updating file:  /tmp-pki-nssdb/%s" % k)
                 f.write(decoded_content(secret_data[k]))
 
-    log.info("Writing Java Keystore..")
-    with open("/tmp-pki-java/cacerts", "wb") as f:
-        f.write(decoded_content(secret_data["jre_cacerts"]))
+    #log.info("Writing Java Keystore..")
+    #with open("/tmp-pki-java/cacerts", "wb") as f:
+    #    f.write(decoded_content(secret_data["jre_cacerts"]))
 
     # log.info("Setting access..")
     access = [
