@@ -8,11 +8,7 @@ function Progress({ message = 'Pending', value = 0 }) {
 
   return (
     <Container>
-      <HeaderText>
-        Your server is starting up.
-        <br />
-        You will be redirected automatically when it's ready for you.
-      </HeaderText>
+      <HeaderText>Your server is starting up.</HeaderText>
       <Track>
         <Bar
           role="progressbar"

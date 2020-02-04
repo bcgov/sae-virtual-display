@@ -8,12 +8,12 @@ export const head = {
       content: 'App Name',
       key: 'name',
     },
-    {
-      width: 20,
-      content: 'Last Activity',
-      key: 'lastActivity',
-      isSortable: true,
-    },
+    // {
+    //   width: 20,
+    //   content: 'Last Activity',
+    //   key: 'lastActivity',
+    //   isSortable: true,
+    // },
     {
       width: 5,
       content: 'Actions',

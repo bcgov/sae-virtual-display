@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { extract } from '@src/utils/theme';
 
 const navButtonTheme = {

@@ -5,7 +5,7 @@ import SpawnForm from '@src/components/spawn-form';
 import { useHistory } from 'react-router-dom';
 import WorkbenchContext from '@src/utils/context';
 
-import { Container } from './styles';
+import { Card, Container } from './styles';
 
 function Dashboard() {
   const history = useHistory();
@@ -13,7 +13,7 @@ function Dashboard() {
   const projectOptions = projects.map(p => {
     return { value: p, label: p };
   });
-  const [isSpawning, setIsSpawning] = useState(false);
+  const [isSpawning, setIsSpawning] = useState(true);
 
   useEffect(() => {
     document.title = 'SAE Virtual Display | Spawn';
@@ -32,10 +32,12 @@ function Dashboard() {
     <>
       {announcement && <Announcement message={announcement} />}
       <Container>
-        {isSpawning && (
-          <Progress message="Spawning Application..." value={50} />
-        )}
         {!isSpawning && (
+          <Card>
+            <Progress message="Spawning Application..." value={50} />
+          </Card>
+        )}
+        {isSpawning && (
           <SpawnForm
             apps={apps}
             projectOptions={projectOptions}

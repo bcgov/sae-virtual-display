@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { colors, borderRadius, typography } from '@atlaskit/theme';
 
 export const Container = styled.div`
-  margin: 20px;
   text-align: center;
 `;
 
@@ -21,7 +20,7 @@ export const Bar = styled.div`
 
 export const HeaderText = styled.p`
   ${typography.h200()}
-  margin-bottom: 20px;
+  margin-bottom: 0;
 `;
 
 export const ProgressText = styled.p`
