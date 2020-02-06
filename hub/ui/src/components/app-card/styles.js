@@ -20,11 +20,16 @@ export const Card = styled.div`
   background-color: #fff;
   border-radius: ${borderRadius}px;
   transition: all 0.2s ease-in;
-  ${elevation.e200()}
 
   & ${CardActions} {
     opacity: 0;
   }
+
+  ${props =>
+    props.ready &&
+    css`
+      ${elevation.e100()}
+    `}
 
   ${props =>
     !props.booting &&
@@ -52,14 +57,14 @@ export const CardBody = styled.div`
   }
 `;
 
-export const CardIcon = styled.div`
-  display: inline-block;
-  margin-top: 3px;
-  position: relative;
-`;
-
 export const CardImg = styled.div`
   margin-right: 1rem;
+
+  ${props =>
+    !props.ready &&
+    css`
+      filter: grayscale(1);
+    `}
 `;
 
 export const CardText = styled.div`
@@ -73,7 +78,11 @@ export const Subtitle = styled.h2`
   font-weight: 600;
   display: flex;
   align-items: center;
-  color: ${colors.link};
+  color: ${props => (props.ready ? colors.green : colors.subtleText)};
+
+  & > span {
+    margin-left: 10px;
+  }
 
   ${Card}:hover & {
     text-decoration: underline;

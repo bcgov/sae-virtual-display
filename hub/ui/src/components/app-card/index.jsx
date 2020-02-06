@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
 import format from 'date-fns/format';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import Lozenge from '@atlaskit/lozenge';
 import parseIso from 'date-fns/parseIso';
-import PresenceActiveIcon from '@atlaskit/icon/glyph/presence-active';
-import PresenceBusyIcon from '@atlaskit/icon/glyph/presence-busy';
 import Progress from '../core/progress';
 import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
-import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
+import SettingsIcon from '@atlaskit/icon/glyph/settings';
+import WorkbenchContext from '@src/utils/context';
 
 import CoreImage from '../core/image';
 import {
   Card,
   CardActions,
   CardBody,
-  CardIcon,
   CardImg,
   CardText,
   ProgressContainer,
@@ -22,25 +22,30 @@ import {
 } from './styles';
 
 function AppCard({ booting, data, progress, style = {} }) {
-  const iconEl = (
-    <CardIcon>
-      {data.ready && (
-        <PresenceActiveIcon primaryColor={colors.green} label="Running" />
-      )}
-      {!data.ready && (
-        <PresenceBusyIcon primaryColor={colors.subtleText} label="Idle" />
-      )}
-    </CardIcon>
-  );
+  const { imagesDir, staticURL } = useContext(WorkbenchContext);
 
   return (
-    <Card booting={booting} style={style}>
+    <Card booting={booting} ready={data.ready} style={style}>
       <CardActions>
-        {data.ready && <ShortcutIcon primaryColor={colors.primary} />}
-        {!data.ready && <VidPlayIcon primaryColor={colors.green} />}
+        {data.ready && (
+          <Button iconAfter={<ShortcutIcon primaryColor={colors.green} />}>
+            Launch
+          </Button>
+        )}
+        {!data.ready && (
+          <Button iconAfter={<SettingsIcon primaryColor={colors.green} />}>
+            Build Container
+          </Button>
+        )}
       </CardActions>
-      <CardImg>
-        <CoreImage fluid src={data.image} width={80} />
+      <CardImg ready={data.ready}>
+        <CoreImage
+          fluid
+          src={`${staticURL}${imagesDir}/${data.logo}.png`}
+          width={80}
+          alt={`${data.label} Logo`}
+          title={data.label}
+        />
       </CardImg>
       <CardBody>
         {booting && (
@@ -50,17 +55,33 @@ function AppCard({ booting, data, progress, style = {} }) {
         )}
         {!booting && (
           <CardText>
-            <Subtitle>
-              {data.label} {iconEl}
+            <Subtitle ready={data.ready}>
+              {data.label}
+              <Lozenge
+                appearance={data.ready ? 'success' : 'moved'}
+                isBold={data.ready}
+              >
+                {data.ready ? 'Running' : 'Unbuilt'}
+              </Lozenge>
             </Subtitle>
             <small>
-              Version {data.version}
-              {' | '}
-              {`Built on ${format(parseIso(data.lastActivity), 'PPP')}`}
+              {data.lastActivity
+                ? `Built on ${format(parseIso(data.lastActivity), 'PPP')}`
+                : 'Container has not been started yet'}
               {data.ready &&
                 ` | Running ${formatDistanceToNow(parseIso(data.started))}`}
             </small>
-            <p>A brief description about the application can go here</p>
+            <p>
+              A brief description about the application can go here{' '}
+              <Button
+                appearance="link"
+                href={`https://${data.container}`}
+                spacing="compact"
+                iconAfter={<ShortcutIcon size="small" />}
+              >
+                View Container
+              </Button>
+            </p>
           </CardText>
         )}
       </CardBody>

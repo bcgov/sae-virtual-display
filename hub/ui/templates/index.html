@@ -33,22 +33,9 @@
         Please enable it to proceed.
       </div>
     </noscript>
+    <script type="text/javascript" src="/data.js"></script>
     <script type="text/javascript" src="/bundle.js"></script>
     <script>
-      const appDef = {
-        notebook: {
-          label: 'Jupyter Notebook',
-          image: '/images/notebook-logo.png',
-        },
-        rstudio: {
-          label: 'R Studio',
-          image: '/images/rstudio-logo.png',
-        },
-        browser: {
-          label: 'Chrome Browser',
-          image: '/images/browser-logo.png',
-        },
-      };
       const spawnOptions = {
         projects: [
           '/exporterstg',
@@ -57,21 +44,17 @@
           '/sre-users',
           '/99-t05',
         ],
-        applications: ['notebook', 'browser', 'rstudio'],
       };
-      const apps = spawnOptions.applications.map(m => ({
-        name: m,
-        ...appDef[m],
-      }));
 
       (function(config) {
         workbench.default(config);
       })({
         announcement: '',
         staticURL: '/',
+        imagesDir: 'images',
         formAction: '/spawn',
         user: 'jjones',
-        apps,
+        apps: vdiApps,
         projects: spawnOptions.projects,
         DEV: true
       });
