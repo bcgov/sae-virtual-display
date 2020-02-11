@@ -6,11 +6,12 @@ import 'jest-styled-components';
 import Progress from '../';
 
 describe('core/progress', () => {
+  const headerText = 'In Progress';
+  const successText = 'DONE';
   afterEach(cleanup);
 
   it('should render, with defaults', () => {
-    const { container, getByRole, getByText } = render(<Progress />);
-    expect(getByRole('progressbar')).toHaveStyle('width: 0%');
+    const { container } = render(<Progress />);
     expect(container.firstChild).toMatchSnapshot();
   });
 
@@ -22,13 +23,33 @@ describe('core/progress', () => {
 
   it('should render the progress bar correctly', () => {
     const { getByRole } = render(<Progress value={40} />);
-    expect(getByRole('progressbar')).toHaveStyle('width: 40%');
+
     expect(getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0.4');
+  });
+
+  it('should toggle header text', () => {
+    const textProps = {
+      headerText,
+      successText,
+    };
+    const { getByText, rerender } = render(
+      <Progress {...textProps} value={40} />,
+    );
+
+    expect(getByText(headerText)).toHaveTextContent(headerText);
+    rerender(<Progress {...textProps} value={100} />);
+    expect(getByText(successText)).toHaveTextContent(successText);
+  });
+
+  it('should handle complete states', () => {
+    const { getByRole } = render(<Progress value={100} />);
+
+    expect(getByRole('progressbar')).toHaveAttribute('aria-valuenow', '1');
   });
 
   it('should not render values below 0', () => {
     const { getByRole } = render(<Progress value={-5} />);
-    expect(getByRole('progressbar')).toHaveStyle('width: 0%');
+    // expect(getByRole('progressbar')).toHaveStyle('width: 0%');
     expect(getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
   });
 });

@@ -3,7 +3,9 @@ import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
 import format from 'date-fns/format';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import isNumber from 'lodash/isNumber';
 import Lozenge from '@atlaskit/lozenge';
+import OpenIcon from '@atlaskit/icon/glyph/media-services/open-mediaviewer';
 import parseIso from 'date-fns/parseIso';
 import Progress from '../core/progress';
 import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
@@ -17,18 +19,28 @@ import {
   CardBody,
   CardImg,
   CardText,
+  Description,
   ProgressContainer,
   Subtitle,
 } from './styles';
 
-function AppCard({ booting, data, progress, style = {} }) {
+function AppCard({ data = {}, onClick, progress }) {
   const { imagesDir, staticURL } = useContext(WorkbenchContext);
+  const isMissingImage = !data.logo || !staticURL || !imagesDir;
+  const isBooting = isNumber(progress);
+
+  function onAnchorClick(event) {
+    event.stopPropagation();
+  }
 
   return (
-    <Card booting={booting} ready={data.ready} style={style}>
+    <Card booting={isBooting} ready={data.ready} onClick={onClick}>
       <CardActions>
         {data.ready && (
-          <Button iconAfter={<ShortcutIcon primaryColor={colors.green} />}>
+          <Button
+            data-testid="app-card-launchBtn"
+            iconAfter={<OpenIcon primaryColor={colors.green} />}
+          >
             Launch
           </Button>
         )}
@@ -38,22 +50,28 @@ function AppCard({ booting, data, progress, style = {} }) {
           </Button>
         )}
       </CardActions>
-      <CardImg ready={data.ready}>
-        <CoreImage
-          fluid
-          src={`${staticURL}${imagesDir}/${data.logo}.png`}
-          width={80}
-          alt={`${data.label} Logo`}
-          title={data.label}
-        />
-      </CardImg>
+      {!isMissingImage && (
+        <CardImg ready={data.ready}>
+          <CoreImage
+            fluid
+            src={`${staticURL}${imagesDir}/${data.logo}.png`}
+            width={80}
+            alt={`${data.label} Logo`}
+            title={data.label}
+          />
+        </CardImg>
+      )}
       <CardBody>
-        {booting && (
+        {isBooting && (
           <ProgressContainer>
-            <Progress value={progress} />
+            <Progress
+              headerText={`Starting ${data.label} container`}
+              successText={`${data.label} container build complete`}
+              value={progress}
+            />
           </ProgressContainer>
         )}
-        {!booting && (
+        {!isBooting && (
           <CardText>
             <Subtitle ready={data.ready}>
               {data.label}
@@ -71,17 +89,20 @@ function AppCard({ booting, data, progress, style = {} }) {
               {data.ready &&
                 ` | Running ${formatDistanceToNow(parseIso(data.started))}`}
             </small>
-            <p>
-              A brief description about the application can go here{' '}
-              <Button
-                appearance="link"
-                href={`https://${data.container}`}
-                spacing="compact"
-                iconAfter={<ShortcutIcon size="small" />}
-              >
-                View Container
-              </Button>
-            </p>
+            <Description>
+              {data.description && <p>{data.description}</p>}
+              {data.container && (
+                <Button
+                  appearance="link"
+                  href="#"
+                  spacing="compact"
+                  iconAfter={<ShortcutIcon size="small" />}
+                  onClick={onAnchorClick}
+                >
+                  View Container
+                </Button>
+              )}
+            </Description>
           </CardText>
         )}
       </CardBody>

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { colors, borderRadius, typography } from '@atlaskit/theme';
 
 export const Container = styled.div`
-  text-align: center;
+  text-align: left;
 `;
 
 export const Track = styled.div`
@@ -13,17 +13,19 @@ export const Track = styled.div`
   border-radius: ${borderRadius}px;
 `;
 
-export const Bar = styled.div`
-  background-color: ${colors.primary};
-  transition: width 0.6s ease;
+export const ProgressContainer = styled.div`
+  margin: 15px 0 0;
 `;
 
 export const HeaderText = styled.p`
-  ${typography.h200()}
+  ${typography.h400()}
   margin-bottom: 0;
 `;
 
 export const ProgressText = styled.p`
+  display: flex;
+  justify-content: space-between;
   ${typography.h100()}
   font-weight: 500;
+  margin-top: 0.5rem;
 `;

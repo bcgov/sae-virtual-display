@@ -1,0 +1,383 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`app-card app-card/index should render 1`] = `
+.c4 {
+  color: #36B37E;
+  display: inline-block;
+  fill: #FFFFFF;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.c4 > svg {
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  vertical-align: bottom;
+}
+
+.c4 stop {
+  stop-color: currentColor;
+}
+
+.c8 {
+  height: 16px;
+  width: 16px;
+  color: currentColor;
+  display: inline-block;
+  fill: #FFFFFF;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.c8 > svg {
+  height: 16px;
+  width: 16px;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  vertical-align: bottom;
+}
+
+.c8 stop {
+  stop-color: currentColor;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border-radius: 3px;
+  -webkit-transition: opacity 0.25s ease-out;
+  transition: opacity 0.25s ease-out;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 1rem;
+  position: relative;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border-radius: 3px;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  box-shadow: 0 1px 1px rgba(9,30,66,0.25),0 0 1px 0 rgba(9,30,66,0.31);
+}
+
+.c1 .c2 {
+  opacity: 0;
+}
+
+.c1 {
+  cursor: pointer;
+}
+
+.c1:hover {
+  box-shadow: 0 8px 16px -4px rgba(9,30,66,0.25),0 0 1px rgba(9,30,66,0.31);
+  background-color: #EBECF0;
+}
+
+.c1:hover .c2 {
+  opacity: 1;
+}
+
+.c5 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  margin: 0.25rem 0;
+}
+
+.c5 p {
+  margin-bottom: 0.5rem;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c7 a {
+  padding-left: 0 !important;
+}
+
+.c7 p {
+  margin: 0 10px 0 0;
+}
+
+.c7 p + a {
+  padding-left: 8px;
+}
+
+.c6 {
+  font-size: 18px;
+  font-weight: 600;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #36B37E;
+}
+
+.c6 > span {
+  margin-left: 10px;
+}
+
+.c0:hover .c6 {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+<div
+  class="c0 c1"
+>
+  <div
+    class="c2 c3"
+  >
+    <button
+      class="css-shc4i4"
+      type="button"
+    >
+      <span
+        class="css-j8fq0c"
+      >
+        <span
+          class="css-t5emrf"
+        >
+          Launch
+        </span>
+        <span
+          class="css-8xpfx5"
+        >
+          <span
+            class="c4"
+          >
+            <svg
+              focusable="false"
+              height="24"
+              role="presentation"
+              viewBox="0 0 24 24"
+              width="24"
+            >
+              <path
+                d="M14 11.414l-3 3V18h3v2H6.006A1.999 1.999 0 0 1 4 17.994V10h2v3h3.586l3-3H12c-.552 0-1-.444-1-1 0-.552.444-1 1-1h3a.997.997 0 0 1 1 1v3c0 .552-.444 1-1 1-.552 0-1-.444-1-1v-.586zM16 18v2h2c1.105 0 2-.888 2-2v-2h-2v1.497c0 .27-.225.503-.503.503H16zM8 6V4H6c-1.105 0-2 .888-2 2v2h2V6.503c0-.27.225-.503.503-.503H8zm10 2h2V6c0-1.112-.895-2-2-2h-2v2h1.497c.278 0 .503.233.503.503V8zm-8-4h4v2h-4V4zm8 6h2v4h-2v-4z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </span>
+      </span>
+    </button>
+  </div>
+  <div
+    class="c5"
+  >
+    <div
+      class=""
+    >
+      <h2
+        class="c6"
+      >
+        R Studio
+        <span
+          class="css-u56ty1"
+        >
+          <span
+            class="css-q5kkvr"
+          >
+            Running
+          </span>
+        </span>
+      </h2>
+      <small>
+        Built on January 9th, 2020
+         | Running about 1 month
+      </small>
+      <div
+        class="c7"
+      >
+        <p>
+          R Studio is an integrated development environment for r, a programming language for statistical computing and graphics.
+        </p>
+        <a
+          class="css-1hzvll6"
+          href="#"
+          type="button"
+        >
+          <span
+            class="css-j8fq0c"
+          >
+            <span
+              class="css-t5emrf"
+            >
+              View Container
+            </span>
+            <span
+              class="css-8xpfx5"
+            >
+              <span
+                class="c8"
+              >
+                <svg
+                  focusable="false"
+                  height="24"
+                  role="presentation"
+                  viewBox="0 0 24 24"
+                  width="24"
+                >
+                  <g
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M19.005 19c-.003 0-.005.002-.005.002l.005-.002zM5 19.006c0-.004-.002-.006-.005-.006H5v.006zM5 4.994V5v-.006zM19 19v-6h2v6.002A1.996 1.996 0 0 1 19.005 21H4.995A1.996 1.996 0 0 1 3 19.006V4.994C3 3.893 3.896 3 4.997 3H11v2H5v14h14zM5 4.994V5v-.006zm0 14.012c0-.004-.002-.006-.005-.006H5v.006zM11 5H5v14h14v-6h2v6.002A1.996 1.996 0 0 1 19.005 21H4.995A1.996 1.996 0 0 1 3 19.006V4.994C3 3.893 3.896 3 4.997 3H11v2zm8 0v3a1 1 0 0 0 2 0V4a1 1 0 0 0-1-1h-4a1 1 0 0 0 0 2h3z"
+                    />
+                    <path
+                      d="M12.707 12.707l8-8a1 1 0 1 0-1.414-1.414l-8 8a1 1 0 0 0 1.414 1.414z"
+                    />
+                  </g>
+                </svg>
+              </span>
+            </span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`app-card app-card/loading should render 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 1rem;
+  position: relative;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border-radius: 3px;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  height: 84px;
+  overflow: hidden;
+}
+
+.c0 .sc-fzXfLT {
+  opacity: 0;
+}
+
+.c0 {
+  cursor: pointer;
+}
+
+.c0:hover {
+  box-shadow: 0 8px 16px -4px rgba(9,30,66,0.25),0 0 1px rgba(9,30,66,0.31);
+  background-color: #EBECF0;
+}
+
+.c0:hover .sc-fzXfLT {
+  opacity: 1;
+}
+
+.c0:hover {
+  cursor: default;
+  box-shadow: none;
+  background: #fff;
+}
+
+.c0 > div:first-child {
+  width: 100px;
+  height: 100%;
+  margin-right: 20px;
+  border-radius: 3px;
+  background: #EBECF0;
+}
+
+.c0 > div:last-child {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c0 div:last-child > div {
+  width: 75%;
+  height: 15px;
+  margin: 5px 0;
+  display: block;
+  border-radius: 3px;
+  background: #EBECF0;
+}
+
+.c0 div:last-child > div:first-child {
+  width: 24%;
+  height: 20px;
+}
+
+.c0 div:last-child > div:nth-child(2) {
+  width: 45%;
+}
+
+<div
+  class="sc-fzXfLU c0"
+  data-testid="app-card-loading"
+>
+  <div />
+  <div>
+    <div />
+    <div />
+    <div />
+  </div>
+</div>
+`;

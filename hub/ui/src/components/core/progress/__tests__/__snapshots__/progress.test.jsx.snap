@@ -2,38 +2,36 @@
 
 exports[`core/progress should render, with defaults 1`] = `
 .c0 {
-  margin: 20px;
-  text-align: center;
+  text-align: left;
 }
 
 .c2 {
-  height: 1rem;
+  margin: 15px 0 0;
+}
+
+.c1 {
+  font-size: 1em;
+  font-style: inherit;
+  line-height: 1.1428571428571428;
+  color: #172B4D;
+  font-weight: 600;
+  -webkit-letter-spacing: -0.003em;
+  -moz-letter-spacing: -0.003em;
+  -ms-letter-spacing: -0.003em;
+  letter-spacing: -0.003em;
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  overflow: hidden;
-  background-color: #EBECF0;
-  border-radius: 3px;
-}
-
-.c3 {
-  background-color: #0052CC;
-  -webkit-transition: width 0.6s ease;
-  transition: width 0.6s ease;
-}
-
-.c1 {
-  font-size: 0.8571428571428571em;
-  font-style: inherit;
-  line-height: 1.3333333333333333;
-  color: #6B778C;
-  font-weight: 600;
-  margin-top: 16px;
-  margin-bottom: 20px;
-}
-
-.c4 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   font-size: 0.7857142857142857em;
   font-style: inherit;
   line-height: 1.4545454545454546;
@@ -41,6 +39,7 @@ exports[`core/progress should render, with defaults 1`] = `
   font-weight: 700;
   margin-top: 16px;
   font-weight: 500;
+  margin-top: 0.5rem;
 }
 
 <div
@@ -49,26 +48,36 @@ exports[`core/progress should render, with defaults 1`] = `
   <p
     class="c1"
   >
-    Your server is starting up.
-    <br />
-    You will be redirected automatically when it's ready for you.
+    Request in progress
   </p>
   <div
     class="c2"
   >
     <div
-      aria-valuemax="100"
+      aria-valuemax="1"
       aria-valuemin="0"
       aria-valuenow="0"
-      class="c3"
+      class="css-1656qb0"
       role="progressbar"
-      style="width: 0%;"
-    />
+      tabindex="0"
+    >
+      <span
+        class="css-1i5tcqv-Bar"
+      />
+      <span
+        class="css-1p25adh-Bar"
+      />
+    </div>
   </div>
   <p
-    class="c4"
+    class="c3"
   >
-    Pending
+    <span>
+      Processing...
+    </span>
+    <span>
+      0% complete
+    </span>
   </p>
 </div>
 `;

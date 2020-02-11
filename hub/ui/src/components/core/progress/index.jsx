@@ -1,24 +1,34 @@
 import * as React from 'react';
+import { SuccessProgressBar } from '@atlaskit/progress-bar';
 
-import { Bar, Container, HeaderText, ProgressText, Track } from './styles';
+import {
+  Container,
+  HeaderText,
+  ProgressText,
+  ProgressContainer,
+} from './styles';
 
-function Progress({ message = 'Pending', value = 0 }) {
-  const valueNow = Math.max(value / 100, 0);
-  const width = `${Math.max(value, 0)}%`;
+function Progress({
+  headerText = 'Request in progress',
+  successText = 'Request complete',
+  message = 'Processing...',
+  value = 0,
+}) {
+  const adjustedValue = value / 100;
+  const isComplete = adjustedValue >= 1;
+  const isPending = value === 0;
+  const percentageText = value.toString();
 
   return (
     <Container>
-      <HeaderText>Your server is starting up.</HeaderText>
-      <Track>
-        <Bar
-          role="progressbar"
-          aria-valuenow={valueNow}
-          aria-valuemin="0"
-          aria-valuemax="100"
-          style={{ width }}
-        />
-      </Track>
-      {message && <ProgressText>{message}</ProgressText>}
+      <HeaderText>{isComplete ? successText : headerText}</HeaderText>
+      <ProgressContainer>
+        <SuccessProgressBar isIndeterminate={isPending} value={adjustedValue} />
+      </ProgressContainer>
+      <ProgressText>
+        <span>{message}</span>
+        <span>{`${percentageText}% complete`}</span>
+      </ProgressText>
     </Container>
   );
 }

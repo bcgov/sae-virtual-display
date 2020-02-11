@@ -1,24 +1,28 @@
 import React from 'react';
+import { colors } from '@atlaskit/theme';
 
+import { workbenchContextDecorator } from '../../../test/decorators';
 import AppCard from './';
-
-const data = {
-  name: 'rstudio',
-  label: 'R Studio',
-  image: '/images/rstudio-logo.png',
-  ready: true,
-  started: '2020-01-09T19:00:04.000Z',
-  lastActivity: '2020-01-09T19:00:04.000Z',
-  pending: '',
-  version: '1.1',
-};
+import AppCardLoading from './loading';
+import data from './__tests__/data';
 
 export default {
   title: 'App Card',
   component: AppCard,
-  decorators: [storyFn => <div style={{ margin: 20 }}>{storyFn()}</div>],
+  decorators: [
+    workbenchContextDecorator(),
+    storyFn => (
+      <div style={{ padding: 20, backgroundColor: colors.skeleton }}>
+        {storyFn()}
+      </div>
+    ),
+  ],
 };
 
 export const Idle = () => <AppCard data={{ ...data, ready: false }} />;
 export const Running = () => <AppCard data={data} />;
-export const Booting = () => <AppCard booting data={data} progress={25} />;
+export const Booting = () => <AppCard data={data} progress={0.25} />;
+export const Loading = () => <AppCardLoading total={5} />;
+export const MissingDetails = () => (
+  <AppCard data={{ ...data, container: null, description: null, logo: null }} />
+);
