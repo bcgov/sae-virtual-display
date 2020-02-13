@@ -23,10 +23,11 @@
       "ready": true,
       "pending": "",
       "url": "/user/jjones/rstudio/",
-      "progress_url": "http://localhost/",
+      "progress_url": "",
       "started": "2020-01-09T19:00:04.000Z",
       "last_activity": "2020-01-09T19:00:04.000Z",
       "state": {}
     }]
   }]
+
 }

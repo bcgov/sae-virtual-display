@@ -4,8 +4,6 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import AppBar from '@src/components/app-bar';
 import Servers from '../servers';
 import Spawn from '../spawn';
-// import Dataset from '@src/components/dataset';
-// import Metadata from '@src/components/metadata';
 
 import { Main } from './styles';
 

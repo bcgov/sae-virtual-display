@@ -1,6 +1,5 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useReducer, useState } from 'react';
 import AppCard from '@src/components/app-card';
-import Loading from '@src/components/app-card/loading';
 import get from 'lodash/get';
 import ServersFilters from '@src/components/servers-filters';
 // import ServersList from '@src/components/servers-list';
@@ -38,22 +37,26 @@ function ServersView() {
   const { apps, user } = useContext(WorkbenchContext);
   const [data, loading] = useApi(`users/${user}`);
   const [state, dispatch] = useReducer(reducer, defaultState);
+  const [spawnedContainers, setSpawnedContainers] = useState([]);
   const items = apps
     .map(d => {
       const servers = get(data, 'servers', []);
       const server = servers.find(s => s.name === d.name) || {};
       return merge(
         {
-          lastActivity: '',
+          lastActivity: new Date().toISOString(),
           pending: '',
           progressUrl: '',
-          started: '',
+          started: new Date().toISOString(),
           state: {},
           ready: false,
           url: '',
         },
         d,
         server,
+        {
+          ready: server.ready || spawnedContainers.includes(d.name),
+        },
       );
     })
     .sort(d => !d.ready)
@@ -82,7 +85,14 @@ function ServersView() {
         {loading && <AppCard total={5} />}
         <div>
           {items.map((d, index) => (
-            <AppCard alt key={uid(d)} data={d} />
+            <AppCard
+              key={uid(d)}
+              data={d}
+              onClick={() => alert('open app in new tab')}
+              onSpawned={app =>
+                setSpawnedContainers(state => [...state, app.name])
+              }
+            />
           ))}
         </div>
       </div>

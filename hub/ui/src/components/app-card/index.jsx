@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
 import format from 'date-fns/format';
@@ -10,7 +10,7 @@ import parseIso from 'date-fns/parseIso';
 import Progress from '../core/progress';
 import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
-import WorkbenchContext from '@src/utils/context';
+import useServer from '@src/hooks/use-server';
 
 import CoreImage from '../core/image';
 import {
@@ -24,17 +24,54 @@ import {
   Subtitle,
 } from './styles';
 
-function AppCard({ data = {}, onClick, progress }) {
-  const { imagesDir, staticURL } = useContext(WorkbenchContext);
-  const isMissingImage = !data.logo || !staticURL || !imagesDir;
+function AppCard({ data = {}, onClick, onSpawned }) {
+  const [status, startServer] = useServer({
+    app: data.name,
+  });
+  const isMissingImage = !data.logo;
+  const [progress, setProgress] = useState(null);
+  const [message, setMessage] = useState(null);
   const isBooting = isNumber(progress);
 
   function onAnchorClick(event) {
     event.stopPropagation();
   }
 
+  function onCardClick() {
+    if (data.ready) {
+      onClick(data);
+    } else {
+      startServer();
+    }
+  }
+
+  useEffect(() => {
+    let socket = null;
+
+    if (data.progressUrl) {
+      socket = new EventSource(data.progressUrl);
+      socket.onmessage(event => {
+        const message = JSON.parse(event.data);
+
+        setProgress(message.progress);
+        setMessage(message.html_message);
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [data, setProgress, setMessage]);
+
   return (
-    <Card booting={isBooting} ready={data.ready} onClick={onClick}>
+    <Card
+      booting={isBooting}
+      error={status.error}
+      ready={data.ready}
+      onClick={onCardClick}
+    >
       <CardActions>
         {data.ready && (
           <Button
@@ -46,7 +83,7 @@ function AppCard({ data = {}, onClick, progress }) {
         )}
         {!data.ready && (
           <Button iconAfter={<SettingsIcon primaryColor={colors.green} />}>
-            Build Container
+            Build Application
           </Button>
         )}
       </CardActions>
@@ -54,7 +91,7 @@ function AppCard({ data = {}, onClick, progress }) {
         <CardImg ready={data.ready}>
           <CoreImage
             fluid
-            src={`${staticURL}${imagesDir}/${data.logo}.png`}
+            src={data.logo}
             width={80}
             alt={`${data.label} Logo`}
             title={data.label}
@@ -65,8 +102,9 @@ function AppCard({ data = {}, onClick, progress }) {
         {isBooting && (
           <ProgressContainer>
             <Progress
-              headerText={`Starting ${data.label} container`}
-              successText={`${data.label} container build complete`}
+              headerText={`Starting ${data.label}`}
+              message={message}
+              successText={`${data.label} application build complete`}
               value={progress}
             />
           </ProgressContainer>
@@ -76,16 +114,16 @@ function AppCard({ data = {}, onClick, progress }) {
             <Subtitle ready={data.ready}>
               {data.label}
               <Lozenge
-                appearance={data.ready ? 'success' : 'moved'}
+                appearance={data.ready ? 'success' : 'default'}
                 isBold={data.ready}
               >
-                {data.ready ? 'Running' : 'Unbuilt'}
+                {data.ready ? 'Running' : 'Idle'}
               </Lozenge>
             </Subtitle>
             <small>
               {data.lastActivity
                 ? `Built on ${format(parseIso(data.lastActivity), 'PPP')}`
-                : 'Container has not been started yet'}
+                : 'Application has not been started yet'}
               {data.ready &&
                 ` | Running ${formatDistanceToNow(parseIso(data.started))}`}
             </small>
@@ -94,12 +132,12 @@ function AppCard({ data = {}, onClick, progress }) {
               {data.container && (
                 <Button
                   appearance="link"
-                  href="#"
+                  href={`https://${data.container}`}
                   spacing="compact"
                   iconAfter={<ShortcutIcon size="small" />}
                   onClick={onAnchorClick}
                 >
-                  View Container
+                  View Info
                 </Button>
               )}
             </Description>

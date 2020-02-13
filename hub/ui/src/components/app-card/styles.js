@@ -27,6 +27,12 @@ export const Card = styled.div`
   }
 
   ${props =>
+    props.error &&
+    css`
+      background: ${colors.R75};
+    `}
+
+  ${props =>
     props.ready &&
     css`
       ${elevation.e100()}
@@ -41,7 +47,6 @@ export const Card = styled.div`
 
     &:hover {
       ${elevation.e300()}
-      background-color: ${colors.backgroundHover};
 
         & ${CardActions} {
           opacity: 1;

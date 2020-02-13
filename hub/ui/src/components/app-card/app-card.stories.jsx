@@ -1,4 +1,5 @@
 import React from 'react';
+import { action } from '@storybook/addon-actions';
 import { colors } from '@atlaskit/theme';
 
 import { workbenchContextDecorator } from '../../../test/decorators';
@@ -21,7 +22,9 @@ export default {
 
 export const Idle = () => <AppCard data={{ ...data, ready: false }} />;
 export const Running = () => <AppCard data={data} />;
-export const Booting = () => <AppCard data={data} progress={0.25} />;
+export const Booting = () => (
+  <AppCard data={{ ...data, ready: false }} onSpawned={action('spawned')} />
+);
 export const Loading = () => <AppCardLoading total={5} />;
 export const MissingDetails = () => (
   <AppCard data={{ ...data, container: null, description: null, logo: null }} />

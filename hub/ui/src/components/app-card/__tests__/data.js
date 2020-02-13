@@ -2,7 +2,7 @@ export default {
   name: 'rstudio',
   container: 'quay.io/containername:test',
   label: 'R Studio',
-  logo: 'rstudio',
+  logo: '/images/rstudio.png',
   ready: true,
   started: '2020-01-09T19:00:04.000Z',
   lastActivity: '2020-01-09T19:00:04.000Z',

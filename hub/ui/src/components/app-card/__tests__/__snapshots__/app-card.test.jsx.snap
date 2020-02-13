@@ -23,7 +23,7 @@ exports[`app-card app-card/index should render 1`] = `
   stop-color: currentColor;
 }
 
-.c8 {
+.c10 {
   height: 16px;
   width: 16px;
   color: currentColor;
@@ -35,7 +35,7 @@ exports[`app-card app-card/index should render 1`] = `
   line-height: 1;
 }
 
-.c8 > svg {
+.c10 > svg {
   height: 16px;
   width: 16px;
   max-height: 100%;
@@ -45,8 +45,13 @@ exports[`app-card app-card/index should render 1`] = `
   vertical-align: bottom;
 }
 
-.c8 stop {
+.c10 stop {
   stop-color: currentColor;
+}
+
+.c6 {
+  max-width: 100%;
+  height: auto;
 }
 
 .c3 {
@@ -99,25 +104,28 @@ exports[`app-card app-card/index should render 1`] = `
 
 .c1:hover {
   box-shadow: 0 8px 16px -4px rgba(9,30,66,0.25),0 0 1px rgba(9,30,66,0.31);
-  background-color: #EBECF0;
 }
 
 .c1:hover .c2 {
   opacity: 1;
 }
 
-.c5 {
+.c7 {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
   margin: 0.25rem 0;
 }
 
-.c5 p {
+.c7 p {
   margin-bottom: 0.5rem;
 }
 
-.c7 {
+.c5 {
+  margin-right: 1rem;
+}
+
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -128,19 +136,19 @@ exports[`app-card app-card/index should render 1`] = `
   align-items: center;
 }
 
-.c7 a {
+.c9 a {
   padding-left: 0 !important;
 }
 
-.c7 p {
+.c9 p {
   margin: 0 10px 0 0;
 }
 
-.c7 p + a {
+.c9 p + a {
   padding-left: 8px;
 }
 
-.c6 {
+.c8 {
   font-size: 18px;
   font-weight: 600;
   display: -webkit-box;
@@ -154,11 +162,11 @@ exports[`app-card app-card/index should render 1`] = `
   color: #36B37E;
 }
 
-.c6 > span {
+.c8 > span {
   margin-left: 10px;
 }
 
-.c0:hover .c6 {
+.c0:hover .c8 {
   -webkit-text-decoration: underline;
   text-decoration: underline;
 }
@@ -208,11 +216,22 @@ exports[`app-card app-card/index should render 1`] = `
   <div
     class="c5"
   >
+    <img
+      alt="R Studio Logo"
+      class="c6"
+      src="/images/rstudio.png"
+      title="R Studio"
+      width="80"
+    />
+  </div>
+  <div
+    class="c7"
+  >
     <div
       class=""
     >
       <h2
-        class="c6"
+        class="c8"
       >
         R Studio
         <span
@@ -230,14 +249,14 @@ exports[`app-card app-card/index should render 1`] = `
          | Running about 1 month
       </small>
       <div
-        class="c7"
+        class="c9"
       >
         <p>
           R Studio is an integrated development environment for r, a programming language for statistical computing and graphics.
         </p>
         <a
           class="css-1hzvll6"
-          href="#"
+          href="https://quay.io/containername:test"
           type="button"
         >
           <span
@@ -246,13 +265,13 @@ exports[`app-card app-card/index should render 1`] = `
             <span
               class="css-t5emrf"
             >
-              View Container
+              View Info
             </span>
             <span
               class="css-8xpfx5"
             >
               <span
-                class="c8"
+                class="c10"
               >
                 <svg
                   focusable="false"
@@ -313,7 +332,6 @@ exports[`app-card app-card/loading should render 1`] = `
 
 .c0:hover {
   box-shadow: 0 8px 16px -4px rgba(9,30,66,0.25),0 0 1px rgba(9,30,66,0.31);
-  background-color: #EBECF0;
 }
 
 .c0:hover .sc-fzXfLT {

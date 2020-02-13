@@ -22,7 +22,7 @@ function Filters({ hideIdle, onSearch, onToggle }) {
           iconBefore={hideIdle ? <WatchFilledIcon /> : <WatchIcon />}
           onClick={onToggle}
         >
-          {hideIdle ? 'Show All' : 'Hide Unbuilt Containers'}
+          {hideIdle ? 'Show All Apps' : 'Hide Idle Apps'}
         </Button>
       </ButtonGroup>
     </Container>
