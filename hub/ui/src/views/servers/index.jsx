@@ -1,13 +1,13 @@
 import React, { useContext, useReducer, useState } from 'react';
-import AppCard from '@src/components/app-card';
+import AppCardLoading from '@src/components/app-card/loading';
 import get from 'lodash/get';
-import ServersFilters from '@src/components/servers-filters';
-// import ServersList from '@src/components/servers-list';
 import merge from 'lodash/merge';
+import ServersFilters from '@src/components/servers-filters';
 import useApi from '@src/hooks/useApi';
 import WorkbenchContext from '@src/utils/context';
 import { uid } from 'react-uid';
 
+import Application from '../application';
 import { Container } from './styles';
 
 const defaultState = {
@@ -82,10 +82,10 @@ function ServersView() {
           onSearch={value => dispatch({ type: 'search', payload: value })}
           onToggle={() => dispatch({ type: 'toggle' })}
         />
-        {loading && <AppCard total={5} />}
+        {loading && <AppCardLoading total={5} />}
         <div>
           {items.map((d, index) => (
-            <AppCard
+            <Application
               key={uid(d)}
               data={d}
               onClick={() => alert('open app in new tab')}

@@ -173,6 +173,7 @@ exports[`app-card app-card/index should render 1`] = `
 
 <div
   class="c0 c1"
+  data-testid="app-card"
 >
   <div
     class="c2 c3"
@@ -235,18 +236,18 @@ exports[`app-card app-card/index should render 1`] = `
       >
         R Studio
         <span
-          class="css-u56ty1"
+          class="css-vlkpln"
         >
           <span
             class="css-q5kkvr"
           >
-            Running
+            Idle
           </span>
         </span>
       </h2>
       <small>
-        Built on January 9th, 2020
-         | Running about 1 month
+        Application has not been started yet
+        Running about 1 month
       </small>
       <div
         class="c9"

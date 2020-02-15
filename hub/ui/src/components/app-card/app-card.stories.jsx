@@ -2,16 +2,20 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 import { colors } from '@atlaskit/theme';
 
-import { workbenchContextDecorator } from '../../../test/decorators';
 import AppCard from './';
 import AppCardLoading from './loading';
 import data from './__tests__/data';
+
+const idleData = { ...data, ready: false };
+const clickProps = {
+  onLaunch: action('Launch app'),
+  onStartApp: action('Call to start server'),
+};
 
 export default {
   title: 'App Card',
   component: AppCard,
   decorators: [
-    workbenchContextDecorator(),
     storyFn => (
       <div style={{ padding: 20, backgroundColor: colors.skeleton }}>
         {storyFn()}
@@ -20,12 +24,28 @@ export default {
   ],
 };
 
-export const Idle = () => <AppCard data={{ ...data, ready: false }} />;
-export const Running = () => <AppCard data={data} />;
+export const Idle = () => <AppCard {...clickProps} data={idleData} />;
 export const Booting = () => (
-  <AppCard data={{ ...data, ready: false }} onSpawned={action('spawned')} />
+  <AppCard
+    {...clickProps}
+    data={{ ...data, ready: false }}
+    progress={55}
+    message="Installing dependencies, please wait..."
+  />
 );
+export const Running = () => <AppCard {...clickProps} data={data} />;
 export const Loading = () => <AppCardLoading total={5} />;
+export const Error = () => <AppCard error data={idleData} />;
 export const MissingDetails = () => (
-  <AppCard data={{ ...data, container: null, description: null, logo: null }} />
+  <AppCard
+    {...clickProps}
+    data={{
+      ...data,
+      ready: false,
+      container: null,
+      description: null,
+      logo: null,
+      lastActivity: '',
+    }}
+  />
 );
