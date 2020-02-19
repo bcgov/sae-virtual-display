@@ -31,6 +31,3 @@ RUN pip3 install -e /home/jovyan/k8sspawner
 RUN cp -r /usr/local/share/jupyterhub/templates /usr/local/share/jupyterhub/templates.oem
 COPY ./templates /usr/local/share/jupyterhub/templates/
 COPY --from=builder /app/assets/ /usr/local/share/jupyterhub/static/
-
-
-USER ${NB_USER}

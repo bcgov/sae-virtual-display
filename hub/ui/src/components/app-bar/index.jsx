@@ -1,44 +1,31 @@
-import React, { forwardRef, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Button from '@atlaskit/button';
-import { NavLink } from 'react-router-dom';
-import WorkbenchIcon from '@atlaskit/icon/glyph/department';
+import WorkbenchIcon from '@atlaskit/icon/glyph/dashboard';
 
 import NavButton from './nav-button';
-import { Brand, Container, Nav } from './styles';
+import { Brand, Container, Icon, Nav } from './styles';
 import WorkbenchContext from '../../utils/context';
 
 function AppBar(props) {
-  const config = useContext(WorkbenchContext);
-  const [user, setUser] = React.useState({});
-
-  useEffect(() => {
-    async function fetchData() {
-      const res = await fetch(`/hub/api/users/${config.user}`);
-
-      if (res.ok) {
-        const payload = await res.json();
-        setUser(payload);
-      }
-    }
-    fetchData();
-  }, []);
+  const { user } = useContext(WorkbenchContext);
 
   return (
     <Container>
       <div>
         <Brand to="/">
-          <WorkbenchIcon primaryColor="yellow" />
-          Workbench
+          <Icon>
+            <WorkbenchIcon primaryColor="#FFAB00" />
+          </Icon>
+          SAE Virtual Display
         </Brand>
         <Nav>
           <NavButton exact href="/">
             Home
           </NavButton>
-          <NavButton href="/metadata">Metadata</NavButton>
         </Nav>
       </div>
       <div>
-        <p className="navbar-text">Signed in as {user.name || 'loading..'}</p>
+        <p className="navbar-text">Signed in as {user}</p>
         <Button
           appearance="primary"
           id="Workbench-logout-btn"

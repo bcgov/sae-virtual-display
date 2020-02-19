@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import App from './components/app';
+import App from './views/app';
 import WorkbenchContext from './utils/context';
 
 function run(config) {
@@ -9,11 +9,8 @@ function run(config) {
     <WorkbenchContext.Provider value={config}>
       <App />
     </WorkbenchContext.Provider>,
-    document.getElementById('main')
+    document.getElementById('main'),
   );
 }
 
-export default {
-  name: 'workbench',
-  run,
-};
+export default run;

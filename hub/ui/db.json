@@ -1,0 +1,33 @@
+{
+  "services": [
+    {
+      "name": "r-studio-v1",
+      "admin": false,
+      "url": "/test",
+      "prefix": "",
+      "pid": 1,
+      "command": "",
+      "info": {}
+    }
+  ],
+  "users": [{
+    "id": "jjones",
+    "name": "Joshua Jones",
+    "admin": false,
+    "groups": [],
+    "server": "/",
+    "pending": "",
+    "last_activity": "2020-01-09T19:00:04.000Z",
+    "servers": [{
+      "name": "rstudio",
+      "ready": true,
+      "pending": "",
+      "url": "/user/jjones/rstudio/",
+      "progress_url": "",
+      "started": "2020-01-09T19:00:04.000Z",
+      "last_activity": "2020-01-09T19:00:04.000Z",
+      "state": {}
+    }]
+  }]
+
+}

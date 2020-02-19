@@ -1,28 +1,5 @@
 import styled from 'styled-components';
 
-import { appBarHeight } from '../shared';
-
-export const Announcement = styled.div`
-  width: 100%;
-  position: absolute;
-  top: 0;
-  z-index: 99;
-`;
-
-export const Container = styled.div`
-  width: 100vw;
-  height: calc(100vh - ${appBarHeight});
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #eee;
-
-  & > div {
-    width: 600px;
-  }
-`;
-
 export const Card = styled.div`
   padding: 20px;
   background: #fff;
@@ -44,6 +21,7 @@ export const AppOption = styled.div`
   position: relative;
   border-radius: 4px;
   border: 2px solid ${props => (props.selected ? selectedColor : '#fff')};
+  cursor: pointer;
 
   :hover {
     background-color: #eee;
