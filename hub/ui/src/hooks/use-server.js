@@ -19,7 +19,6 @@ function useServer({ app }) {
       const url = `${baseURL}/users/${user}/servers/${app}`;
       const res = await fetch(url, {
         signal,
-        credentials: 'include',
         method: 'POST',
       });
 
