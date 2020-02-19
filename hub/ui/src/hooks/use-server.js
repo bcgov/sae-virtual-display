@@ -17,7 +17,11 @@ function useServer({ app }) {
     try {
       const baseURL = DEV ? 'http://localhost:3000' : '/hub/api';
       const url = `${baseURL}/users/${user}/servers/${app}`;
-      const res = await fetch(url, { signal, method: 'POST' });
+      const res = await fetch(url, {
+        signal,
+        credentials: 'include',
+        method: 'POST',
+      });
 
       setLoading(false);
 
