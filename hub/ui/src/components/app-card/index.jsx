@@ -50,7 +50,7 @@ function AppCard({
   progress,
   ready,
 }) {
-  const isMissingImage = !data.logo;
+  const isMissingImage = !data.image;
   const isBooting = isNumber(progress);
 
   function onAnchorClick(event) {
@@ -89,7 +89,7 @@ function AppCard({
         <CardImg ready={data.ready}>
           <CoreImage
             fluid
-            src={data.logo}
+            src={data.image}
             width={80}
             alt={`${data.label} Logo`}
             title={data.label}
