@@ -9,10 +9,9 @@ COPY ./ui /app/
 RUN npm run build
 
 
-FROM jupyterhub/k8s-hub:0.8.2
-#FROM jupyterhub/k8s-hub:0.9.0-alpha.1.088.1350ad7
-#FROM jupyterhub/k8s-hub:0.9.0-alpha.1.088.1350ad7
-# 0.9.0-alpha.1.095.3e95dc3
+FROM jupyterhub/k8s-hub:0.9.0-alpha.1.088.1350ad7
+# Previous 0.9.0-alpha.1.088.1350ad7
+# 0.9.0-beta.2 includes 1.1.0b1 (support for auth_state_hook) - does not work! (0.9.0-beta.2.000.bed779e)
 
 USER root
 
@@ -29,5 +28,6 @@ RUN pip3 install jupyterhub_kubespawner==0.11.1
 COPY ./k8sspawner /home/jovyan/k8sspawner
 RUN pip3 install -e /home/jovyan/k8sspawner
 
+RUN cp -r /usr/local/share/jupyterhub/templates /usr/local/share/jupyterhub/templates.oem
 COPY ./templates /usr/local/share/jupyterhub/templates/
 COPY --from=builder /app/assets/ /usr/local/share/jupyterhub/static/

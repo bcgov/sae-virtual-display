@@ -1,5 +1,10 @@
 FROM ubuntu:16.04
 
+##################################################################
+##################################################################
+##################################################################
+#FROM ubuntu:16.04
+
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated \
         vim \
@@ -46,11 +51,10 @@ RUN apt-get update && apt-get install libnss3-tools
 ##
 RUN apt-get update && apt-get install -y postgresql-client
 
-### AWS aws2 command for S3/Minio communication
-RUN apt-get update && apt-get install -y curl unzip less
-RUN curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
- && unzip awscliv2.zip \
- && ./aws/install
+##
+## Minio CLIENT
+##
+RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc && mv mc /usr/local/bin/mc
 
 ##
 ## Apache Arrow library
@@ -92,60 +96,32 @@ RUN conda config --add channels conda-forge && \
     conda install r-essentials r-tictoc r-rstudioapi openjdk --yes && \
     conda install -c conda-forge/label/main scalapack libiconv arrow-cpp r-base r-arrow r-ggplot2 r-devtools r-microbenchmark r-dbi r-sparklyr r-rpostgres --yes
 
+RUN conda install anaconda-navigator --yes
+
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
 USER root
 
-
 ##
-## RSTUDIO
+## XPRA
 ##
-RUN apt-get update
-RUN curl -L -qO https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.5019-amd64.deb \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-1.2.5019-amd64.deb \
- && rm ./rstudio-1.2.5019-amd64.deb
 
-##
-## Spark 2.4.4 with Hadoop 2.8.5 libraries and Amazon AWS SDK 1.10.77
-##
-ENV HADOOP_VERSION=2.8.5
-ENV HADOOP_HOME=/spark/hadoop-$HADOOP_VERSION
-ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
-ENV PATH=${HADOOP_HOME}/bin:$PATH
+# http://security.ubuntu.com/ubuntu/pool/main/p/poppler/libpoppler58_0.41.0-0ubuntu1.6_amd64.deb
+RUN curl -L -O http://security.ubuntu.com/ubuntu/pool/main/p/poppler/libpoppler58_0.41.0-0ubuntu1.14_amd64.deb \
+ && apt-get install -y -f ./libpoppler58_0.41.0-0ubuntu1.14_amd64.deb \
+ && rm ./libpoppler58_0.41.0-0ubuntu1.14_amd64.deb
 
-RUN mkdir -p $HADOOP_HOME && \
-  curl -sL --retry 3 \
-  "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" \
-  | gunzip \
-  | tar -x -C /tmp/ \
- && mv /tmp/hadoop-$HADOOP_VERSION/* ${HADOOP_HOME} \
- && rm -rf $HADOOP_HOME/share/doc \
- && rmdir /tmp/hadoop-$HADOOP_VERSION
+RUN curl -L -O http://security.ubuntu.com/ubuntu/pool/main/p/poppler/poppler-utils_0.41.0-0ubuntu1.14_amd64.deb \
+ && apt-get install -y -f ./poppler-utils_0.41.0-0ubuntu1.14_amd64.deb \
+ && rm ./poppler-utils_0.41.0-0ubuntu1.14_amd64.deb
 
-ENV SPARK_VERSION=2.4.4
-ENV SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-without-hadoop
-ENV SPARK_HOME=/spark/spark-${SPARK_VERSION}
-#ENV SPARK_DIST_CLASSPATH=$(hadoop classpath)
-ENV PATH=${SPARK_HOME}/bin:$PATH
+RUN curl -L -O https://xpra.org/dists/xenial/main/binary-amd64/xpra_2.5.3-r23270-1_amd64.deb \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./xpra_2.5.3-r23270-1_amd64.deb \
+ && rm ./xpra_2.5.3-r23270-1_amd64.deb
 
-RUN mkdir -p $SPARK_HOME && \
-  curl -sL --retry 3 \
-  "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz" \
-  | gunzip \
-  | tar x -C /tmp/ \
-  && mv /tmp/$SPARK_PACKAGE/* ${SPARK_HOME} \
-  && rmdir /tmp/$SPARK_PACKAGE
 
-#ENV AWS_SDK_VERSION=1.11.699
-ENV AWS_SDK_VERSION=1.10.77
 
-RUN curl -sO https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_VERSION}/hadoop-aws-${HADOOP_VERSION}.jar \
- && mv hadoop-aws-*.jar $SPARK_HOME/jars/. \
- && curl -sO https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/${AWS_SDK_VERSION}/aws-java-sdk-${AWS_SDK_VERSION}.jar \
- && curl -sO https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/${AWS_SDK_VERSION}/aws-java-sdk-s3-${AWS_SDK_VERSION}.jar \
- && curl -sO https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-config/${AWS_SDK_VERSION}/aws-java-sdk-config-${AWS_SDK_VERSION}.jar \
- && curl -sO https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/${AWS_SDK_VERSION}/aws-java-sdk-core-${AWS_SDK_VERSION}.jar \
- && mv aws-java-sdk-*.jar $SPARK_HOME/jars/.
+
 
 ##
 ## Add the runtime scripts to start the X-Windows emulator and RStudio
@@ -153,6 +129,46 @@ RUN curl -sO https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOO
 ENV LANG=en_US.UTF8
 ENV JAVA_HOME=/home/$NB_USER/miniconda3
 ENV XDG_RUNTIME_DIR=/tmp/runtime-$NB_USER
+
+
+######################################################
+######################################################
+## Data Curator
+######################################################
+
+RUN mkdir -p /app
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y build-essential clang libdbus-1-dev libgtk-3-dev \
+                       libnotify-dev libgnome-keyring-dev \
+                       libasound2-dev libcap-dev libcups2-dev libxtst-dev \
+                       libxss1 libnss3-dev gcc-multilib g++-multilib curl \
+                       gperf bison python-dbusmock openjdk-8-jre
+
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+ && apt-get install -y nodejs
+
+RUN apt-get install -y git
+RUN git clone https://github.com/ODIQueensland/data-curator.git \
+ && cd data-curator
+
+RUN apt-get update
+RUN npx @electron/check-python-tls
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+ && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -y yarn
+
+RUN cd data-curator && yarn install
+RUN apt-get install -y libgconf-2-4
+RUN cd data-curator && yarn run build
+
+RUN cd data-curator && ls -l dist/electron
+
+RUN apt-get install -y libgconf-2-4
+
+RUN chown -R $NB_USER /app
 
 COPY artifacts/start-wrapper.sh /usr/local/bin
 COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
@@ -163,4 +179,6 @@ RUN chmod +x /usr/local/bin/launcher.sh \
  && chown $NB_USER $XDG_RUNTIME_DIR
 
 USER $NB_USER
+
+
 ENTRYPOINT ["/usr/local/bin/start-wrapper.sh"]

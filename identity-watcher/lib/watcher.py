@@ -39,6 +39,8 @@ else:
 errors = 0
 
 while True:
+    log.info("Sleeping %d minutes..." % int(sleep_time/60))
+    time.sleep(sleep_time)
 
     if errors == 10:
         log.error("Too many errors.. turning off identity watcher.")
@@ -70,5 +72,3 @@ while True:
             log.error(str(tb))
             errors = errors + 1
 
-    log.info("Sleeping %d minutes..." % int(sleep_time/60))
-    time.sleep(sleep_time)

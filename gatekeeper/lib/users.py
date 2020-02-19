@@ -18,6 +18,10 @@ def status():
     """
     return jsonify({"status": "ok"})
 
+@users.route('/<string:userId>/<string:serverId>/verify', methods=['GET'], strict_slashes=False)
+def user_server_auth(userId: str, serverId: str) -> object:
+    return user_auth(userId)
+
 @users.route('/<string:userId>/verify', methods=['GET'], strict_slashes=False)
 def user_auth(userId: str) -> object:
     """
@@ -40,6 +44,10 @@ def user_auth(userId: str) -> object:
     log.debug("Redirecting to %s/oauth2/authorize?%s" % (conf['api_url'], urllib.parse.urlencode(getVars)))
     return redirect("%s/oauth2/authorize?%s" % (conf['api_url'], urllib.parse.urlencode(getVars)), code=302)
 
+@users.route('/<string:userId>/<string:serverId>/oauth_callback', methods=['GET'], strict_slashes=False)
+def oauth_server_callback(userId: str, serverId: str) -> object:
+    return oauth_callback(userId)
+    
 @users.route('/<string:userId>/oauth_callback', methods=['GET'], strict_slashes=False)
 def oauth_callback(userId: str) -> object:
     """
