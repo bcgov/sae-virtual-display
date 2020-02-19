@@ -30,7 +30,7 @@ def install_files(secret_data):
 
     log.info("Writing Browser NSSDB details..")
     for k in secret_data.keys():
-        if not (k.startswith("postgresql.") or k == "refresh_token" or k == "jre_cacerts"):
+        if not (k.startswith("postgresql.") or k == "refresh_token" or k == "jre_cacerts" or k == "aws-credentials" or k == "mc-config.json"):
             with open("/tmp-pki-nssdb/%s" % k, "wb") as f:
                 log.info("Updating file:  /tmp-pki-nssdb/%s" % k)
                 f.write(decoded_content(secret_data[k]))
