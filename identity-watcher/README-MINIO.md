@@ -113,3 +113,9 @@ aws2 s3 --endpoint $S3_ENDPOINT ls
 aws2 s3 --endpoint $S3_ENDPOINT ls dataset-1
 aws2 s3 --endpoint $S3_ENDPOINT cp s3://dataset-1/sample.txt sample.txt
 ```
+
+### Accessing from within the virtual display
+
+```
+aws2 s3 ls --endpoint $MINIO_ADDR
+```
