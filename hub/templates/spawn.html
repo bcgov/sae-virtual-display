@@ -62,11 +62,8 @@
       };
 
       const apps = spawnOptions.applications.map(m => {
-        return {
-          name: m,
-          label: logosDef[m].label,
-          image: logosDef[m].image
-        };
+        m.image = logos_def[m.logo].image;
+        return m;
       });
 
       (function(config) {
