@@ -22,10 +22,12 @@ docker build . -t vdi-hub
 ## Local Testing
 
 ```
-cp config/default.yaml.example config/default.yaml
-docker run -ti --rm -p 5002:5002 \
- -v `pwd`/config/kubeconfig:/root/.kube/config \
  -v `pwd`/config/default.yaml:/etc/jupyterhub/config/values.yaml \
+
+cp config/default.yaml.example config/default.yaml
+docker run -ti --rm -p 5002:5002 -p 8000:8000 \
+ -v `pwd`/config/kubeconfig:/root/.kube/config \
+ -v `pwd`/config/jupyterhub_config.py:/srv/jupyterhub_config.py \
  -e HUB_SERVICE_HOST=localhost \
  -e HUB_SERVICE_PORT=5000 \
  -e PROXY_API_SERVICE_HOST=localhost \
@@ -33,9 +35,14 @@ docker run -ti --rm -p 5002:5002 \
  -e PROXY_PUBLIC_SERVICE_HOST=0.0.0.0 \
  -e PROXY_PUBLIC_SERVICE_PORT=5002 \
  -e CONFIGPROXY_AUTH_TOKEN=s3cr3t \
+ -e REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
  -e JUPYTERHUB_CRYPT_KEY=00000000000000000000000000000000 \
   vdi-hub
 ```
+
+Browser: http://localhost:8000
+
+Credentials: U: testuser P: testuser
 
 ## Test
 

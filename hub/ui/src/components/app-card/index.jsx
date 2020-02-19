@@ -6,7 +6,7 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import isNumber from 'lodash/isNumber';
 import Lozenge from '@atlaskit/lozenge';
 import OpenIcon from '@atlaskit/icon/glyph/media-services/open-mediaviewer';
-import parseIso from 'date-fns/parseIso';
+import parseISO from 'date-fns/parseISO';
 import Progress from '../core/progress';
 import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
@@ -116,12 +116,12 @@ function AppCard({
             <small>
               {!data.ready && data.lastActivity
                 ? `Application last used ${format(
-                    parseIso(data.lastActivity),
+                    parseISO(data.lastActivity),
                     'PPP',
                   )}`
                 : 'Application has not been started yet'}
               {data.ready &&
-                `Running ${formatDistanceToNow(parseIso(data.started))}`}
+                `Running ${formatDistanceToNow(parseISO(data.started))}`}
             </small>
             <Description>
               {data.description && <p>{data.description}</p>}

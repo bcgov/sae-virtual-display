@@ -4,7 +4,7 @@ import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
 import DynamicTable from '@atlaskit/dynamic-table';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { Link } from 'react-router-dom';
-import parseIso from 'date-fns/parseIso';
+import parseISO from 'date-fns/parseISO';
 
 import CoreImage from '../core/image';
 
@@ -30,7 +30,7 @@ function ServersList({ apps, data = [], history, loading }) {
           },
           /* { */
           /*   key: 'lastActivity', */
-          /*   content: formatDistanceToNow(parseIso(d.lastActivity)), */
+          /*   content: formatDistanceToNow(parseISO(d.lastActivity)), */
           /* }, */
           {
             key: 'url',
