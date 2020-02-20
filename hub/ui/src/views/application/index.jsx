@@ -18,12 +18,12 @@ function ApplicationView({ data = {}, onLaunch }) {
       socket = new EventSource(
         `/hub/api/users/${user}/servers/${data.name}/progress`,
       );
-      socket.onmessage(event => {
+      socket.onmessage = event => {
         const message = JSON.parse(event.data);
 
         setProgress(message.progress);
         setMessage(message.html_message);
-      });
+      };
     }
 
     return () => {
