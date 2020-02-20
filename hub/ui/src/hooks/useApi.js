@@ -20,7 +20,7 @@ function useApi(path) {
       setIsLoading(true);
 
       try {
-        const baseURL = DEV ? 'http://localhost:3000' : '';
+        const baseURL = DEV ? 'http://localhost:3000' : '/hub/api';
         const url = [baseURL, path].join('/');
         const res = await fetch(url, { signal });
 
