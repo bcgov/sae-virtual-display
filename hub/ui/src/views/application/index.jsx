@@ -14,7 +14,7 @@ function ApplicationView({ data = {}, onLaunch }) {
   useEffect(() => {
     let socket = null;
 
-    if (data.progressUrl) {
+    if (status.success) {
       socket = new EventSource(
         `/hub/api/users/${user}/servers/${data.name}/progress`,
       );
@@ -31,7 +31,7 @@ function ApplicationView({ data = {}, onLaunch }) {
         socket.close();
       }
     };
-  }, [data, setProgress, setMessage]);
+  }, [data, setProgress, setMessage, status, user]);
 
   return (
     <AppCard
