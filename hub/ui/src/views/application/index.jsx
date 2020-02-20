@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AppCard from '@src/components/app-card';
 import useServer from '@src/hooks/use-server';
+import WorkbenchContext from '../../utils/context';
 
 function ApplicationView({ data = {}, onLaunch }) {
+  const { user } = useContext(WorkbenchContext);
   const [status, startServer] = useServer({
     app: data.name,
   });
@@ -13,7 +15,9 @@ function ApplicationView({ data = {}, onLaunch }) {
     let socket = null;
 
     if (data.progressUrl) {
-      socket = new EventSource(data.progressUrl);
+      socket = new EventSource(
+        `/hub/api/users/${user}/servers/${data.name}/progress`,
+      );
       socket.onmessage(event => {
         const message = JSON.parse(event.data);
 

@@ -40,8 +40,7 @@ function ServersView() {
   const [spawnedContainers, setSpawnedContainers] = useState([]);
   const items = apps
     .map(d => {
-      const servers = get(data, 'servers', []);
-      const server = servers.find(s => s.name === d.name) || {};
+      const server = get(data, `servers.${d.name}`, {});
       return merge(
         {
           lastActivity: new Date().toISOString(),

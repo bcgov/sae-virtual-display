@@ -23,7 +23,7 @@ exports[`app-card app-card/index should render 1`] = `
   stop-color: currentColor;
 }
 
-.c10 {
+.c8 {
   height: 16px;
   width: 16px;
   color: currentColor;
@@ -35,7 +35,7 @@ exports[`app-card app-card/index should render 1`] = `
   line-height: 1;
 }
 
-.c10 > svg {
+.c8 > svg {
   height: 16px;
   width: 16px;
   max-height: 100%;
@@ -45,13 +45,8 @@ exports[`app-card app-card/index should render 1`] = `
   vertical-align: bottom;
 }
 
-.c10 stop {
+.c8 stop {
   stop-color: currentColor;
-}
-
-.c6 {
-  max-width: 100%;
-  height: auto;
 }
 
 .c3 {
@@ -110,22 +105,18 @@ exports[`app-card app-card/index should render 1`] = `
   opacity: 1;
 }
 
-.c7 {
+.c5 {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
   margin: 0.25rem 0;
 }
 
-.c7 p {
+.c5 p {
   margin-bottom: 0.5rem;
 }
 
-.c5 {
-  margin-right: 1rem;
-}
-
-.c9 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -136,19 +127,19 @@ exports[`app-card app-card/index should render 1`] = `
   align-items: center;
 }
 
-.c9 a {
+.c7 a {
   padding-left: 0 !important;
 }
 
-.c9 p {
+.c7 p {
   margin: 0 10px 0 0;
 }
 
-.c9 p + a {
+.c7 p + a {
   padding-left: 8px;
 }
 
-.c8 {
+.c6 {
   font-size: 18px;
   font-weight: 600;
   display: -webkit-box;
@@ -162,11 +153,11 @@ exports[`app-card app-card/index should render 1`] = `
   color: #36B37E;
 }
 
-.c8 > span {
+.c6 > span {
   margin-left: 10px;
 }
 
-.c0:hover .c8 {
+.c0:hover .c6 {
   -webkit-text-decoration: underline;
   text-decoration: underline;
 }
@@ -217,22 +208,11 @@ exports[`app-card app-card/index should render 1`] = `
   <div
     class="c5"
   >
-    <img
-      alt="R Studio Logo"
-      class="c6"
-      src="/images/rstudio.png"
-      title="R Studio"
-      width="80"
-    />
-  </div>
-  <div
-    class="c7"
-  >
     <div
       class=""
     >
       <h2
-        class="c8"
+        class="c6"
       >
         R Studio
         <span
@@ -246,11 +226,11 @@ exports[`app-card app-card/index should render 1`] = `
         </span>
       </h2>
       <small>
-        Application has not been started yet
+        
         Running about 1 month
       </small>
       <div
-        class="c9"
+        class="c7"
       >
         <p>
           R Studio is an integrated development environment for r, a programming language for statistical computing and graphics.
@@ -272,7 +252,7 @@ exports[`app-card app-card/index should render 1`] = `
               class="css-8xpfx5"
             >
               <span
-                class="c10"
+                class="c8"
               >
                 <svg
                   focusable="false"

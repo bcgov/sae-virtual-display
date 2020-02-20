@@ -119,7 +119,7 @@ function AppCard({
                     parseISO(data.lastActivity),
                     'PPP',
                   )}`
-                : 'Application has not been started yet'}
+                : ''}
               {data.ready &&
                 `Running ${formatDistanceToNow(parseISO(data.started))}`}
             </small>
