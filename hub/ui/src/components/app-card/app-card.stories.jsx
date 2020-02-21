@@ -24,7 +24,9 @@ export default {
   ],
 };
 
-export const Idle = () => <AppCard {...clickProps} data={idleData} />;
+export const Idle = () => (
+  <AppCard {...clickProps} ready={false} data={idleData} />
+);
 export const Booting = () => (
   <AppCard
     {...clickProps}
@@ -33,7 +35,13 @@ export const Booting = () => (
     message="Installing dependencies, please wait..."
   />
 );
-export const Running = () => <AppCard {...clickProps} data={data} />;
+export const Running = () => (
+  <>
+    <AppCard {...clickProps} ready data={data} />
+    <AppCard {...clickProps} ready data={data} progress={100} />
+  </>
+);
+export const Requesting = () => <AppCard loading data={data} />;
 export const Loading = () => <AppCardLoading total={5} />;
 export const Error = () => <AppCard error data={idleData} />;
 export const MissingDetails = () => (

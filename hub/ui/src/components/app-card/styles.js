@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { borderRadius, colors, elevation } from '@atlaskit/theme';
 
 export const CardActions = styled.div`
@@ -52,6 +52,15 @@ export const Card = styled.div`
           opacity: 1;
         }
     }`}
+
+  ${props =>
+    props.loading &&
+    css`
+      & ${CardActions} {
+        opacity: 1;
+      }
+    `}
+
 `;
 
 export const CardBody = styled.div`
@@ -63,11 +72,28 @@ export const CardBody = styled.div`
   }
 `;
 
+const loadingAnimation = keyframes`
+  from {
+    filter: grayscale(1);
+  }
+
+  to {
+    filter: grayscale(0);
+  }
+`;
+
 export const CardImg = styled.div`
   margin-right: 1rem;
 
   ${props =>
-    !props.ready &&
+    props.loading &&
+    css`
+      animation: ${loadingAnimation} 1s ease-in-out alternate infinite;
+    `}
+
+  ${props =>
+    !props.loading &&
+    props.grayscale &&
     css`
       filter: grayscale(1);
     `}
@@ -109,7 +135,15 @@ export const Subtitle = styled.h2`
 `;
 
 export const ProgressContainer = styled.div`
+  min-height: 81px;
+  width: 100%;
   flex: 1;
+  display: flex;
+  align-items: center;
+
+  & > div {
+    flex: 1;
+  }
 `;
 
 // Loading card

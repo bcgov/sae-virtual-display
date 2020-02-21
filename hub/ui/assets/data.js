@@ -1,33 +1,33 @@
 window.vdiApps = [
   {
     name: 'notebook',
-    logo: '/images/notebook.png',
+    logo: '/images/notebook-logo.png',
     label: 'Jupyterlab',
     container: 'quay.io/ikethecoder/vdi-session-notebook:develop',
   },
   {
     name: 'browser',
-    logo: '/images/browser.png',
+    logo: '/images/browser-logo.png',
     label: 'Chrome Browser',
     container: 'quay.io/ikethecoder/vdi-session-browser:develop',
   },
   {
     name: 'rstudio',
-    logo: '/images/rstudio.png',
+    logo: '/images/rstudio-logo.png',
     label: 'RStudio (1.2.5019)',
     container:
       'quay.io/ikethecoder/vdi-session-rstudio:d852f663b1af2fbdfb41bd7fd1a319b0a74d2772',
   },
   {
     name: 'rstudio-edge',
-    logo: '/images/rstudio.png',
+    logo: '/images/rstudio-logo.png',
     label: 'RStudio (EDGE)',
     container:
       'quay.io/ikethecoder/vdi-session-rstudio:a27fdcf55273f18e950352b7c8e973a0f7e1f45d',
   },
   {
     name: 'rstudio-dev',
-    logo: '/images/rstudio.png',
+    logo: '/images/rstudio-logo.png',
     label: 'RStudio (DEV)',
     container:
       'quay.io/ikethecoder/vdi-session-rstudio:07de87a1965c1d9b3ce7a2a98ad3bd2cf04b6d7d',

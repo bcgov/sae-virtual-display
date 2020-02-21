@@ -44,14 +44,15 @@ const getLozengeState = (ready, error) => {
 function AppCard({
   data,
   error,
+  loading,
   message,
   onLaunch,
   onStartApp,
   progress,
   ready,
 }) {
-  const isMissingImage = !data.image;
-  const isBooting = isNumber(progress);
+  const isMissingImage = !data.logo;
+  const isBooting = isNumber(progress) && !ready;
 
   function onAnchorClick(event) {
     event.stopPropagation();
@@ -70,26 +71,28 @@ function AppCard({
       data-testid="app-card"
       booting={isBooting}
       error={error}
-      ready={data.ready}
+      loading={loading}
+      ready={ready}
       onClick={onClick}
     >
       <CardActions>
-        {data.ready && (
+        {data.ready && !loading && (
           <Button iconAfter={<OpenIcon primaryColor={colors.green} />}>
             Launch
           </Button>
         )}
-        {!data.ready && (
+        {loading && <Button isLoading>Loading...</Button>}
+        {!data.ready && !loading && (
           <Button iconAfter={<SettingsIcon primaryColor={colors.green} />}>
             Build Application
           </Button>
         )}
       </CardActions>
       {!isMissingImage && (
-        <CardImg ready={data.ready}>
+        <CardImg grayscale={!loading && !ready} loading={isBooting}>
           <CoreImage
             fluid
-            src={data.image}
+            src={data.logo}
             width={80}
             alt={`${data.label} Logo`}
             title={data.label}
