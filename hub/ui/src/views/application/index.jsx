@@ -10,28 +10,33 @@ function ApplicationView({ data = {}, onLaunch }) {
   });
   const [progress, setProgress] = useState(null);
   const [message, setMessage] = useState(null);
+  let socket = null;
+
+  function initWatcher() {
+    socket = new EventSource(
+      `/hub/api/users/${user}/servers/${data.name}/progress`,
+    );
+    socket.onmessage = event => {
+      const message = JSON.parse(event.data);
+
+      setProgress(message.progress);
+      setMessage(message.html_message);
+    };
+  }
 
   useEffect(() => {
-    let socket = null;
-
     if (status.success) {
-      socket = new EventSource(
-        `/hub/api/users/${user}/servers/${data.name}/progress`,
-      );
-      socket.onmessage = event => {
-        const message = JSON.parse(event.data);
-
-        setProgress(message.progress);
-        setMessage(message.html_message);
-      };
+      initWatcher();
     }
+  }, [status]);
 
+  useEffect(() => {
     return () => {
       if (socket) {
         socket.close();
       }
     };
-  }, [data, setProgress, setMessage, status, user]);
+  }, [socket]);
 
   return (
     <AppCard
