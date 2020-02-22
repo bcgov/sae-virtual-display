@@ -14,13 +14,13 @@ export const CardActions = styled.div`
 
 export const Card = styled.div`
   display: flex;
-  align-items: center;
   padding: 1rem;
   position: relative;
   margin-bottom: 1rem;
   background-color: #fff;
   border-radius: ${borderRadius}px;
   transition: all 0.2s ease-in;
+  color: ${colors.subtleHeading};
 
   & ${CardActions} {
     opacity: 0;
@@ -29,13 +29,18 @@ export const Card = styled.div`
   ${props =>
     props.error &&
     css`
-      background: ${colors.R75};
+      color: ${colors.R500};
     `}
 
   ${props =>
     props.ready &&
     css`
+      color: ${colors.green};
       ${elevation.e100()}
+
+      & ${CardActions} {
+        opacity: 1;
+      }
     `}
 
   ${props =>
@@ -54,7 +59,7 @@ export const Card = styled.div`
     }`}
 
   ${props =>
-    props.loading &&
+    props.isLoading &&
     css`
       & ${CardActions} {
         opacity: 1;
@@ -86,13 +91,13 @@ export const CardImg = styled.div`
   margin-right: 1rem;
 
   ${props =>
-    props.loading &&
+    props.isLoading &&
     css`
       animation: ${loadingAnimation} 1s ease-in-out alternate infinite;
     `}
 
   ${props =>
-    !props.loading &&
+    !props.isLoading &&
     props.grayscale &&
     css`
       filter: grayscale(1);
@@ -104,6 +109,7 @@ export const CardText = styled.div``;
 export const Description = styled.div`
   display: flex;
   align-items: center;
+  color: ${colors.text};
 
   & a {
     padding-left: 0 !important;
@@ -123,7 +129,7 @@ export const Subtitle = styled.h2`
   font-weight: 600;
   display: flex;
   align-items: center;
-  color: ${props => (props.ready ? colors.green : colors.subtleText)};
+  color: inherit;
 
   & > span {
     margin-left: 10px;
@@ -135,7 +141,6 @@ export const Subtitle = styled.h2`
 `;
 
 export const ProgressContainer = styled.div`
-  min-height: 81px;
   width: 100%;
   flex: 1;
   display: flex;

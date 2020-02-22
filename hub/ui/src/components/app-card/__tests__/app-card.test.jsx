@@ -51,6 +51,12 @@ describe('app-card', () => {
     });
 
     describe('app-card/in-progress', () => {
+      it('should render loading state', () => {
+        const { getByText } = render(
+          <AppCard loading data={{ ...data, ready: false }} />,
+        );
+        expect(getByText('Loading...')).toBeTruthy();
+      });
       it('should render progress bar', async () => {
         const onStartApp = jest.fn();
         const onClick = jest.fn();

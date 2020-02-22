@@ -17,8 +17,9 @@ export const ProgressContainer = styled.div`
   margin: 15px 0 0;
 `;
 
-export const HeaderText = styled.p`
-  ${typography.h400()}
+export const HeaderText = styled.h2`
+  font-size: 18px;
+  font-weight: 600;
   margin-bottom: 0;
 `;
 

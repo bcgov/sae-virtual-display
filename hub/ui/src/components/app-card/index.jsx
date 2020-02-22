@@ -71,7 +71,7 @@ function AppCard({
       data-testid="app-card"
       booting={isBooting}
       error={error}
-      loading={loading}
+      isLoading={loading}
       ready={ready}
       onClick={onClick}
     >
@@ -89,7 +89,7 @@ function AppCard({
         )}
       </CardActions>
       {!isMissingImage && (
-        <CardImg grayscale={!loading && !ready} loading={isBooting}>
+        <CardImg grayscale={!loading && !ready} isLoading={isBooting}>
           <CoreImage
             fluid
             src={data.logo}

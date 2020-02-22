@@ -10,16 +10,8 @@ exports[`core/progress should render, with defaults 1`] = `
 }
 
 .c1 {
-  font-size: 1em;
-  font-style: inherit;
-  line-height: 1.1428571428571428;
-  color: #172B4D;
+  font-size: 18px;
   font-weight: 600;
-  -webkit-letter-spacing: -0.003em;
-  -moz-letter-spacing: -0.003em;
-  -ms-letter-spacing: -0.003em;
-  letter-spacing: -0.003em;
-  margin-top: 16px;
   margin-bottom: 0;
 }
 
@@ -45,11 +37,11 @@ exports[`core/progress should render, with defaults 1`] = `
 <div
   class="c0"
 >
-  <p
+  <h2
     class="c1"
   >
     Request in progress
-  </p>
+  </h2>
   <div
     class="c2"
   >
