@@ -2,7 +2,6 @@ import React from 'react';
 
 export const config = {
   announcement: '',
-  formAction: '/spawn',
   staticURL: '/',
   user: '',
   apps: [],
