@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import head from 'lodash/head';
 import WorkbenchContext from '@src/utils/context';
 
-function useServer({ app }) {
+function useServer(app) {
   const { DEV, projects, user } = useContext(WorkbenchContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);

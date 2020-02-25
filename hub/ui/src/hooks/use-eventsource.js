@@ -4,7 +4,8 @@ import { camelizeKeys } from 'humps';
 
 function useEventSource(server) {
   const { user } = useContext(WorkbenchContext);
-  const [state, setState] = useState({
+  const [error, setError] = useState(false);
+  const [status, setState] = useState({
     progress: 0,
     htmlMessage: '',
   });
@@ -13,20 +14,17 @@ function useEventSource(server) {
     const socket = new EventSource(
       `/hub/api/users/${user}/servers/${server}/progress`,
     );
+    socket.onerror = error => setError(true);
     socket.onmessage = event => {
       const message = JSON.parse(event.data);
 
       setState(camelizeKeys(message));
     };
 
-    return () => {
-      if (socket) {
-        socket.close();
-      }
-    };
+    return () => socket.close();
   }, []);
 
-  return { state, setState };
+  return [status, error];
 }
 
 export default useEventSource;
