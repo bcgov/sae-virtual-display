@@ -65,6 +65,7 @@
         workbench.default(config);
       })({
         announcement: '{{ announcement | safe }}',
+        baseURL: '/hub/api',
         staticURL: '{{static_url('')}}',
         user: '{{user.name}}',
         apps: apps,

@@ -3,7 +3,7 @@ import head from 'lodash/head';
 import WorkbenchContext from '@src/utils/context';
 
 function useServer(app) {
-  const { DEV, projects, user } = useContext(WorkbenchContext);
+  const { baseURL, projects, user } = useContext(WorkbenchContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -17,7 +17,6 @@ function useServer(app) {
     setLoading(true);
 
     try {
-      const baseURL = DEV ? 'http://localhost:3000' : '/hub/api';
       const url = `${baseURL}/users/${user}/servers/${app}`;
       const res = await fetch(url, {
         signal,

@@ -7,20 +7,21 @@ export function reducer(state, action) {
     case 'CONNECTED':
       return {
         ...state,
-        connected: true,
+        status: 'connected',
       };
 
     case 'PROGRESS':
       return {
         ...state,
         ...action.payload,
+        status: 'streaming',
       };
 
     case 'ERROR':
       return {
         ...state,
-        error: true,
-        message: action.payload,
+        error: action.payload,
+        status: 'error',
       };
 
     default:
@@ -29,17 +30,17 @@ export function reducer(state, action) {
 }
 
 function useEventSource(server) {
-  const { user } = useContext(WorkbenchContext);
-  const url = `/hub/api/users/${user}/servers/${server}/progress`;
+  const { baseURL, user } = useContext(WorkbenchContext);
+  const url = `${baseURL}/users/${user}/servers/${server}/progress`;
   const [canConnect, setCanConnect] = useState(false);
   const [state, dispatch] = useReducer(reducer, {
-    connected: false,
+    status: 'idle',
     progress: null,
     error: false,
     message: '',
   });
 
-  function init() {
+  function request() {
     setCanConnect(true);
   }
 
@@ -67,7 +68,15 @@ function useEventSource(server) {
     };
   }, [url, canConnect]);
 
-  return [state, init];
+  return {
+    data: {
+      message: state.message,
+      progress: state.progress,
+    },
+    status: state.status,
+    error: state.error,
+    request,
+  };
 }
 
 export default useEventSource;

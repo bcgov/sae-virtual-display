@@ -13,6 +13,7 @@ const messageEvent = new MessageEvent('ping', {
 });
 
 const config = {
+  baseURL: '/hub/api',
   user: 'jjonah',
 };
 const url = '/hub/api/users/jjonah/servers/app/progress';
@@ -26,33 +27,34 @@ describe('useEventSource', () => {
   it('default init should return default config', () => {
     const { result } = renderHook(() => useEventSource('app'), { wrapper });
 
-    expect(result.current[0]).toEqual({
-      connected: false,
+    expect(result.current).toEqual({
+      status: 'idle',
       error: false,
-      progress: null,
-      message: '',
+      data: {
+        progress: null,
+        message: '',
+      },
+      request: expect.any(Function),
     });
   });
 
   it('should connect after being instantiated', () => {
     const { result } = renderHook(() => useEventSource('app'), { wrapper });
 
-    act(() => result.current[1]());
+    act(() => result.current.request());
     act(() => sources[url].emitOpen());
 
-    expect(result.current[0].connected).toBeTruthy();
+    expect(result.current.status).toEqual('connected');
   });
 
   it('should update progress', () => {
     const { result } = renderHook(() => useEventSource('app'), { wrapper });
 
-    act(() => result.current[1]());
+    act(() => result.current.request());
     act(() => sources[url].emitOpen());
     act(() => sources[url].emitMessage(messageEvent));
 
-    expect(result.current[0]).toEqual({
-      connected: true,
-      error: false,
+    expect(result.current.data).toEqual({
       progress: 11,
       message: 'Starting...',
     });
@@ -62,9 +64,14 @@ describe('useEventSource', () => {
     const { result } = renderHook(() => useEventSource('app'), {
       wrapper,
     });
-    act(() => result.current[1]());
+    act(() => result.current.request());
     act(() => sources[url].emitError('Something broke'));
-    expect(result.current[0].error).toBeTruthy();
+    expect(result.current).toEqual(
+      expect.objectContaining({
+        error: 'Something broke',
+        status: 'error',
+      }),
+    );
   });
 
   it('should not try to disconnect if never mounted', () => {
@@ -81,7 +88,7 @@ describe('useEventSource', () => {
       wrapper,
     });
 
-    act(() => result.current[1]());
+    act(() => result.current.request());
     act(() => unmount());
     expect(sources[url].readyState).toBe(2);
   });
