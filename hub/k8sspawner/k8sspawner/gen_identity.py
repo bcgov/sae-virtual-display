@@ -182,28 +182,28 @@ class GenIdentity():
         # https://minio.dev18.bbsae.xyz?Action=AssumeRoleWithWebIdentity&DurationSeconds=3600&WebIdentityToken=$JWT_TOKEN&Version=2011-06-15
     
 
-        payload = {
-            'Action': 'AssumeRoleWithWebIdentity',
-            # 'DurationSeconds': 43200, # 12 hours - max allowed
-            'Version': '2011-06-15', # Always this - it's an AWS spec thing
-            'WebIdentityToken': access_token,
-            'Policy': '{"Version": "2012-10-17","Statement": [{"Action": ["s3:*"],"Effect": "Allow","Resource": ["arn:aws:s3:::*"]}]}'
-        }
+        # payload = {
+        #     'Action': 'AssumeRoleWithWebIdentity',
+        #     # 'DurationSeconds': 43200, # 12 hours - max allowed
+        #     'Version': '2011-06-15', # Always this - it's an AWS spec thing
+        #     'WebIdentityToken': access_token,
+        #     'Policy': '{"Version": "2012-10-17","Statement": [{"Action": ["s3:*"],"Effect": "Allow","Resource": ["arn:aws:s3:::*"]}]}'
+        # }
 
-        url = "%s?%s" % (os.environ['MINIO_ADDR'], urlencode(payload))
+        # url = "%s?%s" % (os.environ['MINIO_ADDR'], urlencode(payload))
 
-        self.info("minio url %s" % url)
+        # self.info("minio url %s" % url)
 
-        headers = {
-            'Content-Type': 'application/json'
-        }
+        # headers = {
+        #     'Content-Type': 'application/json'
+        # }
 
-        x = requests.post(url, headers = headers, verify = '/cacerts/ca_chain.crt')   
-        self.info("status_code %s" % x.status_code)
-        self.info("response %s" % x.content)
-        if x.status_code != 200:
-            self.info("text %s" % x.content)
-            raise Exception("Failed to authenticate with Minio")
+        # x = requests.post(url, headers = headers, verify = '/cacerts/ca_chain.crt')   
+        # self.info("status_code %s" % x.status_code)
+        # self.info("response %s" % x.content)
+        # if x.status_code != 200:
+        #     self.info("text %s" % x.content)
+        #     raise Exception("Failed to authenticate with Minio")
 
         # <AssumeRoleWithWebIdentityResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
         #   <AssumeRoleWithWebIdentityResult>
@@ -224,12 +224,16 @@ class GenIdentity():
         #   </ResponseMetadata>
         # </AssumeRoleWithWebIdentityResponse>    
 
-        root = ET.fromstring(x.text)
+        # root = ET.fromstring(x.text)
 
 
-        accessKeyId = root[0][1][0].text
-        secretAccessKey = root[0][1][1].text
-        expiration = root[0][1][2].text
+        # accessKeyId = root[0][1][0].text
+        # secretAccessKey = root[0][1][1].text
+        # expiration = root[0][1][2].text
+
+        # self.info("minio access key " + accessKeyId)
+        # self.info("minio secret " + secretAccessKey)
+        # self.info("minio expiration " + expiration)
 
         # Not able to get STS to work at the moment, so having to pass in the master keys
         #
@@ -246,9 +250,6 @@ class GenIdentity():
             }
         }
 
-        self.info("minio access key " + accessKeyId)
-        self.info("minio secret " + secretAccessKey)
-        self.info("minio expiration " + expiration)
 
         secret_data['mc-config.json'] = base64.b64encode(json.dumps(minio_secret).encode('utf-8')).decode('utf-8')
 
