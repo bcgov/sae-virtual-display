@@ -1,20 +1,47 @@
-import { useContext, useState } from 'react';
+import { useContext, useReducer, useState } from 'react';
 import head from 'lodash/head';
 import WorkbenchContext from '@src/utils/context';
 
+export function reducer(state, action) {
+  switch (action.type) {
+    case 'LOADING':
+      return {
+        ...state,
+        status: 'loading',
+      };
+
+    case 'SUCCESS':
+      return {
+        ...state,
+        status: 'success',
+      };
+
+    case 'FAILED':
+      return {
+        ...state,
+        error: action.payload,
+        status: 'error',
+      };
+
+    default:
+      throw new Error();
+  }
+}
+
 function useServer(app) {
   const { baseURL, projects, user } = useContext(WorkbenchContext);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [state, dispatch] = useReducer(reducer, {
+    status: 'idle',
+    error: null,
+  });
   const project = head(projects);
 
-  async function fetchData() {
+  async function request() {
     const controller = new AbortController();
     let isCancelling = false;
     const { signal } = controller;
 
-    setLoading(true);
+    dispatch({ type: 'LOADING' });
 
     try {
       const url = `${baseURL}/users/${user}/servers/${app}`;
@@ -27,24 +54,24 @@ function useServer(app) {
         }),
       });
 
-      setLoading(false);
-
       if (!isCancelling) {
         if (res.ok) {
-          setSuccess(true);
+          dispatch({ type: 'SUCCESS' });
         } else {
-          setError(`${res.status} - ${res.statusText}`);
+          dispatch({
+            type: 'FAILED',
+            payload: `${res.status} - ${res.statusText}`,
+          });
         }
       }
     } catch (err) {
       if (!isCancelling) {
-        setLoading(false);
-        setError(err.message);
+        dispatch({ type: 'FAILED', payload: err.message });
       }
     }
   }
 
-  return [{ loading, error, success }, fetchData];
+  return { ...state, request };
 }
 
 export default useServer;

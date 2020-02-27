@@ -5,22 +5,22 @@ import useEventSource from '@src/hooks/use-eventsource';
 
 function ApplicationView({ data = {}, onLaunch }) {
   const { request, ...es } = useEventSource(data.name);
-  const [status, startServer] = useServer(data.name);
+  const server = useServer(data.name);
 
   useEffect(() => {
-    if (status.success) {
+    if (server.status === 'success') {
       request();
     }
-  }, [request, status.success]);
+  }, [request, server]);
 
   return (
     <AppCard
       data={data}
-      error={status.error || es.status === 'error'}
+      error={server.status === 'error' || es.status === 'error'}
       ready={es.data.progress === 100 || data.ready}
       message={es.data.message}
       progress={es.data.progress}
-      onStartApp={startServer}
+      onStartApp={server.request}
       onLaunch={onLaunch}
     />
   );
