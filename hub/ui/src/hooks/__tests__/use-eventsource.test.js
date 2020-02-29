@@ -1,27 +1,36 @@
-import React from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { sources } from 'eventsourcemock';
 
-import WorkbenchContext from '../../utils/context';
+import { makeWrapper } from './utils';
 import useEventSource, { reducer } from '../use-eventsource';
 
-const messageEvent = new MessageEvent('ping', {
-  data: JSON.stringify({
-    progress: 11,
-    html_message: 'Starting...',
-  }),
-});
-
+const url = '/hub/api/users/jjonah/servers/app/progress';
 const config = {
   baseURL: '/hub/api',
   user: 'jjonah',
 };
-const url = '/hub/api/users/jjonah/servers/app/progress';
-const wrapper = ({ children }) => (
-  <WorkbenchContext.Provider value={config}>
-    {children}
-  </WorkbenchContext.Provider>
-);
+const wrapper = makeWrapper(config);
+const messageEvent = new MessageEvent('ping', {
+  data: JSON.stringify({
+    progress: 11,
+    message: 'Starting...',
+  }),
+});
+const errorEvent = new MessageEvent('ping', {
+  data: JSON.stringify({
+    progress: 100,
+    failed: true,
+    message: 'Spawn failed',
+  }),
+});
+const successEvent = new MessageEvent('ping', {
+  data: JSON.stringify({
+    progress: 100,
+    ready: true,
+    message: 'Server ready at /user/jjonah/rstudio-dev/',
+    url: '/user/jjonah/rstudio-dev/',
+  }),
+});
 
 describe('useEventSource', () => {
   it('default init should return default config', () => {
@@ -31,8 +40,10 @@ describe('useEventSource', () => {
       status: 'idle',
       error: false,
       data: {
+        ready: false,
         progress: null,
         message: '',
+        url: '',
       },
       request: expect.any(Function),
     });
@@ -55,8 +66,25 @@ describe('useEventSource', () => {
     act(() => sources[url].emitMessage(messageEvent));
 
     expect(result.current.data).toEqual({
+      ready: false,
       progress: 11,
       message: 'Starting...',
+      url: '',
+    });
+  });
+
+  it('should handle progress end', () => {
+    const { result } = renderHook(() => useEventSource('app'), { wrapper });
+
+    act(() => result.current.request());
+    act(() => sources[url].emitOpen());
+    act(() => sources[url].emitMessage(successEvent));
+
+    expect(result.current.data).toEqual({
+      ready: true,
+      progress: 100,
+      message: 'Server ready at /user/jjonah/rstudio-dev/',
+      url: '/user/jjonah/rstudio-dev/',
     });
   });
 
@@ -69,6 +97,26 @@ describe('useEventSource', () => {
     expect(result.current).toEqual(
       expect.objectContaining({
         error: 'Something broke',
+        status: 'error',
+      }),
+    );
+  });
+
+  it('should handle an error message (does not trigger onerror)', () => {
+    const { result } = renderHook(() => useEventSource('app'), {
+      wrapper,
+    });
+    act(() => result.current.request());
+    act(() => sources[url].emitMessage(errorEvent));
+    expect(result.current).toEqual(
+      expect.objectContaining({
+        data: {
+          ready: false,
+          progress: null,
+          message: '',
+          url: '',
+        },
+        error: 'Spawn failed',
         status: 'error',
       }),
     );

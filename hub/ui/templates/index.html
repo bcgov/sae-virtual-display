@@ -33,27 +33,54 @@
         Please enable it to proceed.
       </div>
     </noscript>
-    <script type="text/javascript" src="/data.js"></script>
     <script type="text/javascript" src="/bundle.js"></script>
     <script>
-      const spawnOptions = {
-        projects: [
-          '/project_1',
-        ],
-      };
+     const spawnOptions = {
+       "projects": ["99-t05"],
+       "applications": [
+         {"name": "notebook", "logo": "notebook", "label": "Jupyterlab", "container": "vdi-session-notebook:develop"},
+         {"name": "browser", "logo": "browser", "label": "Chrome Browser", "container": "vdi-session-browser:develop"},
+         {"name": "rstudio", "logo": "rstudio", "label": "RStudio (1.2.5019)", "container": "vdi-session-rstudio:123"},
+         {"name": "rstudio-edge", "logo": "rstudio", "label": "RStudio (EDGE)", "container": "vdi-session-rstudio:123"},
+         {"name": "rstudio-dev", "logo": "rstudio", "label": "RStudio (DEV)", "container": "vdi-session-rstudio:123"},
+         {"name": "conda-navigator", "logo": "anaconda", "label": "Conda Navigator (Admin)", "container": "vdi-session-navigator:123"},
+         {"name": "data-curator", "logo": "datacurator", "label": "Data Curator (Metadata)", "container": "vdi-session-datacurator:123"}
+     ]};
 
-      (function(config) {
-        workbench.default(config);
-      })({
-        announcement: '',
-        baseURL: 'http://localhost:3000',
-        staticURL: '/',
-        imagesDir: 'images',
-        user: 'jjones',
-        apps: vdiApps,
-        projects: spawnOptions.projects,
-        DEV: true
-      });
+     const logosDef = {
+       notebook: {
+         image: '/images/notebook-logo.png'
+       },
+       rstudio: {
+         image: '/images/rstudio-logo.png'
+       },
+       browser: {
+         image: '/images/browser-logo.png'
+       },
+       anaconda: {
+         image: '/images/anaconda.png'
+       },
+       datacurator: {
+         image: '/images/datacurator-logo.png'
+       }
+     };
+     const apps = spawnOptions.applications.map(m => {
+       m.image = logosDef[m.logo].image;
+       return m;
+     });
+
+     (function(config) {
+       workbench.default(config);
+     })({
+       announcement: '',
+       baseURL: 'http://localhost:3000',
+       staticURL: '/',
+       imagesDir: 'images',
+       user: 'jjones',
+       apps,
+       projects: spawnOptions.projects,
+       DEV: true
+     });
     </script>
   </body>
 </html>

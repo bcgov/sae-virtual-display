@@ -17,6 +17,12 @@ export function reducer(state, action) {
         status: 'streaming',
       };
 
+    case 'DONE':
+      return {
+        ...state,
+        ...action.payload,
+      };
+
     case 'ERROR':
       return {
         ...state,
@@ -34,10 +40,12 @@ function useEventSource(server) {
   const url = `${baseURL}/users/${user}/servers/${server}/progress`;
   const [canConnect, setCanConnect] = useState(false);
   const [state, dispatch] = useReducer(reducer, {
+    ready: false,
     status: 'idle',
     progress: null,
     error: false,
     message: '',
+    url: '',
   });
 
   function request() {
@@ -52,12 +60,19 @@ function useEventSource(server) {
       socket.onopen = () => dispatch({ type: 'CONNECTED' });
       socket.onerror = error => dispatch({ type: 'ERROR', payload: error });
       socket.onmessage = event => {
-        const { htmlMessage, progress } = camelizeKeys(JSON.parse(event.data));
+        const payload = camelizeKeys(JSON.parse(event.data));
 
-        dispatch({
-          type: 'PROGRESS',
-          payload: { progress, message: htmlMessage },
-        });
+        if (payload.failed) {
+          dispatch({ type: 'ERROR', payload: payload.message });
+        } else if (payload.ready) {
+          dispatch({ type: 'DONE', payload });
+          socket.close();
+        } else {
+          dispatch({
+            type: 'PROGRESS',
+            payload,
+          });
+        }
       };
     }
 
@@ -71,7 +86,9 @@ function useEventSource(server) {
   return {
     data: {
       message: state.message,
+      ready: state.ready,
       progress: state.progress,
+      url: state.url,
     },
     status: state.status,
     error: state.error,

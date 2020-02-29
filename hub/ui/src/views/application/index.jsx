@@ -3,9 +3,14 @@ import AppCard from '@src/components/app-card';
 import useServer from '@src/hooks/use-server';
 import useEventSource from '@src/hooks/use-eventsource';
 
-function ApplicationView({ data = {}, onLaunch }) {
+function ApplicationView({ data = {} }) {
   const { request, ...es } = useEventSource(data.name);
   const server = useServer(data.name);
+  const hasStreamError = es.status === 'error';
+  const message = hasStreamError ? es.error : es.data.message;
+  const ready = es.data.ready || data.ready;
+  const error = server.status === 'error' || hasStreamError;
+  const url = data.url || es.data.url;
 
   useEffect(() => {
     if (server.status === 'success') {
@@ -16,12 +21,12 @@ function ApplicationView({ data = {}, onLaunch }) {
   return (
     <AppCard
       data={data}
-      error={server.status === 'error' || es.status === 'error'}
-      ready={es.data.progress === 100 || data.ready}
-      message={es.data.message}
+      error={error}
+      ready={ready}
+      message={message}
       progress={es.data.progress}
       onStartApp={server.request}
-      onLaunch={onLaunch}
+      onLaunch={() => ready && url && window.open(url)}
     />
   );
 }

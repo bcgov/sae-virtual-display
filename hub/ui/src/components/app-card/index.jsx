@@ -51,7 +51,7 @@ function AppCard({
   progress,
   ready,
 }) {
-  const isMissingImage = !data.logo;
+  const isMissingImage = !data.image;
   const isBooting = isNumber(progress) && !ready;
 
   function onAnchorClick(event) {
@@ -76,13 +76,13 @@ function AppCard({
       onClick={onClick}
     >
       <CardActions>
-        {data.ready && !loading && (
+        {ready && !loading && (
           <Button iconAfter={<OpenIcon primaryColor={colors.green} />}>
             Launch
           </Button>
         )}
         {loading && <Button isLoading>Loading...</Button>}
-        {!data.ready && !loading && (
+        {!ready && !loading && (
           <Button iconAfter={<SettingsIcon primaryColor={colors.green} />}>
             Build Application
           </Button>
@@ -92,7 +92,7 @@ function AppCard({
         <CardImg grayscale={!loading && !ready} isLoading={isBooting}>
           <CoreImage
             fluid
-            src={data.logo}
+            src={data.image}
             width={80}
             alt={`${data.label} Logo`}
             title={data.label}
@@ -112,18 +112,18 @@ function AppCard({
         )}
         {!isBooting && (
           <CardText>
-            <Subtitle ready={data.ready}>
+            <Subtitle ready={ready}>
               {data.label}
-              <Lozenge {...getLozengeState(ready, error)} isBold={data.ready} />
+              <Lozenge {...getLozengeState(ready, error)} isBold={ready} />
             </Subtitle>
             <small>
-              {!data.ready && data.lastActivity
+              {!ready && data.lastActivity
                 ? `Application last used ${format(
                     parseISO(data.lastActivity),
                     'PPP',
                   )}`
                 : ''}
-              {data.ready &&
+              {ready &&
                 `Running ${formatDistanceToNow(parseISO(data.started))}`}
             </small>
             <Description>

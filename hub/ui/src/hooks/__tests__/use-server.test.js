@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
 import { makeWrapper } from './utils';
-import useServer from '../use-server';
+import useServer, { reducer } from '../use-server';
 
 const config = {
   baseURL: '/hub/api',
@@ -64,5 +64,29 @@ describe('useServer', () => {
         error: 'Server could not be started',
       }),
     );
+  });
+
+  it('shgould return failed status if body is not ok', async () => {
+    const { result } = renderHook(() => useServer('app'), {
+      wrapper,
+    });
+    fetch.mockResponse('', { status: 403 });
+    await act(() => result.current.request());
+    expect(result.current.status).toEqual('error');
+    expect(result.current.error).toEqual('403 - Forbidden');
+  });
+
+  it('should not make a request after being cancelled', () => {
+    const { unmount } = renderHook(() => useServer('app'), {
+      wrapper,
+    });
+    fetch.mockAbort();
+
+    act(() => unmount());
+    expect(fetch.mock.calls.length).toEqual(0);
+  });
+
+  it('reducer should throw error if unhandled', () => {
+    expect(() => reducer({}, {})).toThrow();
   });
 });
