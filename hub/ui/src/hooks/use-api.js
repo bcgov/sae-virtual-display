@@ -1,5 +1,6 @@
 import { useContext, useReducer } from 'react';
-import head from 'lodash/head';
+import { camelizeKeys } from 'humps';
+import template from 'lodash/template';
 import WorkbenchContext from '@src/utils/context';
 
 export function reducer(state, action) {
@@ -14,6 +15,7 @@ export function reducer(state, action) {
       return {
         ...state,
         status: 'success',
+        data: action.payload,
       };
 
     case 'FAILED':
@@ -28,13 +30,18 @@ export function reducer(state, action) {
   }
 }
 
-function useServer(app) {
-  const { baseURL, projects, user } = useContext(WorkbenchContext);
+function useApi(path) {
+  const context = useContext(WorkbenchContext);
   const [state, dispatch] = useReducer(reducer, {
+    data: {},
     status: 'idle',
     error: null,
   });
-  const project = head(projects);
+  const interpolate = /{([\s\S]+?)}/g;
+  const compiled = template(path, {
+    interpolate,
+  });
+  const urlPath = compiled(context);
 
   async function request() {
     const controller = new AbortController();
@@ -44,19 +51,22 @@ function useServer(app) {
     dispatch({ type: 'LOADING' });
 
     try {
-      const url = `${baseURL}/users/${user}/servers/${app}`;
+      const url = `${context.baseURL}/${urlPath}`;
       const res = await fetch(url, {
         signal,
-        method: 'POST',
-        body: JSON.stringify({
-          image: app,
-          project,
-        }),
+        method: 'GET',
       });
 
       if (!isCancelling) {
         if (res.ok) {
-          dispatch({ type: 'SUCCESS' });
+          const json = await res.json();
+          const payload = camelizeKeys(json, {
+            // Avoid - in keys, they for now are matches for app names
+            process(key, convert, options) {
+              return /-/g.test(key) ? key : convert(key, options);
+            },
+          });
+          dispatch({ type: 'SUCCESS', payload });
         } else {
           dispatch({
             type: 'FAILED',
@@ -74,4 +84,4 @@ function useServer(app) {
   return { ...state, request };
 }
 
-export default useServer;
+export default useApi;

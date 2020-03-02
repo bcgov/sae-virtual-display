@@ -1,9 +1,9 @@
-import React, { useContext, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import AppCardLoading from '@src/components/app-card/loading';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import ServersFilters from '@src/components/servers-filters';
-import useApi from '@src/hooks/useApi';
+import useApi from '@src/hooks/use-api';
 import WorkbenchContext from '@src/utils/context';
 import { uid } from 'react-uid';
 
@@ -34,10 +34,9 @@ const reducer = (state, action) => {
 };
 
 function ServersView() {
-  const { apps, user } = useContext(WorkbenchContext);
-  const [data, loading] = useApi(`users/${user}`);
+  const { apps } = useContext(WorkbenchContext);
+  const { status, data, request } = useApi('users/{user}');
   const [state, dispatch] = useReducer(reducer, defaultState);
-  const [spawnedContainers, setSpawnedContainers] = useState([]);
   const items = apps
     .map(d => {
       const server = get(data, `servers.${d.name}`, {});
@@ -53,9 +52,6 @@ function ServersView() {
         },
         d,
         server,
-        {
-          ready: server.ready || spawnedContainers.includes(d.name),
-        },
       );
     })
     .sort(d => !d.ready)
@@ -73,6 +69,10 @@ function ServersView() {
       return true;
     });
 
+  useEffect(() => {
+    request();
+  }, []);
+
   return (
     <Container>
       <div>
@@ -81,16 +81,13 @@ function ServersView() {
           onSearch={value => dispatch({ type: 'search', payload: value })}
           onToggle={() => dispatch({ type: 'toggle' })}
         />
-        {loading && <AppCardLoading total={5} />}
+        {status === 'loading' && <AppCardLoading total={5} />}
         <div>
           {items.map((d, index) => (
             <Application
               key={uid(d)}
               data={d}
               onClick={() => alert('open app in new tab')}
-              onSpawned={app =>
-                setSpawnedContainers(state => [...state, app.name])
-              }
             />
           ))}
         </div>
