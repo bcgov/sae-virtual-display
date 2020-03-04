@@ -58,7 +58,8 @@ function useEventSource(server) {
     if (canConnect) {
       socket = new EventSource(url);
       socket.onopen = () => dispatch({ type: 'CONNECTED' });
-      socket.onerror = error => dispatch({ type: 'ERROR', payload: error });
+      socket.onerror = () =>
+        dispatch({ type: 'ERROR', payload: 'An error occurred' });
       socket.onmessage = event => {
         const payload = camelizeKeys(JSON.parse(event.data));
 

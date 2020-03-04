@@ -107,10 +107,10 @@ describe('useEventSource', () => {
       wrapper,
     });
     act(() => result.current.request());
-    act(() => sources[url].emitError('Something broke'));
+    act(() => sources[url].emitError('An error occurred'));
     expect(result.current).toEqual(
       expect.objectContaining({
-        error: 'Something broke',
+        error: 'An error occurred',
         status: 'error',
       }),
     );
