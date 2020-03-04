@@ -1,6 +1,16 @@
 import { useContext, useEffect, useReducer, useState } from 'react';
+import at from 'lodash/at';
+import compact from 'lodash/compact';
+import head from 'lodash/head';
+import flow from 'lodash/flow';
 import WorkbenchContext from '@src/utils/context';
 import { camelizeKeys } from 'humps';
+
+const getMessage = flow(
+  v => at(v, ['rawEvent.message', 'message']),
+  v => compact(v),
+  v => head(v),
+);
 
 export function reducer(state, action) {
   switch (action.type) {
@@ -13,7 +23,8 @@ export function reducer(state, action) {
     case 'PROGRESS':
       return {
         ...state,
-        ...action.payload,
+        progress: action.payload.progress,
+        message: getMessage(action.payload),
         status: 'streaming',
       };
 
@@ -58,8 +69,8 @@ function useEventSource(server) {
     if (canConnect) {
       socket = new EventSource(url);
       socket.onopen = () => dispatch({ type: 'CONNECTED' });
-      socket.onerror = () =>
-        dispatch({ type: 'ERROR', payload: 'An error occurred' });
+      // socket.onerror = () =>
+      //   dispatch({ type: 'ERROR', payload: 'An error occurred' });
       socket.onmessage = event => {
         const payload = camelizeKeys(JSON.parse(event.data));
 
