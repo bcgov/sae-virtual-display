@@ -29,13 +29,13 @@ const reducer = (state, action) => {
       };
 
     default:
-      return new Error('unhandled');
+      throw new Error();
   }
 };
 
 function ServersView() {
   const { apps } = useContext(WorkbenchContext);
-  const { status, data, request } = useApi('users/{user}');
+  const { status, data } = useApi('users/{user}');
   const [state, dispatch] = useReducer(reducer, defaultState);
   const items = apps
     .map(d => {
@@ -68,10 +68,6 @@ function ServersView() {
 
       return true;
     });
-
-  useEffect(() => {
-    request();
-  }, []);
 
   return (
     <Container>

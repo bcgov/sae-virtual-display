@@ -16,6 +16,12 @@ const messageEvent = new MessageEvent('ping', {
     message: 'Starting...',
   }),
 });
+const startEvent = new MessageEvent('ping', {
+  data: JSON.stringify({
+    progress: 0,
+    message: 'Server started...',
+  }),
+});
 const errorEvent = new MessageEvent('ping', {
   data: JSON.stringify({
     progress: 100,
@@ -56,6 +62,14 @@ describe('useEventSource', () => {
     act(() => sources[url].emitOpen());
 
     expect(result.current.status).toEqual('connected');
+
+    act(() => sources[url].emitMessage(startEvent));
+    expect(result.current.data).toEqual(
+      expect.objectContaining({
+        progress: 0,
+        message: 'Server started...',
+      }),
+    );
   });
 
   it('should update progress', () => {

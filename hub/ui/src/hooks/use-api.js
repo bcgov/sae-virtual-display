@@ -1,4 +1,4 @@
-import { useContext, useReducer } from 'react';
+import { useContext, useEffect, useReducer } from 'react';
 import { camelizeKeys } from 'humps';
 import template from 'lodash/template';
 import WorkbenchContext from '@src/utils/context';
@@ -43,21 +43,21 @@ function useApi(path) {
   });
   const urlPath = compiled(context);
 
-  async function request() {
+  useEffect(() => {
     const controller = new AbortController();
-    let isCancelling = false;
-    const { signal } = controller;
 
-    dispatch({ type: 'LOADING' });
+    async function request() {
+      const { signal } = controller;
 
-    try {
-      const url = `${context.baseURL}/${urlPath}`;
-      const res = await fetch(url, {
-        signal,
-        method: 'GET',
-      });
+      dispatch({ type: 'LOADING' });
 
-      if (!isCancelling) {
+      try {
+        const url = `${context.baseURL}/${urlPath}`;
+        const res = await fetch(url, {
+          signal,
+          method: 'GET',
+        });
+
         if (res.ok) {
           const json = await res.json();
           const payload = camelizeKeys(json, {
@@ -73,15 +73,18 @@ function useApi(path) {
             payload: `${res.status} - ${res.statusText}`,
           });
         }
-      }
-    } catch (err) {
-      if (!isCancelling) {
+      } catch (err) {
         dispatch({ type: 'FAILED', payload: err.message });
       }
     }
-  }
+    request();
 
-  return { ...state, request };
+    return () => {
+      controller.abort();
+    };
+  }, [context.baseURL, urlPath]);
+
+  return { ...state };
 }
 
 export default useApi;

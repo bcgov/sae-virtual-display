@@ -1,4 +1,4 @@
-import { useContext, useReducer } from 'react';
+import { useContext, useEffect, useMemo, useReducer } from 'react';
 import head from 'lodash/head';
 import WorkbenchContext from '@src/utils/context';
 
@@ -34,27 +34,32 @@ function useServer(app) {
     status: 'idle',
     error: null,
   });
+  const url = `${baseURL}/users/${user}/servers/${app}`;
   const project = head(projects);
+  const body = useMemo(
+    () => ({
+      image: app,
+      project,
+    }),
+    [app, project],
+  );
 
-  async function request() {
+  function makeRequest() {
+    dispatch({ type: 'LOADING' });
+  }
+
+  useEffect(() => {
     const controller = new AbortController();
-    let isCancelling = false;
     const { signal } = controller;
 
-    dispatch({ type: 'LOADING' });
+    async function request() {
+      try {
+        const res = await fetch(url, {
+          signal,
+          method: 'POST',
+          body: JSON.stringify(body),
+        });
 
-    try {
-      const url = `${baseURL}/users/${user}/servers/${app}`;
-      const res = await fetch(url, {
-        signal,
-        method: 'POST',
-        body: JSON.stringify({
-          image: app,
-          project,
-        }),
-      });
-
-      if (!isCancelling) {
         if (res.ok) {
           dispatch({ type: 'SUCCESS' });
         } else {
@@ -63,15 +68,21 @@ function useServer(app) {
             payload: `${res.status} - ${res.statusText}`,
           });
         }
-      }
-    } catch (err) {
-      if (!isCancelling) {
+      } catch (err) {
         dispatch({ type: 'FAILED', payload: err.message });
       }
     }
-  }
 
-  return { ...state, request };
+    if (state.status === 'loading') {
+      request();
+    }
+
+    return () => {
+      controller.abort();
+    };
+  }, [body, dispatch, state.status, url]);
+
+  return { ...state, request: makeRequest };
 }
 
 export default useServer;

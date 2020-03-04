@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm-run-all --parallel dev api",
     "dev": "webpack-dev-server --config webpack.dev.js",
-    "api": "json-server --watch db.json",
+    "api": "json-server --watch db.json --routes routes.json",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
     "test": "jest --updateSnapshot --coverage",
     "test:watch": "jest --updateSnapshot --coverage --watch",
