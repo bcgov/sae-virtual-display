@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useReducer } from 'react';
-import AppCardLoading from '@src/components/app-card/loading';
+import React, { useContext, useReducer } from 'react';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import ServersFilters from '@src/components/servers-filters';
@@ -35,7 +34,7 @@ const reducer = (state, action) => {
 
 function ServersView() {
   const { apps } = useContext(WorkbenchContext);
-  const { status, data } = useApi('users/{user}');
+  const { status, data, refresh } = useApi('users/{user}');
   const [state, dispatch] = useReducer(reducer, defaultState);
   const items = apps
     .map(d => {
@@ -55,19 +54,10 @@ function ServersView() {
       );
     })
     .sort(d => !d.ready)
-    .filter(d => {
-      if (state.search.trim()) {
-        return d.label.search(state.search) >= 0;
-      }
-      return true;
-    })
-    .filter(d => {
-      if (state.hideIdle) {
-        return d.ready;
-      }
-
-      return true;
-    });
+    .filter(d =>
+      state.search.trim() ? d.label.search(state.search) >= 0 : true,
+    )
+    .filter(d => (state.hideIdle ? d.ready : true));
 
   return (
     <Container>
@@ -76,14 +66,15 @@ function ServersView() {
           hideIdle={state.hideIdle}
           onSearch={value => dispatch({ type: 'search', payload: value })}
           onToggle={() => dispatch({ type: 'toggle' })}
+          status={status}
         />
-        {status === 'loading' && <AppCardLoading total={5} />}
         <div>
           {items.map((d, index) => (
             <Application
               key={uid(d)}
               data={d}
               onClick={() => alert('open app in new tab')}
+              onSpawnComplete={refresh}
             />
           ))}
         </div>

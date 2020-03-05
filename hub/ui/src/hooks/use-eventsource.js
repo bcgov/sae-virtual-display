@@ -32,6 +32,7 @@ export function reducer(state, action) {
       return {
         ...state,
         ...action.payload,
+        status: 'success',
       };
 
     case 'ERROR':

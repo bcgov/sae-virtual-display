@@ -1,12 +1,13 @@
 import React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import Spinner from '@atlaskit/spinner';
 import Textfield from '@atlaskit/textfield';
 import WatchIcon from '@atlaskit/icon/glyph/watch';
 import WatchFilledIcon from '@atlaskit/icon/glyph/watch-filled';
 
 import { Container } from './styles';
 
-function Filters({ hideIdle, onSearch, onToggle }) {
+function Filters({ hideIdle, onSearch, onToggle, status }) {
   return (
     <Container>
       <div>
@@ -17,6 +18,7 @@ function Filters({ hideIdle, onSearch, onToggle }) {
           width="medium"
         />
       </div>
+      {status === 'loading' && <Spinner />}
       <ButtonGroup>
         <Button
           iconBefore={hideIdle ? <WatchFilledIcon /> : <WatchIcon />}

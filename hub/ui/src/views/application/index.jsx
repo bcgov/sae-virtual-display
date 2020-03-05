@@ -3,7 +3,7 @@ import AppCard from '@src/components/app-card';
 import useServer from '@src/hooks/use-server';
 import useEventSource from '@src/hooks/use-eventsource';
 
-function ApplicationView({ data = {} }) {
+function ApplicationView({ data = {}, onSpawnComplete }) {
   const { request, ...es } = useEventSource(data.name);
   const server = useServer(data.name);
   const hasStreamError = es.status === 'error';
@@ -17,6 +17,12 @@ function ApplicationView({ data = {} }) {
       request();
     }
   }, [request, server]);
+
+  useEffect(() => {
+    if (es.status === 'success') {
+      onSpawnComplete();
+    }
+  }, [es.status, onSpawnComplete]);
 
   return (
     <AppCard
