@@ -101,4 +101,16 @@ describe('app-card', () => {
       expect(getAllByTestId('app-card-loading').length).toEqual(5);
     });
   });
+
+  describe('app-card/running', () => {
+    const onClick = jest.fn();
+    const onShutdown = jest.fn();
+    const { getByText } = render(
+      <AppCard ready data={data} onClick={onClick} onShutdown={onShutdown} />,
+    );
+    fireEvent.click(getByText('Shutdown'));
+
+    expect(onShutdown).toHaveBeenCalled();
+    expect(onClick).not.toHaveBeenCalled();
+  });
 });

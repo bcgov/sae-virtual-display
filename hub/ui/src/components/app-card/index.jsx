@@ -1,6 +1,7 @@
 import React from 'react';
-import Button from '@atlaskit/button';
+import Button, { ButtonGroup } from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
 import format from 'date-fns/format';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import isNumber from 'lodash/isNumber';
@@ -47,6 +48,7 @@ function AppCard({
   loading,
   message,
   onLaunch,
+  onShutdown,
   onStartApp,
   progress,
   ready,
@@ -66,6 +68,11 @@ function AppCard({
     }
   }
 
+  function onShutdownClick(event) {
+    event.stopPropagation();
+    onShutdown && onShutdown();
+  }
+
   return (
     <Card
       data-testid="app-card"
@@ -77,9 +84,17 @@ function AppCard({
     >
       <CardActions>
         {ready && !loading && (
-          <Button iconAfter={<OpenIcon primaryColor={colors.green} />}>
-            Launch
-          </Button>
+          <ButtonGroup>
+            <Button
+              iconAfter={<CrossIcon primaryColor={colors.red} />}
+              onClick={onShutdownClick}
+            >
+              Shutdown
+            </Button>
+            <Button iconAfter={<OpenIcon primaryColor={colors.green} />}>
+              Launch
+            </Button>
+          </ButtonGroup>
         )}
         {loading && <Button isLoading>Loading...</Button>}
         {!ready && !loading && (

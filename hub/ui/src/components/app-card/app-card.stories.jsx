@@ -9,6 +9,7 @@ import data from './__tests__/data';
 const idleData = { ...data, ready: false };
 const clickProps = {
   onLaunch: action('Launch app'),
+  onShutdown: action('Shutdown server'),
   onStartApp: action('Call to start server'),
 };
 

@@ -75,6 +75,7 @@ function ServersView() {
               data={d}
               onClick={() => alert('open app in new tab')}
               onSpawnComplete={refresh}
+              onShutdownComplete={refresh}
             />
           ))}
         </div>
