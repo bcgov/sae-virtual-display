@@ -166,10 +166,22 @@ class K8sSpawner(KubeSpawner):
         self.volume_mounts = self._expand_all(self.volume_mounts)
         self.volumes = self._expand_all(self.volumes)
 
+        self.log.info("user options " + json.dumps(self.user_options))
+
+        # Handle the scenario where the user_options for image can come through on
+        # the POST as an array or a single string.
+        containerImage = self.user_options['image']
+        if (isinstance(containerImage, list)):
+            containerImage = containerImage[0]
+
+        self.log.info("image (default) " + self.image)
+
         for a in self.vdi_applications:
-            if a["name"] == self.user_options['image'][0]:
+            if a["name"] == containerImage:
                 self.log.info("Using image " + a["container"])
                 self.image = a["container"]
+
+        self.log.info("image (selected) " + self.image)
 
         self.log.info("environment " + json.dumps(self.environment))
         
