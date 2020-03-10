@@ -21,10 +21,10 @@ function Filters({ hideIdle, onSearch, onToggle, status }) {
       {status === 'loading' && <Spinner />}
       <ButtonGroup>
         <Button
-          iconBefore={hideIdle ? <WatchFilledIcon /> : <WatchIcon />}
+          iconBefore={hideIdle ? <WatchIcon /> : <WatchFilledIcon />}
           onClick={onToggle}
         >
-          {hideIdle ? 'Show All Apps' : 'Hide Idle Apps'}
+          {hideIdle ? 'Show All Apps' : 'Show Running Apps Only'}
         </Button>
       </ButtonGroup>
     </Container>

@@ -75,21 +75,15 @@ function useServer(app, events = {}) {
     }
   }
 
-  function makeRequest() {
-    request('POST');
+  async function makeRequest() {
+    await request('POST');
     options.onStart();
   }
 
-  function shutdown() {
-    request('DELETE');
+  async function shutdown() {
+    await request('DELETE');
     options.onShutdown();
   }
-
-  useEffect(() => {
-    return () => {
-      controller.abort();
-    };
-  }, [controller]);
 
   return { ...state, request: makeRequest, shutdown };
 }

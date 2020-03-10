@@ -53,7 +53,6 @@ function ServersView() {
         server,
       );
     })
-    .sort(d => !d.ready)
     .filter(d =>
       state.search.trim() ? d.label.search(state.search) >= 0 : true,
     )

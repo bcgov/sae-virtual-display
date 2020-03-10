@@ -84,10 +84,6 @@ function useApi(path) {
 
   useEffect(() => {
     request();
-
-    return () => {
-      controller.abort();
-    };
   }, []);
 
   return { ...state, refresh };
