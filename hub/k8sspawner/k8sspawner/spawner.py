@@ -10,7 +10,10 @@ import string
 import escapism
 import json
 import requests
-
+import urllib.parse
+from traitlets import (
+    List
+)
 from tornado import gen
 
 from kubespawner.spawner import KubeSpawner
@@ -21,24 +24,29 @@ from kubernetes.client import V1PersistentVolume
 from k8sspawner.gen_identity import GenIdentity
 
 class K8sSpawner(KubeSpawner):
+    vdi_applications = List(
+        [],
+        config=True,
+        help="""
+        List of Virtual Display applications that can be selected.
+        """
+    )
+
     @gen.coroutine
     def get_options_form(self):
 
         auth_state = yield self.user.get_auth_state()
 
         if not auth_state or not auth_state['oauth_user'] or not auth_state['oauth_user']['groups']:
-            return json.dumps({"projects":"", "applications": ["notebook", "browser", "rstudio"]})
-
-        groups = auth_state['oauth_user']['groups']
+            groups = []
+        else:
+            groups = auth_state['oauth_user']['groups']
 
         options = {
             "projects": groups,
-            "applications": ["notebook", "browser", "rstudio"]
+            "applications": self.vdi_applications
         }
         return json.dumps(options)
-
-    def set_image_options(self, images):
-        self.image_options = images
 
     def get_specific_pvc_manifest(self, volume):
         """
@@ -91,22 +99,24 @@ class K8sSpawner(KubeSpawner):
 
         print(pvcDict)
         
-        return make_pvc(**pvcDict)
+        pvc = make_pvc(**pvcDict)
+        pvc.spec.persistentVolumeReclaimPolicy = 'Retain'
+        return pvc
 
-    def get_pv_manifest(self, volume):
-        spec = {
-            "capacity": {
-                "storage": volume['storage_size']
-            },
-            "accessModes": volume['accessModes'],
-            "persistentVolumeReclaimPolicy": "Retain",
-            "storageClassName": volume['storage_class']
-        }
-        metadata = {
-            "name": volume['name']
-        }
-        body = V1PersistentVolume("v1", None, metadata,  spec)
-        return body
+    # def get_pv_manifest(self, volume):
+    #     spec = {
+    #         "capacity": {
+    #             "storage": volume['storage_size']
+    #         },
+    #         "accessModes": volume['accessModes'],
+    #         "persistentVolumeReclaimPolicy": "Retain",
+    #         "storageClassName": volume['storage_class']
+    #     }
+    #     metadata = {
+    #         "name": volume['name']
+    #     }
+    #     body = V1PersistentVolume("v1", None, metadata,  spec)
+    #     return body
 
 
     @gen.coroutine
@@ -117,10 +127,14 @@ class K8sSpawner(KubeSpawner):
         auth_state = yield self.user.get_auth_state()
 
         self.log.info("oauth_user " + json.dumps(auth_state))
-
-        gen = GenIdentity()
+        self.log.info(".. as user " + self.user.name)
 
         user_profile = auth_state['oauth_user']
+
+        # Force the selected project to be the user's group from the auth_state
+        self.user_options['project'] = user_profile['groups']
+
+        gen = GenIdentity()
 
         token = auth_state['access_token']
 
@@ -147,10 +161,27 @@ class K8sSpawner(KubeSpawner):
             else:
                 raise
 
+        self.pod_name = self._expand_user_properties(self.pod_name_template)
+
         self.volume_mounts = self._expand_all(self.volume_mounts)
         self.volumes = self._expand_all(self.volumes)
 
-        self.image = self.image_options[self.user_options['image'][0]]
+        self.log.info("user options " + json.dumps(self.user_options))
+
+        # Handle the scenario where the user_options for image can come through on
+        # the POST as an array or a single string.
+        containerImage = self.user_options['image']
+        if (isinstance(containerImage, list)):
+            containerImage = containerImage[0]
+
+        self.log.info("image (default) " + self.image)
+
+        for a in self.vdi_applications:
+            if a["name"] == containerImage:
+                self.log.info("Using image " + a["container"])
+                self.image = a["container"]
+
+        self.log.info("image (selected) " + self.image)
 
         self.log.info("environment " + json.dumps(self.environment))
         
@@ -195,29 +226,28 @@ class K8sSpawner(KubeSpawner):
         else:
             servername = ''
 
-        try:
-            project = self.user_options['project'][0].lower().replace("_", "-").replace("/", "")
-        except Exception:
+        if 'project' in self.user_options:
+            project = self.user_options['project'][0].lower().replace("/", "").replace("_","-")
+        else:
             project = ''
+        
+        username = urllib.parse.unquote(self.user.name)
 
-        userN = ''
-        unAndGroups = self.user.name.lower().split("-")
-        if (len(unAndGroups) >= 1):
-            userN = unAndGroups[0]
+        userN = username.lower()
 
-        # If user name ends with the project then do not bother using it to form the new identity
-        if len(project) > 0 and self.user.name.lower().endswith(project) == False:
-            userN = "%s-%s" % (self.user.name, project)
+        # Special handling for a naming convention for users having the project ID at the end
+        if len(project) > 0 and username.lower().endswith(project) == True:
+            userN = username.split("-")[0]
 
-        legacy_escaped_username = ''.join([s if s in safe_chars else '-' for s in userN.lower()])
-        safe_username = escapism.escape(userN, safe=safe_chars, escape_char='-').lower()
+        safe_username = ''.join([s if s in safe_chars else '-' for s in userN])
+        #safe_username = escapism.escape(userN, safe=safe_chars, escape_char='-')
 
         formatDict = {}
 
         formatDict['userid'] = self.user.id
         formatDict['username'] = safe_username
-        formatDict['legacy_escape_username'] = legacy_escaped_username
-        formatDict['servername'] = servername
+        #formatDict['legacy_escape_username'] = legacy_escaped_username
+        formatDict['servername'] = servername.lower().replace("/", "").replace("_","-")
         formatDict['group'] = project
-
+ 
         return template.format(**formatDict)

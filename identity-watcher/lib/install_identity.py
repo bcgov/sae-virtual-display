@@ -16,10 +16,10 @@ def decoded_content (data):
 
 def install_files(secret_data):
 
-    log.info("Writing Minio details..")
-    with open("/tmp-auth-minio/config.json", "wb") as f:
-        log.info("Updating file: /tmp-auth-minio/config.json")
-        f.write(decoded_content(secret_data["mc-config.json"]))
+    log.info("Writing Minio/S3 details..")
+    with open("/tmp-auth-minio/credentials", "wb") as f:
+        log.info("Updating file: /tmp-auth-minio/credentials")
+        f.write(decoded_content(secret_data["aws-credentials"]))
 
     log.info("Writing Postgres details..")
     for k in secret_data.keys():
@@ -30,10 +30,14 @@ def install_files(secret_data):
 
     log.info("Writing Browser NSSDB details..")
     for k in secret_data.keys():
-        if not (k.startswith("postgresql.") or k == "refresh_token"):
+        if not (k.startswith("postgresql.") or k == "refresh_token" or k == "jre_cacerts" or k == "aws-credentials" or k == "mc-config.json"):
             with open("/tmp-pki-nssdb/%s" % k, "wb") as f:
                 log.info("Updating file:  /tmp-pki-nssdb/%s" % k)
                 f.write(decoded_content(secret_data[k]))
+
+    #log.info("Writing Java Keystore..")
+    #with open("/tmp-pki-java/cacerts", "wb") as f:
+    #    f.write(decoded_content(secret_data["jre_cacerts"]))
 
     # log.info("Setting access..")
     access = [

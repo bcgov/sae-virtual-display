@@ -1,0 +1,66 @@
+{
+  "servers": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 4
+    },
+    {
+      "id": 5
+    },
+    {
+      "id": 6
+    }
+  ],
+  "services": [
+    {
+      "name": "r-studio-v1",
+      "admin": false,
+      "url": "/test",
+      "prefix": "",
+      "pid": 1,
+      "command": "",
+      "info": {}
+    }
+  ],
+  "users": [
+    {
+      "id": "jjones",
+      "name": "Joshua Jones",
+      "admin": false,
+      "groups": [],
+      "server": "/",
+      "pending": "",
+      "last_activity": "2020-01-09T19:00:04.000Z",
+      "servers": {
+        "conda-navigator": {
+          "name": "conda-navigator",
+          "ready": true,
+          "pending": null,
+          "url": "/user/jjones/conda-navigator/",
+          "progress_url": "/hub/api/users/jjones/servers/conda-navigator/progress",
+          "started": "2020-01-09T19:00:04.000Z",
+          "last_activity": "2020-01-09T19:00:04.000Z",
+          "state": {}
+        },
+        "rstudio": {
+          "name": "rstudio",
+          "ready": true,
+          "pending": null,
+          "url": "/user/jjones/rstudio/",
+          "progress_url": "/hub/api/users/jjones/servers/rstudio/progress",
+          "started": "2020-01-09T19:00:04.000Z",
+          "last_activity": "2020-01-09T19:00:04.000Z",
+          "state": {}
+        }
+      }
+    }
+  ]
+}

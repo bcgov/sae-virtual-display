@@ -27,7 +27,7 @@
     <div id="main">Loading...</div>
     <noscript>
       <div id="noscript">
-        JupyterHub requires JavaScript.<br />
+        SAE requires JavaScript.<br />
         Please enable it to proceed.
       </div>
     </noscript>
@@ -36,36 +36,40 @@
       src="{{ static_url('js/bundle.js') }}"
     ></script>
     <script>
-      var spawn_options = {{spawner_options_form | safe}}
+      const spawnOptions = {{spawner_options_form | safe}};
 
-      var app_def = {
+      const logosDef = {
           notebook: {
-            label: 'Jupyter Notebook',
             image: '{{static_url('images/notebook-logo.png')}}'
           },
           rstudio: {
-            label: 'R Studio',
             image: '{{static_url('images/rstudio-logo.png')}}'
           },
           browser: {
-            label: 'Chrome Browser',
             image: '{{static_url('images/browser-logo.png')}}'
+          },
+          anaconda: {
+            image: '{{static_url('images/anaconda.png')}}'
+          },
+          datacurator: {
+            image: '{{static_url('images/datacurator-logo.png')}}'
           }
-      }
-      
-      var apps = spawn_options.applications.map(m => {
-          return { name: m, label: app_def[m].label, image: app_def[m].image }
+      };
+
+      const apps = spawnOptions.applications.map(m => {
+        m.image = logosDef[m.logo].image;
+        return m;
       });
 
       (function(config) {
-        workbench.run(config);
+        workbench.default(config);
       })({
         announcement: '{{ announcement | safe }}',
+        baseURL: '/hub/api',
         staticURL: '{{static_url('')}}',
-        formAction: '{{url}}',
         user: '{{user.name}}',
         apps: apps,
-        projects: spawn_options.projects
+        projects: spawnOptions.projects
       })
     </script>
   </body>

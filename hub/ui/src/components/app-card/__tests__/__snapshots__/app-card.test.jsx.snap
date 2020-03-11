@@ -1,0 +1,397 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`app-card app-card/index should render 1`] = `
+.c4 {
+  color: #36B37E;
+  display: inline-block;
+  fill: #FFFFFF;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.c4 > svg {
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  vertical-align: bottom;
+}
+
+.c4 stop {
+  stop-color: currentColor;
+}
+
+.c10 {
+  height: 16px;
+  width: 16px;
+  color: currentColor;
+  display: inline-block;
+  fill: #FFFFFF;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.c10 > svg {
+  height: 16px;
+  width: 16px;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  vertical-align: bottom;
+}
+
+.c10 stop {
+  stop-color: currentColor;
+}
+
+.c6 {
+  max-width: 100%;
+  height: auto;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border-radius: 3px;
+  -webkit-transition: opacity 0.25s ease-out;
+  transition: opacity 0.25s ease-out;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 1rem;
+  position: relative;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border-radius: 3px;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  color: #6B778C;
+}
+
+.c1 .c2 {
+  opacity: 0;
+}
+
+.c1 {
+  cursor: pointer;
+}
+
+.c1:hover {
+  box-shadow: 0 8px 16px -4px rgba(9,30,66,0.25),0 0 1px rgba(9,30,66,0.31);
+}
+
+.c1:hover .c2 {
+  opacity: 1;
+}
+
+.c7 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  margin: 0.25rem 0;
+}
+
+.c7 p {
+  margin-bottom: 0.5rem;
+}
+
+.c5 {
+  margin-right: 1rem;
+  -webkit-filter: grayscale(1);
+  filter: grayscale(1);
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #091E42;
+}
+
+.c9 a {
+  padding-left: 0 !important;
+}
+
+.c9 p {
+  margin: 0 10px 0 0;
+}
+
+.c9 p + a {
+  padding-left: 8px;
+}
+
+.c8 {
+  font-size: 18px;
+  font-weight: 600;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: inherit;
+}
+
+.c8 > span {
+  margin-left: 10px;
+}
+
+.c0:hover .c8 {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+<div
+  class="c0 c1"
+  data-testid="app-card"
+>
+  <div
+    class="c2 c3"
+  >
+    <button
+      class="css-shc4i4"
+      type="button"
+    >
+      <span
+        class="css-j8fq0c"
+      >
+        <span
+          class="css-t5emrf"
+        >
+          Build Application
+        </span>
+        <span
+          class="css-8xpfx5"
+        >
+          <span
+            class="c4"
+          >
+            <svg
+              focusable="false"
+              height="24"
+              role="presentation"
+              viewBox="0 0 24 24"
+              width="24"
+            >
+              <path
+                d="M11.701 16.7a5.002 5.002 0 1 1 0-10.003 5.002 5.002 0 0 1 0 10.004m8.368-3.117a1.995 1.995 0 0 1-1.346-1.885c0-.876.563-1.613 1.345-1.885a.48.48 0 0 0 .315-.574 8.947 8.947 0 0 0-.836-1.993.477.477 0 0 0-.598-.195 2.04 2.04 0 0 1-1.29.08 1.988 1.988 0 0 1-1.404-1.395 2.04 2.04 0 0 1 .076-1.297.478.478 0 0 0-.196-.597 8.98 8.98 0 0 0-1.975-.826.479.479 0 0 0-.574.314 1.995 1.995 0 0 1-1.885 1.346 1.994 1.994 0 0 1-1.884-1.345.482.482 0 0 0-.575-.315c-.708.2-1.379.485-2.004.842a.47.47 0 0 0-.198.582A2.002 2.002 0 0 1 4.445 7.06a.478.478 0 0 0-.595.196 8.946 8.946 0 0 0-.833 1.994.48.48 0 0 0 .308.572 1.995 1.995 0 0 1 1.323 1.877c0 .867-.552 1.599-1.324 1.877a.479.479 0 0 0-.308.57 8.99 8.99 0 0 0 .723 1.79.477.477 0 0 0 .624.194c.595-.273 1.343-.264 2.104.238.117.077.225.185.302.3.527.8.512 1.58.198 2.188a.473.473 0 0 0 .168.628 8.946 8.946 0 0 0 2.11.897.474.474 0 0 0 .57-.313 1.995 1.995 0 0 1 1.886-1.353c.878 0 1.618.567 1.887 1.353a.475.475 0 0 0 .57.313 8.964 8.964 0 0 0 2.084-.883.473.473 0 0 0 .167-.631c-.318-.608-.337-1.393.191-2.195.077-.116.185-.225.302-.302.772-.511 1.527-.513 2.125-.23a.477.477 0 0 0 .628-.19 8.925 8.925 0 0 0 .728-1.793.478.478 0 0 0-.314-.573"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </span>
+      </span>
+    </button>
+  </div>
+  <div
+    class="c5"
+  >
+    <img
+      alt="R Studio Logo"
+      class="c6"
+      src="/images/rstudio-logo.png"
+      title="R Studio"
+      width="80"
+    />
+  </div>
+  <div
+    class="c7"
+  >
+    <div
+      class=""
+    >
+      <h2
+        class="c8"
+      >
+        R Studio
+        <span
+          class="css-1ordfia"
+        >
+          <span
+            class="css-q5kkvr"
+          >
+            Idle
+          </span>
+        </span>
+      </h2>
+      <small>
+        Application last used January 9th, 2020
+      </small>
+      <div
+        class="c9"
+      >
+        <p>
+          R Studio is an integrated development environment for r, a programming language for statistical computing and graphics.
+        </p>
+        <a
+          class="css-1hzvll6"
+          href="https://quay.io/containername:test"
+          type="button"
+        >
+          <span
+            class="css-j8fq0c"
+          >
+            <span
+              class="css-t5emrf"
+            >
+              View Info
+            </span>
+            <span
+              class="css-8xpfx5"
+            >
+              <span
+                class="c10"
+              >
+                <svg
+                  focusable="false"
+                  height="24"
+                  role="presentation"
+                  viewBox="0 0 24 24"
+                  width="24"
+                >
+                  <g
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M19.005 19c-.003 0-.005.002-.005.002l.005-.002zM5 19.006c0-.004-.002-.006-.005-.006H5v.006zM5 4.994V5v-.006zM19 19v-6h2v6.002A1.996 1.996 0 0 1 19.005 21H4.995A1.996 1.996 0 0 1 3 19.006V4.994C3 3.893 3.896 3 4.997 3H11v2H5v14h14zM5 4.994V5v-.006zm0 14.012c0-.004-.002-.006-.005-.006H5v.006zM11 5H5v14h14v-6h2v6.002A1.996 1.996 0 0 1 19.005 21H4.995A1.996 1.996 0 0 1 3 19.006V4.994C3 3.893 3.896 3 4.997 3H11v2zm8 0v3a1 1 0 0 0 2 0V4a1 1 0 0 0-1-1h-4a1 1 0 0 0 0 2h3z"
+                    />
+                    <path
+                      d="M12.707 12.707l8-8a1 1 0 1 0-1.414-1.414l-8 8a1 1 0 0 0 1.414 1.414z"
+                    />
+                  </g>
+                </svg>
+              </span>
+            </span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`app-card app-card/loading should render 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 1rem;
+  position: relative;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border-radius: 3px;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  color: #6B778C;
+  height: 84px;
+  overflow: hidden;
+}
+
+.c0 .sc-fzXfLT {
+  opacity: 0;
+}
+
+.c0 {
+  cursor: pointer;
+}
+
+.c0:hover {
+  box-shadow: 0 8px 16px -4px rgba(9,30,66,0.25),0 0 1px rgba(9,30,66,0.31);
+}
+
+.c0:hover .sc-fzXfLT {
+  opacity: 1;
+}
+
+.c0:hover {
+  cursor: default;
+  box-shadow: none;
+  background: #fff;
+}
+
+.c0 > div:first-child {
+  width: 100px;
+  height: 100%;
+  margin-right: 20px;
+  border-radius: 3px;
+  background: #EBECF0;
+}
+
+.c0 > div:last-child {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c0 div:last-child > div {
+  width: 75%;
+  height: 15px;
+  margin: 5px 0;
+  display: block;
+  border-radius: 3px;
+  background: #EBECF0;
+}
+
+.c0 div:last-child > div:first-child {
+  width: 24%;
+  height: 20px;
+}
+
+.c0 div:last-child > div:nth-child(2) {
+  width: 45%;
+}
+
+<div
+  class="sc-fzXfLU c0"
+  data-testid="app-card-loading"
+>
+  <div />
+  <div>
+    <div />
+    <div />
+    <div />
+  </div>
+</div>
+`;

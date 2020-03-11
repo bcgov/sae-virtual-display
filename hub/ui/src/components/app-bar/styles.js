@@ -1,8 +1,8 @@
+import { appBarHeight } from '@src/shared';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import { extract } from '../../utils/theme';
-import { appBarHeight } from '../shared';
 
 const navButtonTheme = {
   default: {
@@ -62,6 +62,11 @@ export const Container = styled.nav`
   p {
     margin: 0 20px 0 0;
   }
+`;
+
+export const Icon = styled.div`
+  display: inline-block;
+  margin-right: 10px;
 `;
 
 export const Brand = styled(Link)`

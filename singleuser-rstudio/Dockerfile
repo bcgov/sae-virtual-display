@@ -46,16 +46,29 @@ RUN apt-get update && apt-get install libnss3-tools
 ##
 RUN apt-get update && apt-get install -y postgresql-client
 
-##
-## Minio CLIENT
-##
-RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc && mv mc /usr/local/bin/mc
+### AWS aws2 command for S3/Minio communication
+RUN apt-get update && apt-get install -y curl unzip less
+RUN curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+ && unzip awscliv2.zip \
+ && ./aws/install
 
 ##
-## Spark
+## Apache Arrow library
 ##
-RUN wget -c http://muug.ca/mirror/apache-dist/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz
-RUN mkdir /spark && tar -zxvf /spark-2.4.4-bin-hadoop2.7.tgz -C /spark/
+RUN apt-get install -y -V apt-transport-https curl gnupg lsb-release
+RUN curl https://dist.apache.org/repos/dist/dev/arrow/KEYS | apt-key add -
+RUN echo "deb [arch=amd64] https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main" >> /etc/apt/sources.list.d/apache-arrow.list
+RUN echo "deb-src https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/ $(lsb_release --codename --short) main" >> /etc/apt/sources.list.d/apache-arrow.list
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y keyboard-configuration
+RUN apt-get update \
+ && apt-get install -y -V libarrow-dev \
+ && apt-get install -y -V libarrow-glib-dev \
+ && apt-get install -y -V libplasma-dev \
+ && apt-get install -y -V libplasma-glib-dev \
+ && apt-get install -y -V libgandiva-dev \
+ && apt-get install -y -V libgandiva-glib-dev \
+ && apt-get install -y -V libparquet-dev \
+ && apt-get install -y -V libparquet-glib-dev
 
 USER $NB_USER
 
@@ -64,39 +77,90 @@ USER $NB_USER
 ##
 WORKDIR /home/$NB_USER
 
-RUN curl -v -O https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh && \
-    chmod +x ./Anaconda3-2019.10-Linux-x86_64.sh && \
-    ./Anaconda3-2019.10-Linux-x86_64.sh -b
+RUN curl -v -qO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    chmod +x ./Miniconda3-*-Linux-x86_64.sh && \
+    ./Miniconda3-*-Linux-x86_64.sh -b
 
-ENV PATH=$PATH:/home/$NB_USER/anaconda3/bin
+ENV PATH=$PATH:/home/$NB_USER/miniconda3/bin
 
 RUN conda init
-RUN conda update --prefix /home/jovyan/anaconda3 anaconda
+#RUN conda update -n base -c defaults conda
+#RUN conda update --prefix /home/$NB_USER/miniconda3 miniconda3
 
-RUN conda config --add channels conda-forge; \
-    conda config --add channels anaconda
-
-RUN conda install r-essentials r-tictoc r-rpostgres r-rstudioapi openjdk --yes
-RUN conda install -c conda-forge/label/main libiconv r-sparklyr --yes
+RUN conda config --add channels conda-forge && \
+    conda config --add channels anaconda && \
+    conda install r-essentials r-tictoc r-rstudioapi openjdk --yes && \
+    conda install -c conda-forge/label/main scalapack libiconv arrow-cpp r-base r-arrow r-ggplot2 r-devtools r-microbenchmark r-dbi r-sparklyr r-rpostgres --yes
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
 USER root
 
-RUN curl -L -O https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.5019-amd64.deb \
+
+##
+## RSTUDIO
+##
+RUN apt-get update
+RUN curl -L -qO https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.5019-amd64.deb \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-1.2.5019-amd64.deb \
  && rm ./rstudio-1.2.5019-amd64.deb
+
+##
+## Spark 2.4.4 with Hadoop 2.8.5 libraries and Amazon AWS SDK 1.10.77
+##
+ENV HADOOP_VERSION=2.8.5
+ENV HADOOP_HOME=/spark/hadoop-$HADOOP_VERSION
+ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+ENV PATH=${HADOOP_HOME}/bin:$PATH
+
+RUN mkdir -p $HADOOP_HOME && \
+  curl -sL --retry 3 \
+  "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" \
+  | gunzip \
+  | tar -x -C /tmp/ \
+ && mv /tmp/hadoop-$HADOOP_VERSION/* ${HADOOP_HOME} \
+ && rm -rf $HADOOP_HOME/share/doc \
+ && rmdir /tmp/hadoop-$HADOOP_VERSION
+
+ENV SPARK_VERSION=2.4.4
+ENV SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-without-hadoop
+ENV SPARK_HOME=/spark/spark-${SPARK_VERSION}
+#ENV SPARK_DIST_CLASSPATH=$(hadoop classpath)
+ENV PATH=${SPARK_HOME}/bin:$PATH
+
+RUN mkdir -p $SPARK_HOME && \
+  curl -sL --retry 3 \
+  "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz" \
+  | gunzip \
+  | tar x -C /tmp/ \
+  && mv /tmp/$SPARK_PACKAGE/* ${SPARK_HOME} \
+  && rmdir /tmp/$SPARK_PACKAGE
+
+#ENV AWS_SDK_VERSION=1.11.699
+ENV AWS_SDK_VERSION=1.10.77
+
+RUN curl -sO https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_VERSION}/hadoop-aws-${HADOOP_VERSION}.jar \
+ && mv hadoop-aws-*.jar $SPARK_HOME/jars/. \
+ && curl -sO https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/${AWS_SDK_VERSION}/aws-java-sdk-${AWS_SDK_VERSION}.jar \
+ && curl -sO https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/${AWS_SDK_VERSION}/aws-java-sdk-s3-${AWS_SDK_VERSION}.jar \
+ && curl -sO https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-config/${AWS_SDK_VERSION}/aws-java-sdk-config-${AWS_SDK_VERSION}.jar \
+ && curl -sO https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/${AWS_SDK_VERSION}/aws-java-sdk-core-${AWS_SDK_VERSION}.jar \
+ && mv aws-java-sdk-*.jar $SPARK_HOME/jars/.
+
+##
+## Add the runtime scripts to start the X-Windows emulator and RStudio
+##
+ENV LANG=en_US.UTF8
+ENV JAVA_HOME=/home/$NB_USER/miniconda3
+ENV XDG_RUNTIME_DIR=/tmp/runtime-$NB_USER
 
 COPY artifacts/start-wrapper.sh /usr/local/bin
 COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
 RUN chmod +x /usr/local/bin/launcher.sh \
- && chmod +x /usr/local/bin/start-wrapper.sh
+ && chmod +x /usr/local/bin/start-wrapper.sh \
+ && mkdir $XDG_RUNTIME_DIR \
+ && chmod 0700 $XDG_RUNTIME_DIR \
+ && chown $NB_USER $XDG_RUNTIME_DIR
 
 USER $NB_USER
-
-ENV LANG=en_US.UTF8
-ENV XDR_RUNTIME_DIR=/tmp/runtime-jovyan
-ENV SPARK_HOME=/spark/spark-2.4.4-bin-hadoop2.7
-ENV PATH=$PATH:$SPARK_HOME/bin
-
 ENTRYPOINT ["/usr/local/bin/start-wrapper.sh"]
