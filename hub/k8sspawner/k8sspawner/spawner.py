@@ -31,6 +31,13 @@ class K8sSpawner(KubeSpawner):
         List of Virtual Display applications that can be selected.
         """
     )
+    vdi_environment = Dict(
+        {},
+        config=True,
+        help="""
+        List of environment variables that have templates to parse
+        """
+    )
 
     @gen.coroutine
     def get_options_form(self):
@@ -126,7 +133,6 @@ class K8sSpawner(KubeSpawner):
         # and register the certificate
         auth_state = yield self.user.get_auth_state()
 
-        self.log.info("oauth_user " + json.dumps(auth_state))
         self.log.info(".. as user " + self.user.name)
 
         user_profile = auth_state['oauth_user']
@@ -185,10 +191,16 @@ class K8sSpawner(KubeSpawner):
 
         self.log.info("environment " + json.dumps(self.environment))
         
-        for key, value in self.environment.items():
+        for key, value in self.vdi_environment.items():
             tvalue = self._expand_user_properties(value)
-            self.log.info("env " + key + " : " + value + " -> " + tvalue)
-            self.environment[key] = tvalue
+            self.log.info("vdi_env " + key + " : " + value + " -> " + tvalue)
+            self.vdi_environment[key] = tvalue
+
+        for key, value in self.environment.items():
+            if key in self.vdi_environment.keys():
+                tvalue = self.vdi_environment[key]
+                self.log.info("env " + key + " : " + value + " -> " + tvalue)
+                self.environment[key] = tvalue
 
         first = True
         for volume in self.volumes:
