@@ -37,6 +37,11 @@ ARG NB_USER=jovyan
 RUN rm /etc/machine-id && ln -s /var/lib/dbus/machine-id /etc/machine-id
 
 ##
+## Git
+##
+RUN apt-get update && apt-get install -y git
+
+##
 ## Browser Client Certificate DB
 ##
 RUN apt-get update && apt-get install libnss3-tools
@@ -100,13 +105,14 @@ USER root
 ##
 ## RSTUDIO
 ##
-RUN apt-get update
-RUN curl -L -qO https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.5019-amd64.deb \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-1.2.5019-amd64.deb \
- && rm ./rstudio-1.2.5019-amd64.deb
+ENV RSTUDIO_VERSION=1.2.5033
+
+RUN curl -L -qO https://download1.rstudio.org/desktop/xenial/amd64/rstudio-${RSTUDIO_VERSION}-amd64.deb \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing --allow-unauthenticated -f ./rstudio-${RSTUDIO_VERSION}-amd64.deb \
+ && rm ./rstudio-${RSTUDIO_VERSION}-amd64.deb
 
 ##
-## Spark 2.4.4 with Hadoop 2.8.5 libraries and Amazon AWS SDK 1.10.77
+## Spark 2.4.5 with Hadoop 2.8.5 libraries and Amazon AWS SDK 1.10.77
 ##
 ENV HADOOP_VERSION=2.8.5
 ENV HADOOP_HOME=/spark/hadoop-$HADOOP_VERSION
@@ -122,7 +128,7 @@ RUN mkdir -p $HADOOP_HOME && \
  && rm -rf $HADOOP_HOME/share/doc \
  && rmdir /tmp/hadoop-$HADOOP_VERSION
 
-ENV SPARK_VERSION=2.4.4
+ENV SPARK_VERSION=2.4.5
 ENV SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-without-hadoop
 ENV SPARK_HOME=/spark/spark-${SPARK_VERSION}
 #ENV SPARK_DIST_CLASSPATH=$(hadoop classpath)
@@ -136,7 +142,6 @@ RUN mkdir -p $SPARK_HOME && \
   && mv /tmp/$SPARK_PACKAGE/* ${SPARK_HOME} \
   && rmdir /tmp/$SPARK_PACKAGE
 
-#ENV AWS_SDK_VERSION=1.11.699
 ENV AWS_SDK_VERSION=1.10.77
 
 RUN curl -sO https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_VERSION}/hadoop-aws-${HADOOP_VERSION}.jar \
