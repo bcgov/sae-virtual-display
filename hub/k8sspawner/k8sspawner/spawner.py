@@ -191,16 +191,10 @@ class K8sSpawner(KubeSpawner):
 
         self.log.info("environment " + json.dumps(self.environment))
         
-        for key, value in self.vdi_environment.items():
-            tvalue = self._expand_user_properties(value)
-            self.log.info("vdi_env " + key + " : " + value + " -> " + tvalue)
-            self.vdi_environment[key] = tvalue
-
         for key, value in self.environment.items():
-            if key in self.vdi_environment.keys():
-                tvalue = self.vdi_environment[key]
-                self.log.info("env " + key + " : " + value + " -> " + tvalue)
-                self.environment[key] = tvalue
+            tvalue = self._expand_user_properties(value)
+            self.log.info("env " + key + " : " + value + " -> " + tvalue)
+            self.environment[key] = tvalue
 
         first = True
         for volume in self.volumes:
