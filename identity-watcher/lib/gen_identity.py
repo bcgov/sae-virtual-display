@@ -142,9 +142,20 @@ aws_session_token={token}
             token=creds['SessionToken']
         )
 
+        aws_credentials_r = """
+aws_access_key_id <- "{key}"
+aws_secret_access_key <- "{secret}"
+aws_session_token <- "{token}"
+        """.format(
+            key=creds['AccessKeyId'],
+            secret=creds['SecretAccessKey'],
+            token=creds['SessionToken']
+        )
+
         self.info("minio/s3 access key " + creds['AccessKeyId'])
         
         secret_data['aws-credentials'] = base64.b64encode(aws_credentials.encode('utf-8')).decode('utf-8')
+        secret_data['aws-credentials-r'] = base64.b64encode(aws_credentials_r.encode('utf-8')).decode('utf-8')
 
         for f in listdir('nssdb'):
             data = open("nssdb/%s" % f, "rb").read()   

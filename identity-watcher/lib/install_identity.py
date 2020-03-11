@@ -20,6 +20,9 @@ def install_files(secret_data):
     with open("/tmp-auth-minio/credentials", "wb") as f:
         log.info("Updating file: /tmp-auth-minio/credentials")
         f.write(decoded_content(secret_data["aws-credentials"]))
+    with open("/tmp-auth-minio/credentials.r", "wb") as f:
+        log.info("Updating file: /tmp-auth-minio/credentials.r")
+        f.write(decoded_content(secret_data["aws-credentials-r"]))
 
     log.info("Writing Postgres details..")
     for k in secret_data.keys():
