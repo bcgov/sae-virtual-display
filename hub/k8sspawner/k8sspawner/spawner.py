@@ -12,7 +12,8 @@ import json
 import requests
 import urllib.parse
 from traitlets import (
-    List
+    List,
+    Dict
 )
 from tornado import gen
 
@@ -31,14 +32,7 @@ class K8sSpawner(KubeSpawner):
         List of Virtual Display applications that can be selected.
         """
     )
-    vdi_environment = Dict(
-        {},
-        config=True,
-        help="""
-        List of environment variables that have templates to parse
-        """
-    )
-
+   
     @gen.coroutine
     def get_options_form(self):
 
