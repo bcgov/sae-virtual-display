@@ -15,7 +15,7 @@ docker push ikethecoder/vdi-gatekeeper
 ```
 
 docker run -ti --rm \
-  -p 8888:8888 \
+  -p 5888:8888 \
   -e JUPYTERHUB_SERVICE_PREFIX="/user/USERID/SERVERID/"\
   vdi-gatekeeper
 
