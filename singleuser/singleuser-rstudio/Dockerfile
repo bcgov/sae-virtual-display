@@ -159,9 +159,10 @@ ENV JAVA_HOME=/home/$NB_USER/miniconda3
 ENV XDG_RUNTIME_DIR=/tmp/runtime-$NB_USER
 
 COPY artifacts/start-wrapper.sh /usr/local/bin
+COPY artifacts/s3sync.sh /usr/local/bin/s3_sync
 COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
 RUN chmod +x /usr/local/bin/launcher.sh \
- && chmod +x /usr/local/bin/start-wrapper.sh \
+ && chmod +x /usr/local/bin/start-wrapper.sh /usr/local/bin/s3_sync \
  && mkdir $XDG_RUNTIME_DIR \
  && chmod 0700 $XDG_RUNTIME_DIR \
  && chown $NB_USER $XDG_RUNTIME_DIR \
@@ -171,6 +172,7 @@ USER $NB_USER
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
+ENV LD_LIBRARY_PATH=/opt/miniconda/lib/R/lib
 ENV PATH=$PATH:/opt/miniconda/bin
 RUN conda init
 
