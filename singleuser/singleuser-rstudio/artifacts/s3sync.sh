@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 # Datasets
 aws s3 --endpoint $MINIO_ADDR sync s3://${PROJECT_ID}-datasets /home/jovyan/work/ProjectGroupShare/${PROJECT_ID}-datasets
 

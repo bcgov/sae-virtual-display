@@ -75,6 +75,9 @@ RUN apt-get update \
  && apt-get install -y -V libparquet-dev \
  && apt-get install -y -V libparquet-glib-dev
 
+## Cairo libraries for rendering ggplot2
+## RUN apt-get install -y -V libcairo2-dev libjpeg9-dev
+
 ##
 ## Conda
 ##
@@ -99,7 +102,7 @@ RUN conda init
 RUN conda config --add channels conda-forge && \
     conda config --add channels anaconda && \
     conda install openjdk --yes && \
-    conda install -c conda-forge/label/main scalapack libiconv arrow-cpp r-essentials r-tictoc r-rstudioapi r-base r-arrow r-ggplot2 r-devtools r-microbenchmark r-dbi r-sparklyr r-rpostgres --yes
+    conda install -c conda-forge/label/main cairo scalapack libiconv arrow-cpp r-bench r-dtplyr r-ggbeeswarm r-essentials r-tictoc r-rstudioapi r-base r-arrow r-ggplot2 r-devtools r-microbenchmark r-dbi r-sparklyr r-rpostgres --yes
 
 ##
 ## RSTUDIO
