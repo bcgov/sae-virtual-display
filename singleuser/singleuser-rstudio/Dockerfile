@@ -19,10 +19,12 @@ RUN apt-get install -y gnupg2 \
  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list \
  && apt-get update
 
+# Ubuntu 18.04 needed libegl1 for RStudio
 RUN apt-get update && apt-get install -y \
         dbus-x11 \
         fluxbox \
         xvfb \
+        libegl1 \
         google-chrome-stable \
         libudev-dev \
         python-avahi \
