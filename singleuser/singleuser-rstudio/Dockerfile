@@ -164,10 +164,14 @@ RUN chmod +x /usr/local/bin/launcher.sh \
  && chmod +x /usr/local/bin/start-wrapper.sh \
  && mkdir $XDG_RUNTIME_DIR \
  && chmod 0700 $XDG_RUNTIME_DIR \
- && chown $NB_USER $XDG_RUNTIME_DIR
+ && chown $NB_USER $XDG_RUNTIME_DIR \
+ && usermod -a -G conda $NB_USER
 
 USER $NB_USER
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
+
+ENV PATH=$PATH:/opt/miniconda/bin
+RUN conda init
 
 ENTRYPOINT ["/usr/local/bin/start-wrapper.sh"]
