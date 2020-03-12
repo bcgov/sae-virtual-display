@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated \
@@ -12,7 +12,8 @@ RUN apt-get update \
         xserver-xephyr \
         xterm
 
-RUN curl https://winswitch.org/gpg.asc | apt-key add - \
+RUN apt-get install -y gnupg2 \
+ && curl https://winswitch.org/gpg.asc | apt-key add - \
  && echo "deb http://winswitch.org/ xenial main" > /etc/apt/sources.list.d/winswitch.list \
  && curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list \
