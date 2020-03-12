@@ -75,18 +75,22 @@ RUN apt-get update \
  && apt-get install -y -V libparquet-dev \
  && apt-get install -y -V libparquet-glib-dev
 
-USER $NB_USER
-
 ##
 ## Conda
 ##
-WORKDIR /home/$NB_USER
+
+WORKDIR /opt
 
 RUN curl -v -qO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     chmod +x ./Miniconda3-*-Linux-x86_64.sh && \
-    ./Miniconda3-*-Linux-x86_64.sh -b
+    ./Miniconda3-*-Linux-x86_64.sh -b -p /opt/miniconda && \
+    rm -f ./Miniconda3-*-Linux-x86_64.sh
 
-ENV PATH=$PATH:/home/$NB_USER/miniconda3/bin
+RUN groupadd conda && \
+    chgrp conda -R /opt/miniconda && \
+    chmod 770 -R /opt/miniconda
+
+ENV PATH=$PATH:/opt/miniconda/bin
 
 RUN conda init
 #RUN conda update -n base -c defaults conda
@@ -94,13 +98,8 @@ RUN conda init
 
 RUN conda config --add channels conda-forge && \
     conda config --add channels anaconda && \
-    conda install r-essentials r-tictoc r-rstudioapi openjdk --yes && \
-    conda install -c conda-forge/label/main scalapack libiconv arrow-cpp r-base r-arrow r-ggplot2 r-devtools r-microbenchmark r-dbi r-sparklyr r-rpostgres --yes
-
-RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
-
-USER root
-
+    conda install openjdk --yes && \
+    conda install -c conda-forge/label/main scalapack libiconv arrow-cpp r-essentials r-tictoc r-rstudioapi r-base r-arrow r-ggplot2 r-devtools r-microbenchmark r-dbi r-sparklyr r-rpostgres --yes
 
 ##
 ## RSTUDIO
@@ -168,4 +167,7 @@ RUN chmod +x /usr/local/bin/launcher.sh \
  && chown $NB_USER $XDG_RUNTIME_DIR
 
 USER $NB_USER
+
+RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
+
 ENTRYPOINT ["/usr/local/bin/start-wrapper.sh"]
