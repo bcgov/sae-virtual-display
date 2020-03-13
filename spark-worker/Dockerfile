@@ -1,5 +1,5 @@
-#FROM bitnami/spark:2.4.4-debian-9-r108
-FROM bitnami/spark:2.4.5-debian-10-r32
+FROM bitnami/spark:2.4.4-debian-9-r108
+#FROM bitnami/spark:2.4.5-debian-10-r32
 
 USER root
 
