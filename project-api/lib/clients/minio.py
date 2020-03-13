@@ -3,28 +3,11 @@ import logging
 import config
 import json
 import tempfile
+import base64
 from string import Template
 from command import call, call_jsonl
 
 log = logging.getLogger(__name__)
-
-# mc rb s3
-# mc ls s3 --json
-# mc admin policy add/remove/list/info s3
-# mc admin policy remove s3 99-t08-s3-access
-# mc admin policy info s3 readonly
-
-# JSON error: "status": "error" (error.message, error.cause.message)
-"""
-{
- "status": "success",
- "type": "folder",
- "lastModified": "2020-03-04T22:40:51.217Z",
- "size": 0,
- "key": "99-t05-datasets/",
- "etag": ""
-}
-"""
 
 class MinioClient():
     def __init__(self, addr, access_key, secret_key):
@@ -33,12 +16,46 @@ class MinioClient():
         self.secret_key = secret_key
         call("mc config host add s3 %s %s %s" % (addr, access_key, secret_key))
 
+    def list_all(self):
+        return {
+            "policies": self.get_policies(),
+            "buckets": self.get_buckets()
+        }
+
+    def get_buckets(self):
+        reply = []
+        buckets = self.call_jsonl_check_errors("mc ls s3 --json")
+        for bucket in buckets:
+            reply.append(bucket['key'])
+        return reply
+
     def get_policies(self):
         reply = []
-        pols = call_jsonl("mc admin policy list s3 --json")
+        pols = self.call_jsonl_check_errors("mc admin policy list s3 --json")
         for pol in pols:
             reply.append(pol['policy'])
         return reply
+
+    def del_buckets(self, project_id):
+        log.info("Delete bucket? %s" % project_id)
+        all = self.list_all()
+        if "%s-datasets/" % project_id in all['buckets']:
+            log.info("Deleting bucket %s-datasets" % project_id)
+            self.call_jsonl_check_errors("mc rb --json s3/%s-datasets" % project_id)
+        if "%s-working/" % project_id in all['buckets']:
+            log.info("Deleting bucket %s-working" % project_id)
+            self.call_jsonl_check_errors("mc rb --json s3/%s-working" % project_id)
+
+    def del_project(self, project_id):
+        all = self.list_all()
+        if "%s-s3-access" % project_id in all['policies']:
+            self.call_jsonl_check_errors("mc admin policy remove --json s3 %s-s3-access" % project_id)
+
+    def get_project(self, project_id):
+        policy = self.call_jsonl_check_errors("mc admin policy info --json s3 %s-s3-access" % project_id)
+        return {
+            "policy": json.loads(base64.b64decode(policy[0]["policyJSON"]).decode("utf-8"))
+        }
 
     def add_project(self, project_id):
         policy = {
@@ -83,12 +100,20 @@ class MinioClient():
             ]
         }
 
-        call("mc mb s3/%s-datasets" % project_id)
-        call("mc mb s3/%s-working" % project_id)
+        self.call_jsonl_check_errors("mc mb --json s3/%s-datasets" % project_id)
+        self.call_jsonl_check_errors("mc mb --json s3/%s-working" % project_id)
 
         handle, filename = tempfile.mkstemp()
         with os.fdopen(handle, "wb") as tmp:
             tmp.write(json.dumps(policy).encode("utf-8"))
 
-        call("mc admin policy add s3 %s-s3-access %s" % (project_id, filename))
+        self.call_jsonl_check_errors("mc admin policy add --json s3 %s-s3-access %s" % (project_id, filename))
 
+    def call_jsonl_check_errors(self, cmd):
+        result = call_jsonl(cmd)
+        if len(result) == 1 and "status" in result[0] and result[0]["status"] == "error":
+            log.error("Error running %s" % cmd)
+            log.error(result[0]["error"]["message"])
+            log.error(result[0]["error"]["cause"]["message"])
+            raise Exception("Failed to process request for Minio")
+        return result

@@ -25,11 +25,20 @@ def call_jsonl(*args):
     cmd = args
     if len(args) == 1:
         cmd = args[0].split(' ')
-    output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-    log.debug("CMD_JSON OUT: %s" % output.decode("utf-8"))
-    reply = []
-    for line in output.split(b'\n'):
-        jsonl = line.decode("utf-8")
-        if len(jsonl) != 0:
-            reply.append(json.loads(jsonl))
-    return reply
+    try:
+        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        log.debug("CMD_JSON OUT: %s" % output.decode("utf-8"))
+        reply = []
+        for line in output.split(b'\n'):
+            jsonl = line.decode("utf-8")
+            if len(jsonl) != 0:
+                reply.append(json.loads(jsonl))
+        return reply
+    except subprocess.CalledProcessError as error:
+        log.error("CMD FAILED %s" % str(args))
+        log.error("CMD OUTPUT %s" % str(error.output))
+        try:
+            return [json.loads(error.output.decode("utf-8"))]
+        except BaseException as ex:
+            raise ex
+        raise error

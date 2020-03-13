@@ -11,8 +11,27 @@ class VaultClient():
         self.addr = addr
         self.token = token
 
+    def list_all(self):
+        return {
+            "roles": self.get_roles(),
+            "policies": self.get_policies()
+        }
+
     def get_roles(self):
         url = "%s/v1/auth/jwt/role" % self.addr
+        headers = {
+            'Content-Type':  "application/json",
+            'X-Vault-Token': self.token
+        }
+        r = requests.request('list', url, headers = headers)
+        if r.status_code == 200:
+            return r.json()['data']['keys']
+        else:
+            log.error("[%s] %s" % (r.status_code, r.text))
+            raise Exception("Failed to get list of roles")
+
+    def get_policies(self):
+        url = "%s/v1/sys/policies/acl" % self.addr
         headers = {
             'Content-Type':  "application/json",
             'X-Vault-Token': self.token
@@ -48,7 +67,7 @@ class VaultClient():
         }
         r = requests.delete(url, headers = headers)
         if r.status_code == 204:
-            log.info("[%s] %s" % (r.status_code, r.text))
+            log.debug("[%s] %s" % (r.status_code, r.text))
         else:
             log.error("[%s] %s" % (r.status_code, r.text))
             raise Exception("Failed to delete.")
@@ -60,7 +79,7 @@ class VaultClient():
         }
         r = requests.get(url, headers = headers)
         if r.status_code == 200:
-            log.info("[%s] %s" % (r.status_code, r.text))
+            log.debug("[%s] %s" % (r.status_code, r.text))
             return r.json()
         else:
             log.error("[%s] %s" % (r.status_code, r.text))
@@ -86,7 +105,7 @@ class VaultClient():
         }
         r = requests.post(url, data = json.dumps(role), headers = headers)
         if r.status_code == 200:
-            log.info("[%s] %s" % (r.status_code, r.text))
+            log.debug("[%s] %s" % (r.status_code, r.text))
         else:
             log.error("[%s] %s" % (r.status_code, r.text))
             raise Exception("Failed to add project %s" % project_id)
@@ -107,7 +126,7 @@ path "pki_int/issue/$role" {
         }
         r = requests.put(url, data = json.dumps(policy), headers = headers)
         if r.status_code == 204:
-            log.info("[%s] %s" % (r.status_code, r.text))
+            log.debug("[%s] %s" % (r.status_code, r.text))
         else:
             log.error("[%s] %s" % (r.status_code, r.text))
             raise Exception("Failed to add policy for project %s" % project_id)

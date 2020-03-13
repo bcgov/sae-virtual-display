@@ -33,7 +33,7 @@ def project_list() -> object:
     """
     Returns the list of projects that are enabled
     """
-    return jsonify(vault=vault_cli.get_roles(), minio=minio_cli.get_policies())
+    return jsonify(vault=vault_cli.list_all(), minio=minio_cli.list_all())
 
 @projects.route('/<string:projectId>', methods=['POST'], strict_slashes=False)
 def project_post(projectId: str) -> object:
@@ -52,14 +52,20 @@ def project_get(projectId: str) -> object:
     Returns the details about the project
     """
 
-    return jsonify(vault_cli.get_project(projectId))
+    return jsonify(vault=vault_cli.get_project(projectId), minio=minio_cli.get_project(projectId))
 
 @projects.route('/<string:projectId>', methods=['DELETE'], strict_slashes=False)
 def project_delete(projectId: str) -> object:
     """
     Deletes the project access
     """
+    minio_cli.del_project(projectId)
     vault_cli.del_project(projectId)
+
+    purge = request.args.get('purge')
+    log.debug("Purge? %s" % purge)
+    if purge == "yes":
+        minio_cli.del_buckets(projectId)
 
     return jsonify({"status": "ok"})
 
