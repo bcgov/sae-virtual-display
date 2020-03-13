@@ -6,7 +6,7 @@ RUN adduser --disabled-password --gecos "App User" --uid 1000 appuser
 
 ARG NB_USER=appuser
 
-COPY lib/requirements.txt /app/
+COPY server/requirements.txt /app/
 RUN (cd /app && pip3 install -r requirements.txt)
 
 # Install MC Minio client for configuring policies
@@ -14,7 +14,7 @@ RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && \
     chmod +x mc && \
     mv mc /usr/local/bin/mc
 
-COPY lib /app
+COPY server /app
 
 COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
 RUN chmod +x /usr/local/bin/launcher.sh

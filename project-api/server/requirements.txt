@@ -1,5 +1,6 @@
 config==0.4.2
 flask==1.1.1
 flask-compress==1.4.0
+Flask-Dance==2.2.0
 gevent==1.4.0
 requests==2.22.0

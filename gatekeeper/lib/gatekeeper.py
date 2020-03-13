@@ -13,9 +13,8 @@ import signal
 from flask import Flask, g, jsonify, make_response, url_for, Response
 from flask_compress import Compress
 from users import Register
-#from proxy import Proxy
-log = logging.getLogger(__name__)
 
+log = logging.getLogger(__name__)
 
 def create_app(test_config=None):
 

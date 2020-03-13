@@ -6,11 +6,13 @@ implementation that should be used by JupyterHub.
 """
 
 import os
+import sys
 import string
 import escapism
 import json
 import requests
 import urllib.parse
+import traceback
 from traitlets import (
     List,
     Dict
@@ -119,6 +121,24 @@ class K8sSpawner(KubeSpawner):
     #     body = V1PersistentVolume("v1", None, metadata,  spec)
     #     return body
 
+    def publish_event(self, payload):
+
+        url = os.environ['PROJECT_EVENTS_URL']
+        token = os.environ['PROJECT_EVENTS_TOKEN']
+        try:
+            headers = {
+                'Content-Type':  "application/json",
+                'x-api-key': token
+            }
+            r = requests.post(url, data = json.dumps(payload), headers = headers)
+            if r.status_code == 200:
+                self.log.debug("[%s] %s" % (r.status_code, r.text))
+            else:
+                self.log.error("Notification to %s failed" % url)
+                self.log.error("[%s] %s" % (r.status_code, r.text))
+        except:
+            self.log.error("Notification to %s failed" % url)
+            traceback.print_exc(file=sys.stdout)
 
     @gen.coroutine
     def start(self):
@@ -140,7 +160,18 @@ class K8sSpawner(KubeSpawner):
 
         user_project_id = self._expand_user_properties('{username}-{group}')
 
-        secret = gen.generate(user_profile['preferred_username'],token, auth_state['refresh_token'], 'users-bbsae-xyz', user_project_id)
+        # Handle the scenario where the user_options for image can come through on
+        # the POST as an array or a single string.
+        containerImage = self.user_options['image']
+        if (isinstance(containerImage, list)):
+            containerImage = containerImage[0]
+
+        try:
+            secret = gen.generate(user_profile['preferred_username'],token, auth_state['refresh_token'], 'users-bbsae-xyz', user_project_id)
+            self.publish_event({"action": "bbsae_spawn", "project": self.user_options['project'], "actor": urllib.parse.unquote(self.user.name), "success": True, "message": "Spawning %s" % containerImage})
+        except:
+            self.publish_event({"action": "bbsae_spawn", "project": self.user_options['project'], "actor": urllib.parse.unquote(self.user.name), "success": False, "message": "Failed to spawn %s" % containerImage})
+            raise
 
         try:
             yield self.asynchronize(
@@ -168,11 +199,6 @@ class K8sSpawner(KubeSpawner):
 
         self.log.info("user options " + json.dumps(self.user_options))
 
-        # Handle the scenario where the user_options for image can come through on
-        # the POST as an array or a single string.
-        containerImage = self.user_options['image']
-        if (isinstance(containerImage, list)):
-            containerImage = containerImage[0]
 
         self.log.info("image (default) " + self.image)
 

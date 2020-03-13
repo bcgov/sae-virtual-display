@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="/static/bootstrap/bootstrap.min.css"/>
+        <script src="/static/bootstrap/jquery-3.4.1.min.js"></script>
+        <script src="/static/bootstrap/bootstrap.min.js"></script>
+        <script>
+            function submitted() {
+                $('#progress').css('display', 'block');
+                $('#message').css('display', 'none');
+                $('button').attr("disabled", true);
+                return true;
+            }
+        </script>
+        <title>Browser-Based Secure Analytics Environment Administration</title>
+    </head>
+    <body>
+            <div class="container">
+
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                              <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                                <a class="navbar-brand" href="/v1/selfserve/main">Browser-Based Secure Analytics Environment Administration</a>
+                                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                                </ul>
+                                <span class="navbar-text my-2 my-lg-0">
+                                        <a href="/admin/logout">Logout</a>
+                                </span>                                
+                            </div>
+                    </nav>
+
+                    {% if message %}
+                        <div class="alert alert-primary m-3" role="alert" id="message">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="alert alert-info m-3" role="alert" id="progress" style="display:none; vertical-align:middle">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <span class="">Please wait... it can take a minute or two.</span>
+                    </div>
+
+                    <div class="card m-3">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link {{tab['create']}}" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Create Repo</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{tab['rename']}}" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Rename Repo</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{tab['join']}}" id="join-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Join Repo</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{tab['leave']}}" id="leave-tab" data-toggle="tab" href="#leave" role="tab" aria-controls="leave" aria-selected="false">Leave Repo</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{tab['delete']}}" id="delete-tab" data-toggle="tab" href="#delete" role="tab" aria-controls="delete" aria-selected="false">Delete Repo</a>
+                                </li> -->
+                                <li class="nav-item">
+                                    <a class="nav-link {{tab['activity']}}" id="activity-tab" data-toggle="tab" href="#activity" role="tab" aria-controls="activity" aria-selected="false">Activity</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade {{tab['create']}}" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                                    <h2>Create Repository</h2>
+
+                                    <form action="/v1/selfserve/projectsc/repository" method="POST" onSubmit="return submitted()">
+                                        <p>SAE Project: <b>{{ project }}</b></p>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Repository</label>
+                                            <input type="text" class="form-control" id="repository" name="repository" aria-describedby="emailHelp" placeholder="Enter repository">
+                                            <small id="emailHelp" class="form-text text-muted">Name of the new repository.</small>
+                                        </div>
+                                        <div class="form-group form-check">
+                                            <input class="form-check-input" type="checkbox" name="private" value="private" id="private_repo">
+                                            <label class="form-check-label" for="private_repo">
+                                                Make repository private to your project (SAE project repository)
+                                            </label>
+                                            <small id="emailHelp" class="form-text text-muted">SAE project repositories have Issues and WIKI enabled but are only accessible to your project team.  If you do not select this option, your repository will be a SAE shared repository that will be accessible to all DIP projects.</small>
+                                        </div>                                        
+                                        <button type="submit" class="btn btn-primary" id="submit_button">Submit</button>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade {{tab['rename']}}" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                                    <h2>Rename Repository</h2>
+                                    <form action="/v1/selfserve/projectsc/repository/rename" method="POST" onSubmit="return submitted()">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Select Existing Repository:</label>
+                                            {% for value in repo_list %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="repository" id="rename_{{ value.name }}" value="{{ value.name }}">
+                                                    <label class="form-check-label" for="rename_{{ value.name }}">
+                                                            {{ value.name }} <span class="badge badge-pill badge-light">shared: {{value.share_count}}</span>
+                                                                    {% if value.private %}
+                                                                        <span class="badge badge-pill badge-secondary">private</span>
+                                                                    {% endif %}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                            {% if repo_list.__len__() == 0 %}
+                                            <p><i>No linked repositories found.</i></p>
+                                            {% endif %}
+                                    </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">New Repository Name</label>
+                                            <input type="text" class="form-control" id="repository" name="newRepository" aria-describedby="emailHelp" placeholder="Enter repository">
+                                            <small id="emailHelp" class="form-text text-muted">Name of the new repository.</small>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade {{tab['join']}}" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                                    <h2>Join Repository</h2>
+                                    <form action="/v1/selfserve/projectsc/repository/join" method="POST" onSubmit="return submitted()">
+                                        <p>SAE Project: <b>{{ project }}</b></p>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Select Existing Repository:</label>
+                                            {% for value in unlinked_repo_list %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="repository" id="join_{{ value.name }}" value="{{ value.name }}">
+                                                    <label class="form-check-label" for="join_{{ value.name }}">
+                                                            {{ value.name }} <span class="badge badge-pill badge-light">shared: {{value.share_count}}</span>
+                                                                {% if value.private %}
+                                                                    <span class="badge badge-pill badge-secondary">private</span>
+                                                                {% endif %}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                            {% if unlinked_repo_list.__len__() == 0 %}
+                                                <p><i>No unlinked repositories found.</i></p>
+                                            {% endif %}
+
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>                                    
+                                </div>
+                                <div class="tab-pane fade {{tab['leave']}}" id="leave" role="tabpanel" aria-labelledby="leave-tab">
+                                        <h2>Leave Repository</h2>
+                                        <form action="/v1/selfserve/projectsc/repository/leave" method="POST" onSubmit="return submitted()">
+                                            <p>SAE Project: <b>{{ project }}</b></p>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Select Existing Repository:</label>
+                                                {% for value in repo_list %}
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="repository" id="leave_{{ value.name }}" value="{{ value.name }}">
+                                                        <label class="form-check-label" for="leave_{{ value.name }}">
+                                                                {{ value.name }} <span class="badge badge-pill badge-light">shared: {{value.share_count}}</span>
+                                                                {% if value.private %}
+                                                                    <span class="badge badge-pill badge-secondary">private</span>
+                                                                {% endif %}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                                {% if repo_list.__len__() == 0 %}
+                                                <p><i>No linked repositories found.</i></p>
+                                                {% endif %}
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </form>                                    
+                                </div>
+                                <div class="tab-pane fade {{tab['delete']}}" id="delete" role="tabpanel" aria-labelledby="delete-tab">
+
+                                    <h2>Delete Repository</h2>
+                                    <form action="/v1/selfserve/projectsc/repository/delete" method="POST" onSubmit="return submitted()">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Select Repository (only showing repos not sharing with any SAE projects):</label>
+                                            {% for value in noshares_repo_list %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="repository" id="delete_{{ value.name }}" value="{{ value.name }}">
+                                                    <label class="form-check-label" for="delete_{{ value.name }}">
+                                                            {{ value.name }}
+                                                                    {% if value.private %}
+                                                                        <span class="badge badge-pill badge-secondary">private</span>
+                                                                    {% endif %}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                            {% if noshares_repo_list.__len__() == 0 %}
+                                            <p><i>No repositories found.</i></p>
+                                            {% endif %}
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade {{tab['activity']}}" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+                                        <h2>Activity</h2>
+                                        <div id="activity_root"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+
+            <script src="/static/react/react.min.js"></script>
+            <script src="/static/react/react-dom.min.js"></script>
+            <script src="/static/react/browser.min.js"></script>
+    
+            <script type="text/babel" src="/static/app/activity.jsx"></script>
+
+    </body>
+</html>

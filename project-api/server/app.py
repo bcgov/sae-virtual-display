@@ -12,7 +12,8 @@ import os
 import signal
 from flask import Flask, g, jsonify, make_response, url_for, Response
 from flask_compress import Compress
-from api import ProjectApi
+from routes.api import Register
+
 #from proxy import Proxy
 log = logging.getLogger(__name__)
 
@@ -29,8 +30,10 @@ def create_app(test_config=None):
         app.config.update(conf.data)
         app.config.update(test_config)
 
+    app.secret_key = conf.data['sessionSecret']
+
     ##Routes##
-    ProjectApi(app)
+    Register(app)
     Compress(app)
 
     @app.route('/hello')

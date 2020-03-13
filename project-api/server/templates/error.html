@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="/static/bootstrap/bootstrap.min.css"/>
+        <script src="/static/bootstrap/jquery-3.4.1.min.js"></script>
+        <script src="/static/bootstrap/bootstrap.min.js"></script>
+        <title>DIP Self-Service</title>
+    </head>
+    <body>
+            <div class="container">
+
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                              <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                                <a class="navbar-brand" href="/v1/selfserve/main">DIP Self-Service</a>
+                                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                                </ul>
+                            </div>
+                    </nav>
+
+                    {% if message %}
+                        <div class="alert alert-danger m-3" role="alert" id="message">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+            </div>
+    </body>
+</html>
