@@ -1,0 +1,33 @@
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get -y install python3-pip curl
+
+RUN adduser --disabled-password --gecos "App User" --uid 1000 appuser
+
+ARG NB_USER=appuser
+
+COPY lib/requirements.txt /app/
+RUN (cd /app && pip3 install -r requirements.txt)
+
+# Install MC Minio client for configuring policies
+RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && \
+    chmod +x mc && \
+    mv mc /usr/local/bin/mc
+
+COPY lib /app
+
+COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
+RUN chmod +x /usr/local/bin/launcher.sh
+
+RUN chown -R $NB_USER:users /home/appuser \
+ && chown -R $NB_USER:users /app \
+ && chown -R $NB_USER:users /usr/local/bin \
+ && usermod -a -G users $NB_USER
+
+
+USER $NB_USER
+
+WORKDIR /app
+ENV LANG=en_US.UTF8
+
+ENTRYPOINT ["/usr/local/bin/launcher.sh"]

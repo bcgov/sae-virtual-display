@@ -33,6 +33,13 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/sae-virtual-display/init-user-identity
       bash ../.travis/docker_quayio_push vdi-init-identity
+  - name: Project API
+    stage: Virtual Display Components
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/project-api
+      bash ../.travis/docker_quayio_push vdi-project-api
 
   - name: Session // RStudio
     stage: Virtual Display Components
@@ -75,7 +82,7 @@ matrix:
     script:
     - |-
       cd /home/travis/build/bcgov/sae-virtual-display/spark-worker
-      bash ../.travis/docker_quayio_push spark-worker
+      bash ../.travis/docker_quayio_push vdi-spark-worker
 
 env:
   global:
