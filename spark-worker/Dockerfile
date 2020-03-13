@@ -1,5 +1,5 @@
 FROM bitnami/spark:2.4.4-debian-9-r108
-#FROM bitnami/spark:2.4.5-debian-10-r32
+#FROM bitnami/spark:2.4.5-debian-10-r32 (wasn't able to start)
 
 USER root
 
@@ -20,7 +20,7 @@ RUN mkdir -p $HADOOP_HOME && \
  && mv /tmp/hadoop-$HADOOP_VERSION/* ${HADOOP_HOME} \
  && rm -rf $HADOOP_HOME/share/doc
 
-ENV SPARK_VERSION=2.4.5
+ENV SPARK_VERSION=2.4.4
 ENV SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-without-hadoop
 ENV SPARK_HOME=/opt/bitnami/spark
 #ENV SPARK_DIST_CLASSPATH=$(hadoop classpath)
