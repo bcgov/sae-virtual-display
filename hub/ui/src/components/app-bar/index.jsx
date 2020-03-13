@@ -3,7 +3,7 @@ import Button from '@atlaskit/button';
 import WorkbenchIcon from '@atlaskit/icon/glyph/dashboard';
 
 import NavButton from './nav-button';
-import { Brand, Container, Icon, Nav } from './styles';
+import { Brand, Container, Icon, Nav, SignedInText } from './styles';
 import WorkbenchContext from '../../utils/context';
 
 function AppBar(props) {
@@ -25,7 +25,16 @@ function AppBar(props) {
         </Nav>
       </div>
       <div>
-        <p className="navbar-text">Signed in as {user}</p>
+        {props.isHelpEnabled && (
+          <Button
+            appearance="primary"
+            id="Workbench-tour-btn"
+            onClick={props.onStartTour}
+          >
+            Take Tour
+          </Button>
+        )}
+        <SignedInText>Signed in as {user}</SignedInText>
         <Button
           appearance="primary"
           id="Workbench-logout-btn"

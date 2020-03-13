@@ -5,4 +5,5 @@ export const Container = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+  position: relative;
 `;

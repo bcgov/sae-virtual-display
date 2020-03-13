@@ -7,6 +7,8 @@ import data from './data';
 import AppCard from '../';
 import Loading from '../loading';
 
+const cachedLocation = window.location;
+
 describe('app-card', () => {
   afterEach(cleanup);
 
@@ -40,13 +42,9 @@ describe('app-card', () => {
     it('should stop event bubbling on info button', () => {
       const onStart = jest.fn();
       const { getByText } = render(
-        <AppCard
-          data={{ ...data, container: 'http://test.com' }}
-          onStart={onStart}
-        />,
+        <AppCard data={{ ...data, container: '/test' }} onStart={onStart} />,
       );
       fireEvent.click(getByText('View Info'));
-
       expect(onStart).not.toHaveBeenCalled();
     });
 

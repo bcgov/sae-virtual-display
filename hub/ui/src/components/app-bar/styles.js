@@ -58,10 +58,6 @@ export const Container = styled.nav`
     display: flex;
     align-items: center;
   }
-
-  p {
-    margin: 0 20px 0 0;
-  }
 `;
 
 export const Icon = styled.div`
@@ -84,4 +80,8 @@ export const Brand = styled(Link)`
 export const Nav = styled.div`
   padding: 0;
   margin: 0 0 0 30px;
+`;
+
+export const SignedInText = styled.p`
+  margin: 0 10px;
 `;

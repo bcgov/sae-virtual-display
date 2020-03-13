@@ -54,10 +54,10 @@ exports[`core/progress should render, with defaults 1`] = `
       tabindex="0"
     >
       <span
-        class="css-1i5tcqv-Bar"
+        class="css-1w0nw0i-Bar"
       />
       <span
-        class="css-1p25adh-Bar"
+        class="css-1xfl40c-Bar"
       />
     </div>
   </div>

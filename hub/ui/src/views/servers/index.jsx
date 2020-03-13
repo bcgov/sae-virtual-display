@@ -71,6 +71,7 @@ function ServersView() {
           {items.map((d, index) => (
             <Application
               key={uid(d)}
+              hasHelp={index === 0}
               data={d}
               onClick={() => alert('open app in new tab')}
               onSpawnComplete={refresh}
