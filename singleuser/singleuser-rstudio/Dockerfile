@@ -133,7 +133,7 @@ RUN mkdir -p $HADOOP_HOME && \
  && rm -rf $HADOOP_HOME/share/doc \
  && rmdir /tmp/hadoop-$HADOOP_VERSION
 
-ENV SPARK_VERSION=2.4.5
+ENV SPARK_VERSION=2.4.4
 ENV SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-without-hadoop
 ENV SPARK_HOME=/spark/spark-${SPARK_VERSION}
 #ENV SPARK_DIST_CLASSPATH=$(hadoop classpath)
