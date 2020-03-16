@@ -1,5 +1,6 @@
 {
   "host": "https://[host]/api/fetch/page/",
   "port": "3000",
-  "credentials": "a base64 encoded string of :email:password"
+  "credentials": "a base64 encoded string of :email:password",
+  "whitelist": ["UI URL"]
 }

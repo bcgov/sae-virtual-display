@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import Button from '@atlaskit/button';
+import Button, { ButtonGroup } from '@atlaskit/button';
 import WorkbenchIcon from '@atlaskit/icon/glyph/dashboard';
+import Help from '@src/views/help';
 
 import NavButton from './nav-button';
 import { Brand, Container, Icon, Nav, SignedInText } from './styles';
@@ -35,13 +36,16 @@ function AppBar(props) {
           </Button>
         )}
         <SignedInText>Signed in as {user}</SignedInText>
-        <Button
-          appearance="primary"
-          id="Workbench-logout-btn"
-          href="/hub/logout"
-        >
-          Logout
-        </Button>
+        <ButtonGroup>
+          <Button
+            appearance="primary"
+            id="Workbench-logout-btn"
+            href="/hub/logout"
+          >
+            Logout
+          </Button>
+          <Help />
+        </ButtonGroup>
       </div>
     </Container>
   );
