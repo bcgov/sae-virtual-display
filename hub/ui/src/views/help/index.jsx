@@ -9,8 +9,8 @@ import WorkbenchContext from '@src/utils/context';
 import { HelpContent, HelpLoading } from './styles';
 
 function Help() {
-  const { helpArticles } = useContext(WorkbenchContext);
-  const data = useHelp(helpArticles.main);
+  const { help } = useContext(WorkbenchContext);
+  const data = useHelp(help.main);
   const [open, toggleOpen] = useState(false);
 
   function onToggle() {

@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import isNil from 'lodash/isNil';
+import nth from 'lodash/nth';
 import sanitize from 'sanitize-html';
 import { Spotlight } from '@atlaskit/onboarding';
 
-function Onboarding({ data, enabled }) {
-  const [index, setIndex] = useState(0);
-  const section = data[index - 1];
+function Onboarding({ data = [], enabled }) {
+  const [index, setIndex] = useState(null);
+  const sections = data.map(d => d.page && d.page.title);
+  const section = nth(data, index);
+  const target = data.reduce((prev, d) => {
+    if (index >= 0) {
+      return nth(sections, index);
+    }
+    return prev;
+  }, null);
 
   useEffect(() => {
     if (enabled) {
-      setIndex(1);
+      setIndex(0);
     }
   }, [enabled]);
 
@@ -20,27 +29,22 @@ function Onboarding({ data, enabled }) {
   const renderActions = () => {
     const actions = [];
 
-    if (index < data.length) {
+    if (index + 1 < data.length) {
       actions.push({ onClick: () => setIndex(s => s + 1), text: 'Next' });
     } else {
-      actions.push({ onClick: () => setIndex(0), text: 'Finish' });
+      actions.push({ onClick: () => setIndex(null), text: 'Finish' });
     }
 
-    if (index > 1) {
+    if (index > 0) {
       actions.push({ onClick: () => setIndex(s => s - 1), text: 'Prev' });
     }
 
     return actions;
   };
 
-  if (index > 0 && section) {
+  if (!isNil(index) && section) {
     return (
-      <Spotlight
-        actions={renderActions()}
-        dialogPlacement="right center"
-        heading={section.page.title}
-        target={`help-${section.page.numbering}`}
-      >
+      <Spotlight actions={renderActions()} target={target}>
         <div
           dangerouslySetInnerHTML={{ __html: sanitize(section.page.body) }}
         />

@@ -10,8 +10,8 @@ import Servers from '../servers';
 import { Main } from './styles';
 
 function App() {
-  const { helpArticles } = useContext(WorkbenchContext);
-  const data = useHelp(helpArticles.onboarding);
+  const { help } = useContext(WorkbenchContext);
+  const helpData = useHelp(help.onboarding);
   const [isHelpEnabled, setHelpEnabled] = useState(false);
 
   function onToggleOnboarding() {
@@ -26,7 +26,7 @@ function App() {
     <Router>
       <SpotlightManager>
         <AppBar
-          isHelpEnabled={data.length > 0}
+          isHelpEnabled={helpData.length > 0}
           onStartTour={onToggleOnboarding}
         />
         <Main>
@@ -38,7 +38,7 @@ function App() {
           </Switch>
         </Main>
         <SpotlightTransition>
-          <Onboarding data={data} enabled={isHelpEnabled} />
+          <Onboarding data={helpData} enabled={isHelpEnabled} />
         </SpotlightTransition>
       </SpotlightManager>
     </Router>
