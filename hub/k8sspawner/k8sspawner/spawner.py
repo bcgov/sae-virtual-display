@@ -160,7 +160,7 @@ class K8sSpawner(KubeSpawner):
         token = auth_state['access_token']
 
         project_id = self._expand_user_properties('{group}')
-        user_project_id = self._expand_user_properties('oid-{username}-{group}')
+        user_project_id = self._expand_user_properties('{username}-{group}')
 
         # Handle the scenario where the user_options for image can come through on
         # the POST as an array or a single string.
@@ -275,7 +275,7 @@ class K8sSpawner(KubeSpawner):
         formatDict = {}
 
         formatDict['userid'] = self.user.id
-        formatDict['username'] = safe_username
+        formatDict['username'] = "oid-" + safe_username
         formatDict['servername'] = servername.lower().replace("/", "").replace("_","-")
         formatDict['group'] = project
  
