@@ -260,8 +260,11 @@ class K8sSpawner(KubeSpawner):
             project = self.user_options['project'][0].lower().replace("/", "").replace("_","-")
         else:
             project = ''
-        
-        userN = urllib.parse.unquote(self.user_options['username']).lower()
+
+        if 'username' in self.user_options:
+            userN = urllib.parse.unquote(self.user_options['username']).lower()
+        else:
+            userN = urllib.parse.unquote(self.user.name).lower()
 
         # Special handling for a naming convention for users having the project ID at the end
         if len(project) > 0 and userN.endswith(project) == True:
