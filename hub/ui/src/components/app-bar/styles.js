@@ -77,11 +77,23 @@ export const Brand = styled(Link)`
   }
 `;
 
+export const MainMenu = styled.div`
+  margin: 4px 0 0 20px;
+`;
+
+export const MainMenuButton = styled.div`
+  height: 30px;
+  display: inline-block;
+  color: #fff;
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover {
+    opacity: 0.75;
+  }
+`;
+
 export const Nav = styled.div`
   padding: 0;
   margin: 0 0 0 30px;
-`;
-
-export const SignedInText = styled.p`
-  margin: 0 10px;
 `;
