@@ -153,6 +153,7 @@ class K8sSpawner(KubeSpawner):
 
         # Force the selected project to be the user's group from the auth_state
         self.user_options['project'] = user_profile['groups']
+        self.user_options['username'] = user_profile['preferred_username']
 
         gen = GenIdentity()
 
@@ -167,11 +168,13 @@ class K8sSpawner(KubeSpawner):
         if (isinstance(containerImage, list)):
             containerImage = containerImage[0]
 
+        login_username = user_profile['preferred_username']
+
         try:
-            secret = gen.generate(user_profile['preferred_username'],token, auth_state['refresh_token'], user_project_id, project_id)
-            self.publish_event({"action": "bbsae_spawn", "project": self.user_options['project'], "actor": urllib.parse.unquote(self.user.name), "application": containerImage, "success": True, "message": "Spawning %s" % containerImage})
+            secret = gen.generate(login_username, token, auth_state['refresh_token'], user_project_id, project_id)
+            self.publish_event({"action": "bbsae_spawn", "project": self.user_options['project'], "actor": urllib.parse.unquote(login_username), "application": containerImage, "success": True, "message": "Spawning %s" % containerImage})
         except:
-            self.publish_event({"action": "bbsae_spawn", "project": self.user_options['project'], "actor": urllib.parse.unquote(self.user.name), "application": containerImage, "success": False, "message": "Failed to spawn %s" % containerImage})
+            self.publish_event({"action": "bbsae_spawn", "project": self.user_options['project'], "actor": urllib.parse.unquote(login_username), "application": containerImage, "success": False, "message": "Failed to spawn %s" % containerImage})
             raise
 
         try:
@@ -258,22 +261,18 @@ class K8sSpawner(KubeSpawner):
         else:
             project = ''
         
-        username = urllib.parse.unquote(self.user.name)
-
-        userN = username.lower()
+        userN = urllib.parse.unquote(self.user_options['username']).lower()
 
         # Special handling for a naming convention for users having the project ID at the end
-        if len(project) > 0 and username.lower().endswith(project) == True:
-            userN = username[0:0-(len(project)+1)]
+        if len(project) > 0 and userN.endswith(project) == True:
+            userN = userN[0:0-(len(project)+1)]
 
         safe_username = ''.join([s if s in safe_chars else '-' for s in userN])
-        #safe_username = escapism.escape(userN, safe=safe_chars, escape_char='-')
 
         formatDict = {}
 
         formatDict['userid'] = self.user.id
         formatDict['username'] = safe_username
-        #formatDict['legacy_escape_username'] = legacy_escaped_username
         formatDict['servername'] = servername.lower().replace("/", "").replace("_","-")
         formatDict['group'] = project
  
