@@ -19,6 +19,7 @@ loggingLevel = getattr(logging, 'DEBUG')
 logging.basicConfig(level=loggingLevel,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
+project_id = os.environ["PROJECT_ID"]
 user_project_id = os.environ["USER_PROJECT_ID"]
 
 log.info("Identity Watcher Started for %s" % user_project_id)
@@ -59,7 +60,7 @@ while True:
             sleep_time = max(60, min(expires_on, refresh_expires_on) - 120) # 2 minute buffer, wait atleast 60 seconds
 
             log.info("Access Token Refreshed - new sleep time %d - %s" % (sleep_time, access_token[0:10]))
-            secret_data = gen.generate(access_token, refresh_token, 'users-bbsae-xyz', user_project_id)
+            secret_data = gen.generate(access_token, refresh_token, user_project_id, project_id)
             install_files (secret_data)
             
         except KeyboardInterrupt:

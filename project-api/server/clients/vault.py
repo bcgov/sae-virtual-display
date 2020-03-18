@@ -85,6 +85,25 @@ class VaultClient():
             log.error("[%s] %s" % (r.status_code, r.text))
             raise Exception("Failed to get.")
 
+    # vault_pki_secret_backend_role : "pki-backend-role-%s" % project_id
+    #
+    # _add_pki_role()
+    #
+    # resource "vault_pki_secret_backend_role" "users" {
+    #   backend          = vault_mount.pki_int.path
+    #   name             = "users-bbsae-xyz"
+    #   allow_subdomains = false
+    #   max_ttl          = 86400 # 24 hours
+    #   allow_any_name   = true
+    #   server_flag      = false
+    #   client_flag      = true
+    #   require_cn       = true
+    #   key_usage        = ["DigitalSignature","KeyAgreement","KeyEncipherment"]
+    #   organization     = ["Data Innovation Programme @ PopDataBC"]
+    # }
+    #
+    # _add_jwt_role()
+    #
     def _add_role(self, project_id):
         role = {
             "role_type": "jwt",

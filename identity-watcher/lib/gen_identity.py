@@ -41,12 +41,12 @@ class GenIdentity():
 
         return j['access_token'], int(j['expires_in']), j['refresh_token'], int(j['refresh_expires_in'])       
 
-    def vault_login(self, vault_addr, access_token, refresh_token, attempt):
+    def vault_login(self, vault_addr, role, access_token, refresh_token, attempt):
         url = "%s/v1/auth/jwt/login" % vault_addr
 
         self.info("vault_login - " + url)
 
-        payload = {'role': 'sae-issue-cert-role', 'jwt': access_token}
+        payload = {'role': role, 'jwt': access_token}
 
         headers = {
             "Content-Type": "application/json"
@@ -65,12 +65,15 @@ class GenIdentity():
         return vault_token
 
 
-    def generate(self, access_token, refresh_token, role, user_project_id):
+    def generate(self, access_token, refresh_token, user_project_id, project_id):
         self.info("GenIdentity User Project=%s" % (user_project_id))
         
-        vault_token = self.vault_login (os.environ['VAULT_ADDR'], access_token, refresh_token, 1)
+        pki_role = "pki-backend-role-%s" % project_id
+        jwt_role = "sae-issue-cert-%s" % project_id
 
-        url = "%s/v1/pki_int/issue/%s" % (os.environ['VAULT_ADDR'], role)
+        vault_token = self.vault_login (os.environ['VAULT_ADDR'], jwt_role, access_token, refresh_token, 1)
+
+        url = "%s/v1/pki_int/issue/%s" % (os.environ['VAULT_ADDR'], pki_role)
 
         self.info("issue url %s" % url)
 

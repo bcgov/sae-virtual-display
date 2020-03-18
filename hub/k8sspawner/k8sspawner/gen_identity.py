@@ -40,12 +40,12 @@ class GenIdentity():
         j = x.json()
         return j['access_token']        
 
-    def vault_login(self, vault_addr, access_token, refresh_token, attempt):
+    def vault_login(self, vault_addr, role, access_token, refresh_token, attempt):
         url = "%s/v1/auth/jwt/login" % vault_addr
 
         self.info("vault_login - " + url)
 
-        payload = {'role': 'sae-issue-cert-role', 'jwt': access_token}
+        payload = {'role': role, 'jwt': access_token}
 
         headers = {
             "Content-Type": "application/json"
@@ -57,7 +57,7 @@ class GenIdentity():
             if attempt == 2:
                 raise Exception("Failed to login to Vault even after JWT refresh")
             access_token = self.refresh_jwt_token(refresh_token)
-            return self.vault_login (vault_addr, access_token, refresh_token, 2)
+            return self.vault_login (vault_addr, role, access_token, refresh_token, 2)
 
         if x.status_code != 200:
             self.info("text %s" % x.text)
@@ -69,12 +69,15 @@ class GenIdentity():
         return access_token, vault_token
 
 
-    def generate(self, user_id, access_token, refresh_token, role, user_project_id):
+    def generate(self, user_id, access_token, refresh_token, user_project_id, project_id):
         self.info("GenIdentity U=%s, P=%s" % (user_id, user_project_id))
 
-        access_token, vault_token = self.vault_login (os.environ['VAULT_ADDR'], access_token, refresh_token, 1)
+        pki_role = "pki-backend-role-%s" % project_id
+        jwt_role = "sae-issue-cert-%s" % project_id
 
-        url = "%s/v1/pki_int/issue/%s" % (os.environ['VAULT_ADDR'], role)
+        access_token, vault_token = self.vault_login (os.environ['VAULT_ADDR'], jwt_role, access_token, refresh_token, 1)
+
+        url = "%s/v1/pki_int/issue/%s" % (os.environ['VAULT_ADDR'], pki_role)
 
         self.info("issue url %s" % url)
 
