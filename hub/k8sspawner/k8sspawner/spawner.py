@@ -152,7 +152,7 @@ class K8sSpawner(KubeSpawner):
         user_profile = auth_state['oauth_user']
 
         # Force the selected project to be the user's group from the auth_state
-        self.user_options['project'] = user_profile['groups']
+        self.user_options['project']  = user_profile['groups']
         self.user_options['username'] = user_profile['preferred_username']
 
         gen = GenIdentity()
@@ -160,7 +160,7 @@ class K8sSpawner(KubeSpawner):
         token = auth_state['access_token']
 
         project_id = self._expand_user_properties('{group}')
-        user_project_id = self._expand_user_properties('{username}-{group}')
+        user_project_id = self._expand_user_properties('oid-{username}-{group}')
 
         # Handle the scenario where the user_options for image can come through on
         # the POST as an array or a single string.
