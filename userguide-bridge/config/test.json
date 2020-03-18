@@ -1,0 +1,8 @@
+{
+  "host": "https://help-api/api",
+  "port": "3001",
+  "credentials": "ZG9jczphcGlAZXhhbXBsZS5vcmc6dGVzdHBhc3N3b3Jk",
+  "logLevel": "dev",
+  "morganFormat": "dev",
+  "whitelist": ["http://localhost:8080"]
+}

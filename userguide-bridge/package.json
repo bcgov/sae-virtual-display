@@ -4,8 +4,9 @@
   "description": "A proxy service to connect documentation to an interface",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "cross-env DEBUG=dev NODE_ENV=development nodemon src/index.js",
+    "start:prod": "cross-env NODE_ENV=production node src/index.js",
+    "test": "NODE_ENV=test jest"
   },
   "keywords": [],
   "author": "Joshua Jones <joshua@general-metrics.com>",
@@ -13,10 +14,18 @@
   "dependencies": {
     "config": "^3.3.0",
     "cors": "^2.8.5",
+    "debug": "^4.1.1",
     "express": "^4.17.1",
-    "node-fetch": "^2.6.0"
+    "morgan": "^1.9.1",
+    "node-fetch": "^2.6.0",
+    "supports-color": "^7.1.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
+    "fetch-mock-jest": "^1.2.4",
+    "jest": "^25.1.0",
+    "jest-express": "^1.11.3",
+    "nodemon": "^2.0.2",
     "prettier": "^1.19.1"
   }
 }

@@ -2,6 +2,7 @@ const config = require('config');
 const express = require('express');
 const fetch = require('node-fetch');
 
+const log = require('../../utils/log');
 const { fetchArticle } = require('../../middleware/auth');
 
 const host = config.get('host');
@@ -47,8 +48,10 @@ async function searchApi(token, keyword) {
       }),
     });
     const json = await response.json();
+    log('[SUCCESS] Search result found');
     return json;
   } catch (err) {
+    log('[FAILED] Search article %o', err.message);
     throw new Error(err);
   }
 }
@@ -63,8 +66,10 @@ async function getDocument(token, id) {
       },
     });
     const json = await response.json();
+    log('[SUCCESS] Search article loaded');
     return json;
   } catch (err) {
+    log('[FAILED] Search article %o', err.message);
     throw new Error(err);
   }
 }
