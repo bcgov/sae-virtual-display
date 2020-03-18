@@ -13,12 +13,26 @@ class VaultClient():
 
     def list_all(self):
         return {
-            "roles": self.get_roles(),
+            "jwt_roles": self.get_roles(),
+            "pki_roles": self.get_pki_roles(),
             "policies": self.get_policies()
         }
 
     def get_roles(self):
         url = "%s/v1/auth/jwt/role" % self.addr
+        headers = {
+            'Content-Type':  "application/json",
+            'X-Vault-Token': self.token
+        }
+        r = requests.request('list', url, headers = headers)
+        if r.status_code == 200:
+            return r.json()['data']['keys']
+        else:
+            log.error("[%s] %s" % (r.status_code, r.text))
+            raise Exception("Failed to get list of roles")
+
+    def get_pki_roles(self):
+        url = "%s/v1/pki_int/roles" % self.addr
         headers = {
             'Content-Type':  "application/json",
             'X-Vault-Token': self.token
@@ -46,19 +60,23 @@ class VaultClient():
     def del_project(self, project_id):
         self._delete("%s/v1/sys/policies/acl/%s" % (self.addr, "sae-issue-cert-role-%s" % project_id))
         self._delete("%s/v1/auth/jwt/role/%s" % (self.addr, "sae-issue-cert-%s" % project_id))
+        self._delete("%s/v1/pki_int/roles/%s" % (self.addr, "pki-backend-role-%s" % project_id))
 
     def get_project(self, project_id):
         policy = self._get("%s/v1/sys/policies/acl/%s" % (self.addr, "sae-issue-cert-role-%s" % project_id))
         role = self._get("%s/v1/auth/jwt/role/%s" % (self.addr, "sae-issue-cert-%s" % project_id))
+        pki_role = self._get("%s/v1/pki_int/roles/%s" % (self.addr, "pki-backend-role-%s" % project_id))
         return {
             "name": project_id,
             "policy": policy,
-            "role": role
+            "jwt_role": role,
+            "pki_role": pki_role
         }
 
     def add_project(self, project_id):
         self._add_policy(project_id)
         self._add_role(project_id)
+        self._add_pki_role(project_id)
 
     def _delete (self, url):
         headers = {
@@ -101,6 +119,30 @@ class VaultClient():
     #   key_usage        = ["DigitalSignature","KeyAgreement","KeyEncipherment"]
     #   organization     = ["Data Innovation Programme @ PopDataBC"]
     # }
+    def _add_pki_role(self, project_id):
+        role = {
+            "name": "pki-backend-role-%s" % project_id,
+            "max_ttl": 86400,
+            "allow_any_name": True,
+            "server_flag": False,
+            "client_flag": True,
+            "require_cn": True,
+            "key_usage": ["DigitalSignature","KeyAgreement","KeyEncipherment"],
+            "organization": "BBSAE Org"
+        }
+
+        url = "%s/v1/pki_int/roles/%s" % (self.addr, "pki-backend-role-%s" % project_id)
+        headers = {
+            'Content-Type':  "application/json",
+            'X-Vault-Token': self.token
+        }
+        r = requests.post(url, data = json.dumps(role), headers = headers)
+        if r.status_code == 204:
+            log.debug("[%s] %s" % (r.status_code, r.text))
+        else:
+            log.error("[%s] %s" % (r.status_code, r.text))
+            raise Exception("Failed to add project %s" % project_id)
+
     #
     # _add_jwt_role()
     #

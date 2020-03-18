@@ -100,9 +100,13 @@ class MinioClient():
             ]
         }
 
-        self.call_jsonl_check_errors("mc mb --json s3/%s-datasets" % project_id)
-        self.call_jsonl_check_errors("mc mb --json s3/%s-working" % project_id)
-
+        buckets = self.get_buckets()
+        log.info(str(buckets))
+        if "%s-datasets/" % project_id not in buckets:
+            self.call_jsonl_check_errors("mc mb --json s3/%s-datasets" % project_id)
+        if "%s-working/" % project_id not in buckets:
+            self.call_jsonl_check_errors("mc mb --json s3/%s-working" % project_id)
+        
         handle, filename = tempfile.mkstemp()
         with os.fdopen(handle, "wb") as tmp:
             tmp.write(json.dumps(policy).encode("utf-8"))
