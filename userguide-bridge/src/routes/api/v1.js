@@ -3,12 +3,11 @@ const express = require('express');
 const fetch = require('node-fetch');
 
 const log = require('../../utils/log');
-const { fetchArticle } = require('../../middleware/auth');
 
 const host = config.get('host');
 const router = express.Router();
 
-router.get('/', req => {
+router.get('/', () => {
   return 'Nothing to see here';
 });
 

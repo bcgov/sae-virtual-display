@@ -1,12 +1,9 @@
-const config = require('config');
 const fetch = require('node-fetch');
-
-const credentials = config.get('credentials');
-const host = config.get('host');
+const log = require('../utils/log');
 
 let token = null;
 
-async function authenticate() {
+async function authenticate({ host, credentials }) {
   try {
     const res = await fetch(`${host}/public/authenticate`, {
       method: 'POST',
@@ -22,14 +19,13 @@ async function authenticate() {
   }
 }
 
-function auth() {
-  authenticate();
+function auth(options) {
+  authenticate(options).catch(() => {
+    log('Authorization failed');
+  });
 
   return (req, res, next) => {
-    if (token) {
-      req.token = token;
-    }
-
+    req.token = token;
     next();
   };
 }
