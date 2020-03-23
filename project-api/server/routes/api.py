@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 from routes.v1.projects import projects
 from routes.v1.events import events
+from routes.admin import admin
 from routes.selfserve import selfserve
 
 v1 = Blueprint('v1', 'v1')
@@ -17,4 +18,6 @@ class Register:
     def __init__(self, app):
         app.register_blueprint(events, url_prefix="/v1/events")
         app.register_blueprint(projects, url_prefix="/v1/projects")
-        app.register_blueprint(selfserve, url_prefix="/admin")
+        app.register_blueprint(admin, url_prefix="/admin")
+        app.register_blueprint(selfserve, url_prefix="/selfserve")
+
