@@ -9,7 +9,8 @@ import { HelpContent, HelpLoading } from './styles';
 
 function Help({ open, onClose }) {
   const { help } = useContext(WorkbenchContext);
-  const data = useHelp(help.main);
+  // const data = useHelp(help.main);
+  const data = {};
 
   return (
     <ModalTransition>

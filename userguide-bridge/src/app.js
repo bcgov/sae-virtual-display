@@ -7,8 +7,7 @@ const auth = require('./middleware/auth');
 const v1 = require('./routes/api/v1');
 
 // Config
-const credentials = config.get('credentials');
-const host = config.get('host');
+const token = config.get('token');
 const whitelist = config.get('whitelist');
 const format = config.get('morganFormat');
 
@@ -29,8 +28,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use(
   auth({
-    host,
-    credentials,
+    token,
   }),
 );
 app.use(cors(corsOptions));
