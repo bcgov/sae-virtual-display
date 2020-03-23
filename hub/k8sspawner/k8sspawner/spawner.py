@@ -152,7 +152,7 @@ class K8sSpawner(KubeSpawner):
         user_profile = auth_state['oauth_user']
 
         # Force the selected project to be the user's group from the auth_state
-        self.user_options['project']  = user_profile['groups']
+        self.user_options['project']  = user_profile['project']
         self.user_options['username'] = user_profile['preferred_username']
 
         gen = GenIdentity()
