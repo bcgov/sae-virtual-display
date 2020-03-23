@@ -46,6 +46,52 @@ class KeycloakClient():
         url = "%s/auth/admin/realms/%s/groups?max=1000" % (self.addr, self.realm)
         return self._get(url)
 
+    def join_project (self, project_id, username):
+        if self.access_token == None:
+            self.session()
+
+        idref = self._find(project_id)
+
+        if len(idref) == 0:
+            log.debug("Project does not exist %s" % project_id)
+            raise Exception("Failed to get project %s" % project_id)
+
+        gid = idref[0]['id']
+
+        idref = self._find_user(username)
+        if len(idref) == 0:
+            log.debug("User does not exist %s" % username)
+            raise Exception("Failed to get user %s" % username)
+
+        uid = idref[0]['id']
+
+        url = "%s/auth/admin/realms/%s/users/%s/groups/%s" % (self.addr, self.realm, uid, gid)
+
+        self._put(url)
+
+    def leave_project (self, project_id, username):
+        if self.access_token == None:
+            self.session()
+
+        idref = self._find(project_id)
+
+        if len(idref) == 0:
+            log.debug("Project does not exist %s" % project_id)
+            raise Exception("Failed to get project %s" % project_id)
+
+        gid = idref[0]['id']
+
+        idref = self._find_user(username)
+        if len(idref) == 0:
+            log.debug("User does not exist %s" % username)
+            raise Exception("Failed to get user %s" % username)
+
+        uid = idref[0]['id']
+
+        url = "%s/auth/admin/realms/%s/users/%s/groups/%s" % (self.addr, self.realm, uid, gid)
+
+        self._del(url)
+
     def add_project (self, name):
         if self.access_token == None:
             self.session()
@@ -76,6 +122,21 @@ class KeycloakClient():
         url = "%s/auth/admin/realms/%s/groups/%s" % (self.addr, self.realm, id)
         return self._get(url)
 
+    def get_project_membership (self, name):
+        if self.access_token == None:
+            self.session()
+
+        idref = self._find(name)
+
+        if len(idref) == 0:
+            log.debug("Project does not exist %s" % name)
+            raise Exception("Failed to get project %s" % name)
+
+        id = idref[0]['id']
+
+        url = "%s/auth/admin/realms/%s/groups/%s/members" % (self.addr, self.realm, id)
+        return self._get(url)
+
     def del_project (self, name):
         if self.access_token == None:
             self.session()
@@ -96,6 +157,13 @@ class KeycloakClient():
             self.session()
 
         url = "%s/auth/admin/realms/%s/groups?search=%s" % (self.addr, self.realm, name)
+        return self._get(url)
+
+    def _find_user (self, name):
+        if self.access_token == None:
+            self.session()
+
+        url = "%s/auth/admin/realms/%s/users?username=%s" % (self.addr, self.realm, name)
         return self._get(url)
 
     def _get (self, url):
@@ -131,6 +199,19 @@ class KeycloakClient():
         }
 
         r = requests.delete(url, headers = headers)
+        if r.status_code == 204:
+            log.debug("[%s] %s" % (r.status_code, r.text))
+        else:
+            log.error("[%s] %s" % (r.status_code, r.text))
+            raise Exception("Failed %s" % url)
+
+    def _put (self, url):
+        headers = {
+            'Content-Type':  "application/json",
+            'Authorization': "Bearer %s" % self.access_token
+        }
+
+        r = requests.put(url, headers = headers)
         if r.status_code == 204:
             log.debug("[%s] %s" % (r.status_code, r.text))
         else:

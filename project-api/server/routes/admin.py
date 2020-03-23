@@ -108,13 +108,15 @@ def view_projects() -> object:
 
     kcGroups = keycloak_cli.list_all()
 
+    membership = []
     projects = []
     log.info(str(conf.data['group_exclusions']))
     for grp in kcGroups:
         if grp['name'] not in conf.data['group_exclusions']:
             projects.append(grp['name'])
+            membership.append(keycloak_cli.get_project_membership(grp['name']))
 
-    return jsonify(projects=projects, keycloak=kcGroups, vault=vault_cli.list_all(), minio=minio_cli.list_all())
+    return jsonify(projects=projects, membership=membership, keycloak=kcGroups, vault=vault_cli.list_all(), minio=minio_cli.list_all())
 
 
 def do_render_template(**args):

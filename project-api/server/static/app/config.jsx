@@ -27,6 +27,8 @@ class ProjectConfig extends React.Component {
       <pre>{JSON.stringify(this.state.data.vault, null, 3)}</pre>
       <h3>Minio</h3>
       <pre>{JSON.stringify(this.state.data.minio, null, 3)}</pre>
+      <h3>Membership</h3>
+      <pre>{JSON.stringify(this.state.data.membership, null, 3)}</pre>
     </div>
     );
   }
