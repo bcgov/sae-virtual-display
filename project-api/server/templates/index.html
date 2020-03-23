@@ -66,6 +66,12 @@
                                     <a class="nav-link {{tab['delete']}}" id="delete-tab" data-toggle="tab" href="#delete" role="tab" aria-controls="delete" aria-selected="false">Delete Repo</a>
                                 </li> -->
                                 <li class="nav-item">
+                                        <a class="nav-link {{tab['projects']}}" id="projects-tab" data-toggle="tab" href="#projects" role="tab" aria-controls="projects" aria-selected="false">Projects</a>
+                                </li>
+                                <li class="nav-item">
+                                        <a class="nav-link {{tab['config']}}" id="projects-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="false">Config</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link {{tab['activity']}}" id="activity-tab" data-toggle="tab" href="#activity" role="tab" aria-controls="activity" aria-selected="false">Activity</a>
                                 </li>
                             </ul>
@@ -195,6 +201,14 @@
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                     </form>
                                 </div>
+                                <div class="tab-pane fade {{tab['projects']}}" id="projects" role="tabpanel" aria-labelledby="projects-tab">
+                                        <h2>Projects</h2>
+                                        <div id="projects_root"></div>
+                                </div>
+                                <div class="tab-pane fade {{tab['config']}}" id="config" role="tabpanel" aria-labelledby="config-tab">
+                                        <h2>Configuration</h2>
+                                        <div id="config_root"></div>
+                                </div>
                                 <div class="tab-pane fade {{tab['activity']}}" id="activity" role="tabpanel" aria-labelledby="activity-tab">
                                         <h2>Activity</h2>
                                         <div id="activity_root"></div>
@@ -210,6 +224,8 @@
             <script src="/static/react/browser.min.js"></script>
     
             <script type="text/babel" src="/static/app/activity.jsx"></script>
+            <script type="text/babel" src="/static/app/projects.jsx"></script>
+            <script type="text/babel" src="/static/app/config.jsx"></script>
 
     </body>
 </html>

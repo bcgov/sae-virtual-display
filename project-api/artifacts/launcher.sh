@@ -17,18 +17,25 @@ cat > ./config/default.json <<EOF
         "access_key": "${MINIO_ACCESS_KEY}",
         "secret_key": "${MINIO_SECRET_KEY}"
     },
-    "keycloak": {
+    "oauth": {
         "url": "${KEYCLOAK_URL}",
         "realm": "${KEYCLOAK_REALM}",
         "client_id": "${OAUTH_CLIENT_ID}",
         "client_secret": "${OAUTH_CLIENT_SECRET}",
         "admin_group": "${ADMIN_GROUP}"
     },
+    "keycloak": {
+        "url": "${KEYCLOAK_URL}",
+        "realm": "${KEYCLOAK_REALM}",
+        "username": "${KEYCLOAK_USERNAME}",
+        "password": "${KEYCLOAK_PASSWORD}"
+    },
     "notification": {
         "enabled": ${NOTIFY_ENABLED},
         "url": "${NOTIFY_URL}",
         "token": "${NOTIFY_TOKEN}"
-    }
+    },
+    "group_exclusions": [${GROUP_EXCLUSIONS}]
 
 }
 EOF

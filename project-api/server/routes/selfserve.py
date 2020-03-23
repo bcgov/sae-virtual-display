@@ -16,10 +16,10 @@ log = logging.getLogger(__name__)
 
 conf = Config().data
 
-client_id = conf['keycloak']['client_id']
-client_secret = conf['keycloak']['client_secret']
-oauth_url = conf['keycloak']['url']
-oauth_realm = conf['keycloak']['realm']
+client_id = conf['oauth']['client_id']
+client_secret = conf['oauth']['client_secret']
+oauth_url = conf['oauth']['url']
+oauth_realm = conf['oauth']['realm']
 
 selfserve = OAuth2ConsumerBlueprint(
     "kc", 'selfserve',

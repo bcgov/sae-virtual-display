@@ -155,7 +155,7 @@ class VaultClient():
             "bound_audiences": [],
             "user_claim": "preferred_username",
             "bound_claims": {
-                "groups": project_id
+                "project": project_id
             }
         }
 

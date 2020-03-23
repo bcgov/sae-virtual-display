@@ -9,6 +9,7 @@ import random
 import string
 import config
 from auth.auth import auth
+from clients.keycloak import KeycloakClient
 from clients.vault import VaultClient
 from clients.minio import MinioClient
 from activity.activity import activity
@@ -21,6 +22,7 @@ conf = config.Config()
 
 vault_cli = VaultClient(conf.data['vault']['addr'], conf.data['vault']['token'])
 minio_cli = MinioClient(conf.data['minio']['addr'], conf.data['minio']['access_key'], conf.data['minio']['secret_key'])
+keycloak_cli = KeycloakClient(conf.data['keycloak']['url'], conf.data['keycloak']['realm'], conf.data['keycloak']['username'], conf.data['keycloak']['password'])
 
 @projects.route('/status', methods=['GET'], strict_slashes=False)
 def status():
@@ -36,7 +38,7 @@ def project_list() -> object:
     """
     Returns the list of projects that are enabled
     """
-    return jsonify(vault=vault_cli.list_all(), minio=minio_cli.list_all())
+    return jsonify(keycloak=keycloak_cli.list_all(), vault=vault_cli.list_all(), minio=minio_cli.list_all())
 
 @projects.route('/<string:projectId>', methods=['POST'], strict_slashes=False)
 @auth
@@ -45,6 +47,7 @@ def project_post(projectId: str) -> object:
     Enables a project
     """
     try:
+        keycloak_cli.add_project(projectId)
         minio_cli.add_project(projectId)
         vault_cli.add_project(projectId)
 
@@ -63,7 +66,7 @@ def project_get(projectId: str) -> object:
     Returns the details about the project
     """
 
-    return jsonify(vault=vault_cli.get_project(projectId), minio=minio_cli.get_project(projectId))
+    return jsonify(keycloak=keycloak_cli.get_project(projectId), vault=vault_cli.get_project(projectId), minio=minio_cli.get_project(projectId))
 
 @projects.route('/<string:projectId>', methods=['DELETE'], strict_slashes=False)
 @auth
@@ -74,14 +77,20 @@ def project_delete(projectId: str) -> object:
     try:
         minio_cli.del_project(projectId)
         vault_cli.del_project(projectId)
-
-        purge = request.args.get('purge')
-        log.debug("Purge? %s" % purge)
-        if purge == "yes":
-            minio_cli.del_buckets(projectId)
         activity ('disable_project', '', projectId, 'api', True, "Project Disabled")
     except BaseException as ex:
         activity ('disable_project', '', projectId, 'api', False, "Failed - project partially disabled")
+        raise ex
+
+    try:
+        purge = request.args.get('purge')
+        log.debug("Purge? %s" % purge)
+        if purge == "yes":
+            keycloak_cli.del_project(projectId)
+            minio_cli.del_buckets(projectId)
+            activity ('purge_project', '', projectId, 'api', True, "Project Purged")
+    except BaseException as ex:
+        activity ('disable_project', '', projectId, 'api', False, "Failed - project partially purged")
         raise ex
 
     return jsonify({"status": "ok"})
