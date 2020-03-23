@@ -40,10 +40,10 @@ class K8sSpawner(KubeSpawner):
 
         auth_state = yield self.user.get_auth_state()
 
-        if not auth_state or not auth_state['oauth_user'] or not auth_state['oauth_user']['groups']:
+        if not auth_state or not auth_state['oauth_user'] or 'project' not in auth_state['oauth_user']:
             groups = []
         else:
-            groups = auth_state['oauth_user']['groups']
+            groups = auth_state['oauth_user']['project']
 
         options = {
             "projects": groups,
