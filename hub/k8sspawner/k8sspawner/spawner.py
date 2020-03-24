@@ -184,7 +184,7 @@ class K8sSpawner(KubeSpawner):
         for grp in user_profile['groups']:
             self.log.info(".. Project? " + grp)
 
-            if grp.split('-')[0] in ["18","19","20","21","22"]:
+            if grp.split('-')[0].isnumeric():
                 self.log.info(".. Project? " + grp + " == YES")
                 self.user_options['project'].append(grp)
 
