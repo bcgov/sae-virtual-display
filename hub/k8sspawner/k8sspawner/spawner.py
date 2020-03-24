@@ -193,6 +193,7 @@ class K8sSpawner(KubeSpawner):
         gen = GenIdentity()
 
         token = auth_state['access_token']
+        self.log.debug(token)
 
         project_id = self._expand_user_properties('{group}')
         user_project_id = self._expand_user_properties('{username}-{group}')
