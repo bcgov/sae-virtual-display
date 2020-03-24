@@ -8,6 +8,7 @@
 # POST /{realm}/groups
 import logging
 import config
+import datetime, time
 import requests
 import json
 from string import Template
@@ -33,16 +34,25 @@ class KeycloakClient():
         }
 
         r = requests.post(url, data = form)
+
         if r.status_code == 200:
             self.access_token = r.json()['access_token']
+            self.token_expires = datetime.datetime.now().timestamp() + r.json()['expires_in']
         else:
             log.error("[%s] %s" % (r.status_code, r.text))
             raise Exception("Failed to get session")
 
-    def list_all (self):
+    def check_session (self):
         if self.access_token == None:
             self.session()
+        elif self.token_expires < datetime.datetime.now().timestamp():
+            log.info("Session expired - getting new session")
+            self.session()
+        else:
+            diff = round(self.token_expires - datetime.datetime.now().timestamp())
+            log.info("Session looks ok - good for another %s seconds" % diff)
 
+    def list_all (self):
         url = "%s/auth/admin/realms/%s/groups?max=1000" % (self.addr, self.realm)
         return self._get(url)
 
@@ -50,9 +60,6 @@ class KeycloakClient():
         self.join_group (project_id, username)
 
     def join_group (self, group_id, username):
-        if self.access_token == None:
-            self.session()
-
         idref = self._find(group_id)
 
         if len(idref) == 0:
@@ -73,9 +80,6 @@ class KeycloakClient():
         self._put(url)
 
     def leave_project (self, project_id, username):
-        if self.access_token == None:
-            self.session()
-
         idref = self._find(project_id)
 
         if len(idref) == 0:
@@ -99,9 +103,6 @@ class KeycloakClient():
         self.add_group(name)
 
     def add_group (self, name):
-        if self.access_token == None:
-            self.session()
-
         if len(self._find(name)) != 0:
             log.debug("Group already exists %s" % name)
             return
@@ -114,9 +115,6 @@ class KeycloakClient():
         return self._add(url, data)
 
     def del_user (self, name):
-        if self.access_token == None:
-            self.session()
-
         idref = self._find_user(name)
 
         if len(idref) == 0:
@@ -129,9 +127,6 @@ class KeycloakClient():
         return self._del(url)
 
     def add_user (self, name, email, first_name, last_name):
-        if self.access_token == None:
-            self.session()
-
         if len(self._find_user(name)) != 0:
             log.debug("Username already exists %s" % name)
             return
@@ -148,9 +143,6 @@ class KeycloakClient():
         return self._add(url, data)
 
     def get_project (self, name):
-        if self.access_token == None:
-            self.session()
-
         idref = self._find(name)
 
         if len(idref) == 0:
@@ -163,9 +155,6 @@ class KeycloakClient():
         return self._get(url)
 
     def get_project_membership (self, name):
-        if self.access_token == None:
-            self.session()
-
         idref = self._find(name)
 
         if len(idref) == 0:
@@ -178,9 +167,6 @@ class KeycloakClient():
         return self._get(url)
 
     def del_project (self, name):
-        if self.access_token == None:
-            self.session()
-
         idref = self._find(name)
 
         if len(idref) == 0:
@@ -193,20 +179,15 @@ class KeycloakClient():
         return self._del(url)
 
     def _find (self, name):
-        if self.access_token == None:
-            self.session()
-
         url = "%s/auth/admin/realms/%s/groups?search=%s" % (self.addr, self.realm, name)
         return self._get(url)
 
     def _find_user (self, name):
-        if self.access_token == None:
-            self.session()
-
         url = "%s/auth/admin/realms/%s/users?username=%s" % (self.addr, self.realm, name)
         return self._get(url)
 
     def _get (self, url):
+        self.check_session()
         headers = {
             'Content-Type':  "application/json",
             'Authorization': "Bearer %s" % self.access_token
@@ -220,6 +201,7 @@ class KeycloakClient():
             raise Exception("Failed to get.")
 
     def _add (self, url, data):
+        self.check_session()
         headers = {
             'Content-Type':  "application/json",
             'Authorization': "Bearer %s" % self.access_token
@@ -233,6 +215,7 @@ class KeycloakClient():
             raise Exception("Failed %s" % url)
 
     def _del (self, url):
+        self.check_session()
         headers = {
             'Content-Type':  "application/json",
             'Authorization': "Bearer %s" % self.access_token
@@ -246,6 +229,7 @@ class KeycloakClient():
             raise Exception("Failed %s" % url)
 
     def _put (self, url):
+        self.check_session()
         headers = {
             'Content-Type':  "application/json",
             'Authorization': "Bearer %s" % self.access_token
