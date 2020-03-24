@@ -190,7 +190,7 @@ class K8sSpawner(KubeSpawner):
 
         self.user_options['username'] = user_profile['preferred_username']
 
-        gen = GenIdentity(self.log)
+        gen = GenIdentity()
 
         token = auth_state['access_token']
 

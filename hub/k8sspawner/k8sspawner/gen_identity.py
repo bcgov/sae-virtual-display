@@ -7,8 +7,6 @@ from urllib.parse import urlencode
 
 import xml.etree.ElementTree as ET
 
-from k8sspawner.keycloak import KeycloakClient
-
 from kubernetes.client.models import (
     V1Secret
 )
