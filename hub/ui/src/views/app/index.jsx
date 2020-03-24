@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import AppBar from '@src/components/app-bar';
 import { SpotlightManager, SpotlightTransition } from '@atlaskit/onboarding';
@@ -11,7 +11,7 @@ import { Main } from './styles';
 
 function App() {
   const { help } = useContext(WorkbenchContext);
-  const helpData = useHelp(help.onboarding);
+  const { data, request } = useHelp(help.onboarding);
   const [isHelpEnabled, setHelpEnabled] = useState(false);
 
   function onToggleOnboarding() {
@@ -22,11 +22,15 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    request();
+  }, [request]);
+
   return (
     <Router>
       <SpotlightManager>
         <AppBar
-          isHelpEnabled={helpData.length > 0}
+          isHelpEnabled={data.length > 0}
           onStartTour={onToggleOnboarding}
         />
         <Main>
@@ -38,7 +42,7 @@ function App() {
           </Switch>
         </Main>
         <SpotlightTransition>
-          <Onboarding data={helpData} enabled={isHelpEnabled} />
+          <Onboarding data={data} enabled={isHelpEnabled} />
         </SpotlightTransition>
       </SpotlightManager>
     </Router>
