@@ -38,7 +38,7 @@ class Registration extends React.Component {
       <table className="table table-bordered">
         <thead className="thead-dark">
           <tr>
-            <th scope="col">Projects</th>
+            <th scope="col">Groups</th>
           </tr>
         </thead>
         <tbody>

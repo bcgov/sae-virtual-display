@@ -44,8 +44,11 @@ def _selfserve():
         resp = selfserve.session.get("/auth/realms/%s/protocol/openid-connect/userinfo" % oauth_realm)
         assert resp.ok
 
-        groups = resp.json()['groups']
-
+        js = resp.json()
+        if 'groups' in js:
+            groups = js['groups']
+        else:
+            groups = []
         session['groups'] = groups
         session['username'] = resp.json()['preferred_username']
 

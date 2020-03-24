@@ -40,10 +40,10 @@ class K8sSpawner(KubeSpawner):
 
         auth_state = yield self.user.get_auth_state()
 
-        if not auth_state or not auth_state['oauth_user'] or 'project' not in auth_state['oauth_user']:
+        if not auth_state or not auth_state['oauth_user'] or 'groups' not in auth_state['oauth_user']:
             groups = []
         else:
-            groups = auth_state['oauth_user']['project']
+            groups = auth_state['oauth_user']['groups']
 
         options = {
             "projects": groups,
@@ -123,8 +123,8 @@ class K8sSpawner(KubeSpawner):
 
     def publish_event(self, payload):
 
-        url = os.environ['PROJECT_EVENTS_URL']
-        token = os.environ['PROJECT_EVENTS_TOKEN']
+        url = "%s/v1/events" % os.environ['PROJECT_API_URL']
+        token = os.environ['PROJECT_API_TOKEN']
         try:
             headers = {
                 'Content-Type':  "application/json",
@@ -140,6 +140,31 @@ class K8sSpawner(KubeSpawner):
             self.log.error("Notification to %s failed" % url)
             traceback.print_exc(file=sys.stdout)
 
+    def gen_user(self, user_project_id, groups):
+
+        url = "%s/v1/internalusers/%s" % (os.environ['PROJECT_API_URL'], user_project_id)
+        token = os.environ['PROJECT_API_TOKEN']
+        try:
+            headers = {
+                'Content-Type':  "application/json",
+                'x-api-key': token
+            }
+            payload = {
+                groups = groups
+                first_name = ""
+                last_name = ""
+                email = ""
+            }
+            r = requests.post(url, data = json.dumps(payload), headers = headers)
+            if r.status_code == 200:
+                self.log.debug("[%s] %s" % (r.status_code, r.text))
+            else:
+                self.log.error("Interal user setup failed - %s" % url)
+                self.log.error("[%s] %s" % (r.status_code, r.text))
+        except:
+            self.log.error("Internal user setup failed - %s" % url)
+            traceback.print_exc(file=sys.stdout)
+
     @gen.coroutine
     def start(self):
 
@@ -152,15 +177,28 @@ class K8sSpawner(KubeSpawner):
         user_profile = auth_state['oauth_user']
 
         # Force the selected project to be the user's group from the auth_state
-        self.user_options['project']  = user_profile['project']
+        self.user_options['groups']  = user_profile['groups']
+
+        self.user_options['project'] = []
+        for (grp in user_profile['groups']) {
+            self.log.info(".. Project? " + grp);
+
+            if (grp.split('-')[0] in ["18-","19-","20-","21-","22-"]) {
+                self.log.info(".. Project? " + grp + " == YES");
+                self.user_options['project'].append(grp)
+            }
+        }
+
         self.user_options['username'] = user_profile['preferred_username']
 
-        gen = GenIdentity()
+        gen = GenIdentity(self.log)
 
         token = auth_state['access_token']
 
         project_id = self._expand_user_properties('{group}')
         user_project_id = self._expand_user_properties('{username}-{group}')
+
+        self.gen_user (user_project_id, user_profile['groups'])
 
         # Handle the scenario where the user_options for image can come through on
         # the POST as an array or a single string.

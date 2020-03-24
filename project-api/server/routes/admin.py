@@ -49,7 +49,7 @@ def _admin():
         resp = admin.session.get("/auth/realms/%s/protocol/openid-connect/userinfo" % oauth_realm)
         assert resp.ok
 
-        groups = resp.json()['groups']
+        groups = resp.json()['groups_all']
 
         log.info("Checking? %s %s" % (conf['oauth']['admin_group'], str(groups)))
 

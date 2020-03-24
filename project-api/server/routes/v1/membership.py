@@ -24,6 +24,28 @@ vault_cli = VaultClient(conf.data['vault']['addr'], conf.data['vault']['token'])
 minio_cli = MinioClient(conf.data['minio']['addr'], conf.data['minio']['access_key'], conf.data['minio']['secret_key'])
 keycloak_cli = KeycloakClient(conf.data['keycloak']['url'], conf.data['keycloak']['realm'], conf.data['keycloak']['username'], conf.data['keycloak']['password'])
 
+@membership.route('/<string:username>', methods=['PUT'], strict_slashes=False)
+@auth
+def add_user(username: str) -> object:
+    """
+    Add user if it does not exist
+    """
+    content = request.json
+
+    projectName = content['project']
+
+    try:
+        keycloak_cli.add_user(username, content['email'], content['first_name'], content['last_name'])
+        keycloak_cli.join_project(projectName, username)
+
+        activity ('add_user', '', projectName, 'api', True, "User %s Added" % username)
+    except BaseException as ex:
+        activity ('add_user', '', projectName, 'api', False, "Failed - failed to add user %s." % username)
+        raise ex
+
+    return jsonify({"status": "ok"})
+
+
 @membership.route('/<string:projectId>/<string:username>', methods=['PUT'], strict_slashes=False)
 @auth
 def join(projectId: str, username: str) -> object:

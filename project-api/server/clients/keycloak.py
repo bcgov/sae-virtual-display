@@ -47,14 +47,17 @@ class KeycloakClient():
         return self._get(url)
 
     def join_project (self, project_id, username):
+        self.join_group (project_id, username)
+
+    def join_group (self, group_id, username):
         if self.access_token == None:
             self.session()
 
-        idref = self._find(project_id)
+        idref = self._find(group_id)
 
         if len(idref) == 0:
-            log.debug("Project does not exist %s" % project_id)
-            raise Exception("Failed to get project %s" % project_id)
+            log.debug("Group does not exist %s" % group_id)
+            raise Exception("Failed to get group %s" % group_id)
 
         gid = idref[0]['id']
 
@@ -93,11 +96,14 @@ class KeycloakClient():
         self._del(url)
 
     def add_project (self, name):
+        self.add_group(name)
+
+    def add_group (self, name):
         if self.access_token == None:
             self.session()
 
         if len(self._find(name)) != 0:
-            log.debug("Project already exists %s" % name)
+            log.debug("Group already exists %s" % name)
             return
 
         data = {
@@ -105,6 +111,40 @@ class KeycloakClient():
         }
 
         url = "%s/auth/admin/realms/%s/groups" % (self.addr, self.realm)
+        return self._add(url, data)
+
+    def del_user (self, name):
+        if self.access_token == None:
+            self.session()
+
+        idref = self._find_user(name)
+
+        if len(idref) == 0:
+            log.debug("User does not exist %s" % name)
+            raise Exception("Failed to get user %s" % name)
+
+        id = idref[0]['id']
+
+        url = "%s/auth/admin/realms/%s/users/%s" % (self.addr, self.realm, id)
+        return self._del(url)
+
+    def add_user (self, name, email, first_name, last_name):
+        if self.access_token == None:
+            self.session()
+
+        if len(self._find_user(name)) != 0:
+            log.debug("Username already exists %s" % name)
+            return
+
+        data = {
+            "username": name,
+            "email": email,
+            "firstName": first_name,
+            "lastName": last_name,
+            "enabled": True
+        }
+
+        url = "%s/auth/admin/realms/%s/users" % (self.addr, self.realm)
         return self._add(url, data)
 
     def get_project (self, name):

@@ -7,6 +7,8 @@ from urllib.parse import urlencode
 
 import xml.etree.ElementTree as ET
 
+from k8sspawner.keycloak import KeycloakClient
+
 from kubernetes.client.models import (
     V1Secret
 )
@@ -67,8 +69,7 @@ class GenIdentity():
         vault_token = j['auth']['client_token']
 
         return access_token, vault_token
-
-
+        
     def generate(self, user_id, access_token, refresh_token, user_project_id, project_id):
         self.info("GenIdentity U=%s, P=%s" % (user_id, user_project_id))
 
