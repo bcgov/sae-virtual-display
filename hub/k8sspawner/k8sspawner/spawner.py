@@ -150,10 +150,10 @@ class K8sSpawner(KubeSpawner):
                 'x-api-key': token
             }
             payload = {
-                groups = groups
-                first_name = ""
-                last_name = ""
-                email = ""
+                'groups': groups,
+                'first_name': "",
+                'last_name': "",
+                'email': ""
             }
             r = requests.post(url, data = json.dumps(payload), headers = headers)
             if r.status_code == 200:
