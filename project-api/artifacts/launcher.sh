@@ -27,9 +27,14 @@ cat > ./config/default.json <<EOF
     "keycloak": {
         "url": "${KEYCLOAK_URL}",
         "realm": "${KEYCLOAK_REALM}",
-        "realm_internal": "${KEYCLOAK_REALM_INTERNAL}",
         "username": "${KEYCLOAK_USERNAME}",
         "password": "${KEYCLOAK_PASSWORD}"
+    },
+    "kc_internal": {
+        "url": "${KEYCLOAK_INTERNAL_URL}",
+        "realm": "${KEYCLOAK_INTERNAL_REALM}",
+        "username": "${KEYCLOAK_INTERNAL_USERNAME}",
+        "password": "${KEYCLOAK_INTERNAL_PASSWORD}"
     },
     "notification": {
         "enabled": ${NOTIFY_ENABLED},

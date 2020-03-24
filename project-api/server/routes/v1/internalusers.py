@@ -20,7 +20,7 @@ internalusers = Blueprint('internalusers', 'internalusers')
 
 conf = config.Config()
 
-keycloak_cli = KeycloakClient(conf.data['keycloak']['url'], conf.data['keycloak']['realm_internal'], conf.data['keycloak']['username'], conf.data['keycloak']['password'])
+keycloak_cli = KeycloakClient(conf.data['kc_internal']['url'], conf.data['kc_internal']['realm'], conf.data['kc_internal']['username'], conf.data['kc_internal']['password'])
 
 @internalusers.route('/<string:username>', methods=['PUT'], strict_slashes=False)
 @auth
