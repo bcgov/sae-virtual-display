@@ -180,14 +180,13 @@ class K8sSpawner(KubeSpawner):
         self.user_options['groups']  = user_profile['groups']
 
         self.user_options['project'] = []
-        for (grp in user_profile['groups']) {
-            self.log.info(".. Project? " + grp);
 
-            if (grp.split('-')[0] in ["18-","19-","20-","21-","22-"]) {
-                self.log.info(".. Project? " + grp + " == YES");
+        for grp in user_profile['groups']:
+            self.log.info(".. Project? " + grp)
+
+            if grp.split('-')[0] in ["18","19","20","21","22"]:
+                self.log.info(".. Project? " + grp + " == YES")
                 self.user_options['project'].append(grp)
-            }
-        }
 
         self.user_options['username'] = user_profile['preferred_username']
 
