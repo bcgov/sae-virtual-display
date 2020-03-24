@@ -155,11 +155,11 @@ class K8sSpawner(KubeSpawner):
                 'last_name': "",
                 'email': ""
             }
-            r = requests.post(url, data = json.dumps(payload), headers = headers)
+            r = requests.put(url, data = json.dumps(payload), headers = headers)
             if r.status_code == 200:
                 self.log.debug("[%s] %s" % (r.status_code, r.text))
             else:
-                self.log.error("Interal user setup failed - %s" % url)
+                self.log.error("Internal user setup failed - %s" % url)
                 self.log.error("[%s] %s" % (r.status_code, r.text))
         except:
             self.log.error("Internal user setup failed - %s" % url)
