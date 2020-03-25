@@ -3,7 +3,7 @@ class Registration extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { list : [] }
+    this.state = { list : [], jwt_info: {} }
   }
 
   componentDidMount() {
@@ -34,11 +34,10 @@ class Registration extends React.Component {
         )
     }
     return (
-
       <table className="table table-bordered">
         <thead className="thead-dark">
           <tr>
-            <th scope="col">Groups</th>
+            <th scope="col">Group Name</th>
           </tr>
         </thead>
         <tbody>

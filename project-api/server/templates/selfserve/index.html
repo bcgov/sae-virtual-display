@@ -58,7 +58,10 @@
                         <div class="card-body">
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade {{tab['registration']}}" id="registration" role="tabpanel" aria-labelledby="registration-tab">
+                                        <h3>Groups</h3>
                                         <div id="registration_root"></div>
+                                        <h3>Identity Claims</h3>
+                                        <pre>{{ jwt_info }}</pre>
                                 </div>
                             </div>
                         </div>

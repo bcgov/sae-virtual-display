@@ -51,6 +51,7 @@ def _selfserve():
             groups = []
         session['groups'] = groups
         session['username'] = resp.json()['preferred_username']
+        session['jwt_info'] = json.dumps(resp.json(), indent=4, sort_keys=True)
 
         activity ('access', '', '', session['username'], True, "Access Granted")
 
@@ -71,7 +72,7 @@ def main():
     if len(session['groups']) == 0:
         message = "You currently do not have any projects assigned to your account."
 
-    return render_template('selfserve/index.html', message=message, logout_url=logout_url(), username=session['username'], tab={"registration":"show active"})
+    return render_template('selfserve/index.html', message=message, logout_url=logout_url(), jwt_info=session['jwt_info'], username=session['username'], tab={"registration":"show active"})
 
 @selfserve.route('/groups',
            methods=['GET'], strict_slashes=False)
