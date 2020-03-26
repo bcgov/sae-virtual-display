@@ -69,4 +69,20 @@ describe('hooks/use-help', () => {
       request: result.current.request,
     });
   });
+
+  it('should return failed status if body is not ok', async () => {
+    const { result } = renderHook(() => useHelp('onboarding'), {
+      wrapper,
+    });
+
+    fetch.mockResponse('', { status: 403 });
+    await act(() => result.current.request());
+
+    expect(result.current.status).toEqual('error');
+    expect(result.current.error).toEqual('403 - Forbidden');
+  });
+
+  it('reducer should throw error if unhandled', () => {
+    expect(() => reducer({}, {})).toThrow();
+  });
 });

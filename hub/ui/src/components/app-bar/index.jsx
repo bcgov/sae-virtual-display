@@ -18,10 +18,8 @@ import {
   MainMenuButton,
   Nav,
 } from './styles';
-import WorkbenchContext from '../../utils/context';
 
-function AppBar(props) {
-  const { user } = useContext(WorkbenchContext);
+function AppBar({ isHelpEnabled, onStartTour, user }) {
   const [open, toggleOpen] = useState(false);
 
   function onHelpToggle() {
@@ -46,12 +44,13 @@ function AppBar(props) {
           </Nav>
         </div>
         <div>
-          {props.isHelpEnabled && (
+          {isHelpEnabled && (
             <Button
               appearance="primary"
               iconBefore={<FeedbackIcon />}
               id="Workbench-tour-btn"
-              onClick={props.onStartTour}
+              onClick={onStartTour}
+              testId="start-tour-btn"
             >
               Take The Quickstart Tour
             </Button>
@@ -60,13 +59,16 @@ function AppBar(props) {
             <DropdownMenu
               position="bottom right"
               trigger={
-                <MainMenuButton>
+                <MainMenuButton data-testid="trigger">
                   <SettingsIcon size="large" />
                 </MainMenuButton>
               }
+              testId="app-bar-menu"
             >
               <DropdownItemGroup>
-                <DropdownItem>Signed in as {user}</DropdownItem>
+                <DropdownItem data-testid="username">
+                  Signed in as {user}
+                </DropdownItem>
                 <DropdownItem onClick={onHelpToggle}>Help</DropdownItem>
                 <DropdownItem href="/hub/logout">Logout</DropdownItem>
               </DropdownItemGroup>

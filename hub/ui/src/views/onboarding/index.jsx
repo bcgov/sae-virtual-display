@@ -4,16 +4,16 @@ import nth from 'lodash/nth';
 import sanitize from 'sanitize-html';
 import { Spotlight } from '@atlaskit/onboarding';
 
-function Onboarding({ data = [], enabled }) {
+function Onboarding({ data = [], enabled, onComplete }) {
   const [index, setIndex] = useState(null);
   const sections = data.map(d => d.page && d.page.title);
   const section = nth(data, index);
-  const target = data.reduce((prev, d) => {
-    if (index >= 0) {
-      return nth(sections, index);
-    }
-    return prev;
-  }, null);
+  const target = nth(sections, index);
+
+  function handleComplete() {
+    setIndex(null);
+    onComplete();
+  }
 
   useEffect(() => {
     if (enabled) {
@@ -32,7 +32,7 @@ function Onboarding({ data = [], enabled }) {
     if (index + 1 < data.length) {
       actions.push({ onClick: () => setIndex(s => s + 1), text: 'Next' });
     } else {
-      actions.push({ onClick: () => setIndex(null), text: 'Finish' });
+      actions.push({ onClick: handleComplete, text: 'Finish' });
     }
 
     if (index > 0) {
@@ -44,7 +44,7 @@ function Onboarding({ data = [], enabled }) {
 
   if (!isNil(index) && section) {
     return (
-      <Spotlight actions={renderActions()} target={target}>
+      <Spotlight actions={renderActions()} target={target} testId="onboarding">
         <div
           dangerouslySetInnerHTML={{ __html: sanitize(section.page.body) }}
         />

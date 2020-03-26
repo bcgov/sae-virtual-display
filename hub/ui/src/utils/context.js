@@ -4,6 +4,11 @@ export const config = {
   announcement: '',
   baseURL: '/',
   staticURL: '/',
+  help: {
+    url: '',
+    documentation: '',
+    onboarding: '',
+  },
   user: '',
   apps: [],
   projects: [],

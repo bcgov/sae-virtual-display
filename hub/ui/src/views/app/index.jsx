@@ -10,7 +10,7 @@ import Servers from '../servers';
 import { Main } from './styles';
 
 function App() {
-  const { help } = useContext(WorkbenchContext);
+  const { help, user } = useContext(WorkbenchContext);
   const { data, request } = useHelp(help.onboarding);
   const [isHelpEnabled, setHelpEnabled] = useState(false);
 
@@ -32,17 +32,21 @@ function App() {
         <AppBar
           isHelpEnabled={data.length > 0}
           onStartTour={onToggleOnboarding}
+          user={user}
         />
         <Main>
           <Switch>
             <Route exact path="/">
               <Servers />
             </Route>
-            <Route render={() => '404'} />
           </Switch>
         </Main>
         <SpotlightTransition>
-          <Onboarding data={data} enabled={isHelpEnabled} />
+          <Onboarding
+            data={data}
+            enabled={isHelpEnabled}
+            onComplete={onToggleOnboarding}
+          />
         </SpotlightTransition>
       </SpotlightManager>
     </Router>
