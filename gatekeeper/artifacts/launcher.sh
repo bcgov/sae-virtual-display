@@ -4,8 +4,6 @@ set -x
 
 echo "Configuring Gatekeeper FOR $JUPYTERHUB_USER"
 
-env
-
 # Give some time for the virtual display to launch
 sleep 1
 

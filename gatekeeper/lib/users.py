@@ -5,6 +5,8 @@ from urllib.parse import urlencode
 from flask import Blueprint, jsonify, redirect, request, make_response
 from http import HTTPStatus as HTTPStatus
 import logging
+import random
+import string
 
 log = logging.getLogger(__name__)
 
@@ -32,16 +34,14 @@ def user_auth(userId: str) -> object:
     log.debug("For user %s" % userId)
 
     conf = config()
-    log.debug("Config %s" % conf)
 
     # Redirect to OAUTH
     getVars = {
         'client_id': conf['client_id'],
         'redirect_uri': conf['oauth_callback'],
         'response_type': 'code',
-        'state': "12345"
+        'state': "00000000000"
     }
-    log.debug("Redirecting to %s/oauth2/authorize?%s" % (conf['api_url'], urllib.parse.urlencode(getVars)))
     return redirect("%s/oauth2/authorize?%s" % (conf['api_url'], urllib.parse.urlencode(getVars)), code=302)
 
 @users.route('/<string:userId>/<string:serverId>/oauth_callback', methods=['GET'], strict_slashes=False)
@@ -57,8 +57,9 @@ def oauth_callback(userId: str) -> object:
     Use code to call oauth2/token.  If good, set cookie 'jupyterhub-user-USER' and clear the 'jupyterhub-user-USER-oauth-state' cookie.  Turn on proxy traffic to XPRA.
     """
     code = request.args.get('code')
+    state = request.args.get('state')
 
-    log.debug("Got code %s" % code)
+    # Validate 'state'
 
     conf = config()
 
@@ -74,21 +75,10 @@ def oauth_callback(userId: str) -> object:
         'redirect_uri': conf['oauth_callback']
     }
 
-    url = "%s/oauth2/token" % (conf['api_url'])
+    url = "%s/oauth2/token" % conf['api_url']
 
-    log.debug("POST TO %s" % url)
-    log.debug("POST PAYLOAD %s" % params)
     response = requests.post(url, data=urlencode(params).encode('utf8'), headers=headers)
-    log.debug("Got response")
-    log.debug("Got response TEXT %s" % response.text)
-    log.debug("Got response JSON %s" % response.json())
     tok = response.json()
-
-    log.debug("Request INFO %s" % request.url_root)
-    log.debug("Request INFO %s" % request.host)
-    log.debug("Request INFO %s" % request.host_url)
-
-    log.debug("REDIRECT TO %s%s" % (conf['external_host'], conf['service_prefix']))
 
     response = make_response(redirect("%s%s" % (conf['external_host'], conf['service_prefix'])))
     response.set_cookie('virtual-display-session', path=conf['service_prefix'], value=tok['access_token'])

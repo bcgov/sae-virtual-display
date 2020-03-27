@@ -12,29 +12,25 @@ import os
 import signal
 from flask import Flask, g, jsonify, make_response, url_for, Response
 from flask_compress import Compress
-from users import Register
+from routes.api import Register
 
+#from proxy import Proxy
 log = logging.getLogger(__name__)
+
 
 def create_app(test_config=None):
 
     app = Flask(__name__)
 
     conf = config.Config()
-    if ('conf' in conf):
-        if test_config is None:
-            app.config.update(conf.conf.data)
-        else:
-            # load the test config if passed in
-            app.config.update(conf.conf.data)
-            app.config.update(test_config)
+    if test_config is None:
+        app.config.update(conf.data)
+    else:
+        # load the test config if passed in
+        app.config.update(conf.data)
+        app.config.update(test_config)
 
-    # logLevel = config['logLevel'].upper()
-
-    loggingLevel = getattr(logging, 'DEBUG')
-
-    logging.basicConfig(level=loggingLevel,
-                        format='%(asctime)s - %(levelname)s - %(message)s')
+    app.secret_key = conf.data['sessionSecret']
 
     ##Routes##
     Register(app)
@@ -77,29 +73,3 @@ def create_app(test_config=None):
 
     return app
 
-def wsgi_server():
-    port = 8886
-    app = create_app()
-    http = WSGIServer(('', port), app.wsgi_app)
-
-    log.info('Serving on port %s', str(port))
-    try:
-        http.serve_forever()
-    except KeyboardInterrupt:
-        print('Keyboard interrupt received: EXITING')
-    finally:
-        http.close() 
-    log.info('Server terminated!')
-
-#_proxy = Proxy(create_app())
-
-#def handler(signum, frame):
-#    print('Signal handler called with signal', signum)
-    #_proxy.stop()
-
-# Set the signal handler and a 5-second alarm
-#signal.signal(signal.SIGINT, handler)
-
-#_proxy.run()
-
-wsgi_server()

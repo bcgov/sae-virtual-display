@@ -6,13 +6,16 @@ implementation that should be used by JupyterHub.
 """
 
 import os
+import sys
 import string
 import escapism
 import json
 import requests
 import urllib.parse
+import traceback
 from traitlets import (
-    List
+    List,
+    Dict
 )
 from tornado import gen
 
@@ -31,13 +34,13 @@ class K8sSpawner(KubeSpawner):
         List of Virtual Display applications that can be selected.
         """
     )
-
+   
     @gen.coroutine
     def get_options_form(self):
 
         auth_state = yield self.user.get_auth_state()
 
-        if not auth_state or not auth_state['oauth_user'] or not auth_state['oauth_user']['groups']:
+        if not auth_state or not auth_state['oauth_user'] or 'groups' not in auth_state['oauth_user']:
             groups = []
         else:
             groups = auth_state['oauth_user']['groups']
@@ -118,6 +121,49 @@ class K8sSpawner(KubeSpawner):
     #     body = V1PersistentVolume("v1", None, metadata,  spec)
     #     return body
 
+    def publish_event(self, payload):
+
+        url = "%s/v1/events" % os.environ['PROJECT_API_URL']
+        token = os.environ['PROJECT_API_TOKEN']
+        try:
+            headers = {
+                'Content-Type':  "application/json",
+                'x-api-key': token
+            }
+            r = requests.post(url, data = json.dumps(payload), headers = headers)
+            if r.status_code == 200:
+                self.log.debug("[%s] %s" % (r.status_code, r.text))
+            else:
+                self.log.error("Notification to %s failed" % url)
+                self.log.error("[%s] %s" % (r.status_code, r.text))
+        except:
+            self.log.error("Notification to %s failed" % url)
+            traceback.print_exc(file=sys.stdout)
+
+    def gen_user(self, user_project_id, groups):
+
+        url = "%s/v1/internalusers/%s" % (os.environ['PROJECT_API_URL'], user_project_id)
+        token = os.environ['PROJECT_API_TOKEN']
+        try:
+            headers = {
+                'Content-Type':  "application/json",
+                'x-api-key': token
+            }
+            payload = {
+                'groups': groups,
+                'first_name': "",
+                'last_name': "",
+                'email': ""
+            }
+            r = requests.put(url, data = json.dumps(payload), headers = headers)
+            if r.status_code == 200:
+                self.log.debug("[%s] %s" % (r.status_code, r.text))
+            else:
+                self.log.error("Internal user setup failed - %s" % url)
+                self.log.error("[%s] %s" % (r.status_code, r.text))
+        except:
+            self.log.error("Internal user setup failed - %s" % url)
+            traceback.print_exc(file=sys.stdout)
 
     @gen.coroutine
     def start(self):
@@ -126,21 +172,48 @@ class K8sSpawner(KubeSpawner):
         # and register the certificate
         auth_state = yield self.user.get_auth_state()
 
-        self.log.info("oauth_user " + json.dumps(auth_state))
         self.log.info(".. as user " + self.user.name)
 
         user_profile = auth_state['oauth_user']
 
         # Force the selected project to be the user's group from the auth_state
-        self.user_options['project'] = user_profile['groups']
+        self.user_options['groups']  = user_profile['groups']
+
+        self.user_options['project'] = []
+
+        for grp in user_profile['groups']:
+            self.log.info(".. Project? " + grp)
+
+            if grp.split('-')[0].isnumeric():
+                self.log.info(".. Project? " + grp + " == YES")
+                self.user_options['project'].append(grp)
+
+        self.user_options['username'] = user_profile['preferred_username']
 
         gen = GenIdentity()
 
         token = auth_state['access_token']
+        self.log.debug(token)
 
+        project_id = self._expand_user_properties('{group}')
         user_project_id = self._expand_user_properties('{username}-{group}')
 
-        secret = gen.generate(user_profile['preferred_username'],token, auth_state['refresh_token'], 'users-bbsae-xyz', user_project_id)
+        self.gen_user (user_project_id, user_profile['groups'])
+
+        # Handle the scenario where the user_options for image can come through on
+        # the POST as an array or a single string.
+        containerImage = self.user_options['image']
+        if (isinstance(containerImage, list)):
+            containerImage = containerImage[0]
+
+        login_username = user_profile['preferred_username']
+
+        try:
+            secret = gen.generate(login_username, token, auth_state['refresh_token'], user_project_id, project_id)
+            self.publish_event({"action": "bbsae_spawn", "project": self.user_options['project'], "actor": urllib.parse.unquote(login_username), "application": containerImage, "success": True, "message": "Spawning %s" % containerImage})
+        except:
+            self.publish_event({"action": "bbsae_spawn", "project": self.user_options['project'], "actor": urllib.parse.unquote(login_username), "application": containerImage, "success": False, "message": "Failed to spawn %s" % containerImage})
+            raise
 
         try:
             yield self.asynchronize(
@@ -168,11 +241,6 @@ class K8sSpawner(KubeSpawner):
 
         self.log.info("user options " + json.dumps(self.user_options))
 
-        # Handle the scenario where the user_options for image can come through on
-        # the POST as an array or a single string.
-        containerImage = self.user_options['image']
-        if (isinstance(containerImage, list)):
-            containerImage = containerImage[0]
 
         self.log.info("image (default) " + self.image)
 
@@ -230,23 +298,22 @@ class K8sSpawner(KubeSpawner):
             project = self.user_options['project'][0].lower().replace("/", "").replace("_","-")
         else:
             project = ''
-        
-        username = urllib.parse.unquote(self.user.name)
 
-        userN = username.lower()
+        if 'username' in self.user_options:
+            userN = urllib.parse.unquote(self.user_options['username']).lower()
+        else:
+            userN = urllib.parse.unquote(self.user.name).lower()
 
         # Special handling for a naming convention for users having the project ID at the end
-        if len(project) > 0 and username.lower().endswith(project) == True:
-            userN = username.split("-")[0]
+        if len(project) > 0 and userN.endswith(project) == True:
+            userN = userN[0:0-(len(project)+1)]
 
         safe_username = ''.join([s if s in safe_chars else '-' for s in userN])
-        #safe_username = escapism.escape(userN, safe=safe_chars, escape_char='-')
 
         formatDict = {}
 
         formatDict['userid'] = self.user.id
-        formatDict['username'] = safe_username
-        #formatDict['legacy_escape_username'] = legacy_escaped_username
+        formatDict['username'] = "oid-" + safe_username
         formatDict['servername'] = servername.lower().replace("/", "").replace("_","-")
         formatDict['group'] = project
  
