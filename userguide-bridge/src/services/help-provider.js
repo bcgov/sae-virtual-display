@@ -1,5 +1,5 @@
 const config = require('config');
-const fetch = require('node-fetch');
+const fetch = require('cross-fetch');
 
 const log = require('../utils/log');
 
@@ -12,7 +12,6 @@ async function search(token, keyword) {
       headers: {
         Authorization: `Bearer ${token}`,
         'Cache-Control': 'no-cache',
-        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         keywords: keyword,
@@ -23,7 +22,7 @@ async function search(token, keyword) {
       }),
     });
     const json = await response.json();
-    log('[SUCCESS] Search result found');
+    log('[SUCCESS] Found %o article results found', json.length);
     return json;
   } catch (err) {
     log('[FAILED] Search article %o', err.message);

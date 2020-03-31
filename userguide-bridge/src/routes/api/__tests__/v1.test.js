@@ -1,7 +1,7 @@
 jest.mock('../../../services/help-provider');
 const express = require('express');
 const request = require('supertest');
-const { search, getDocument } = require('../../../services/help-provider');
+const { getDocument } = require('../../../services/help-provider');
 
 const auth = require('../../../middleware/auth');
 const v1 = require('../v1');
@@ -15,26 +15,38 @@ app.use(
 app.use('/', v1);
 
 describe('api/v1', () => {
+  beforeEach(() => {
+    app.locals.apps = [
+      {
+        id: 1,
+        tags: '#bbsae#onboarding',
+        documentId: '111b',
+      },
+    ];
+  });
+
+  afterEach(() => {
+    delete app.locals.apps;
+  });
+
   it('should render empty root', async () => {
     const res = await request(app).get('/');
     expect(res.text).toEqual('Nothing to see here');
   });
 
-  it('should return an error if nothing works', async () => {
+  it('should return an error if no articles are in memory', async () => {
+    delete app.locals.apps;
     const res = await request(app).get('/article/bbsae/onboarding');
+    expect(res.status).toEqual(404);
+  });
+
+  it('should throw the correct error', async () => {
+    getDocument.mockRejectedValue(new Error('Broken'));
+    const res = await request(app).get('/article/bsae/123');
     expect(res.status).toEqual(500);
   });
 
   it('should forward the correct arguments to the API service', async () => {
-    search.mockReturnValue(
-      Promise.resolve([
-        {
-          id: '111a',
-          documentId: '111b',
-          tags: '#bbsae#onboarding#',
-        },
-      ]),
-    );
     getDocument.mockReturnValue(
       Promise.resolve({
         id: '111',
@@ -42,7 +54,7 @@ describe('api/v1', () => {
       }),
     );
     const res = await request(app).get('/article/bbsae/onboarding');
-    expect(search).toHaveBeenCalledWith('123', 'onboarding');
+
     expect(getDocument).toHaveBeenCalledWith('123', '111b');
     expect(res.body).toEqual({ id: '111', name: 'correct' });
   });

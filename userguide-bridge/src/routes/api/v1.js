@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { search, getDocument } = require('../../services/help-provider');
+const { getDocument } = require('../../services/help-provider');
 
 const router = express.Router();
 
@@ -10,17 +10,25 @@ router.get('/', (req, res) => {
 
 router.get('/article/:app/:keyword', async (req, res, next) => {
   const { token } = req;
-  const { app, keyword } = req.params;
+  const { apps } = req.app.locals;
+  const { keyword } = req.params;
+
+  if (!apps) {
+    res.sendStatus(404);
+    return next();
+  }
 
   try {
-    const searchResults = await search(token, keyword);
-    const appRelevantResult = searchResults.find(d => d.tags.includes(app));
-    const id = appRelevantResult && appRelevantResult.documentId;
+    const result = apps.find(d => d.tags.includes(keyword));
+    const id = result && result.documentId;
     const document = await getDocument(token, id);
+
     res.json(document);
   } catch (err) {
     next(err);
   }
+
+  next();
 });
 
 module.exports = router;

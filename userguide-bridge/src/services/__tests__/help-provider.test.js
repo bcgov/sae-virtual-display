@@ -36,7 +36,6 @@ describe('services/help-provider', () => {
         headers: {
           Authorization: 'Bearer 123',
           'Cache-Control': 'no-cache',
-          'Content-Type': 'application/json',
         },
         body:
           '{"keywords":"onboarding","content":false,"doc":false,"tag":true,"attachment":false}',
