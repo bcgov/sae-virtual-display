@@ -4,9 +4,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const auth = require('./middleware/auth');
-const log = require('./utils/log');
 const v1 = require('./routes/api/v1');
-const { search } = require('./services/help-provider');
 
 // Config
 const token = config.get('token');
@@ -28,20 +26,10 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan(format));
 }
 
-async function searcher() {
-  try {
-    const results = await search(token, 'bbsae');
-    app.locals.apps = results;
-  } catch (err) {
-    log(err);
-  }
-}
-
-searcher();
-
 app.use(
   auth({
     token,
+    app,
   }),
 );
 app.use(cors(corsOptions));

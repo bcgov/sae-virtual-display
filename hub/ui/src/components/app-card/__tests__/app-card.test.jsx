@@ -7,8 +7,6 @@ import data from './data';
 import AppCard from '../';
 import Loading from '../loading';
 
-const cachedLocation = window.location;
-
 describe('app-card', () => {
   afterEach(cleanup);
 
@@ -35,7 +33,6 @@ describe('app-card', () => {
         <AppCard ready data={data} onLaunch={onLaunch} />,
       );
       fireEvent.click(getByText('Launch'));
-
       expect(onLaunch).toHaveBeenCalled();
     });
 

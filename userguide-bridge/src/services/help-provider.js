@@ -1,5 +1,6 @@
 const config = require('config');
-const fetch = require('cross-fetch');
+const nodeFetch = require('node-fetch');
+const fetch = require('fetch-retry')(nodeFetch);
 
 const log = require('../utils/log');
 
@@ -20,6 +21,9 @@ async function search(token, keyword) {
         tag: true,
         attachment: false,
       }),
+      retryOn: [401],
+      retries: 3,
+      retryDelay: 1000,
     });
     const json = await response.json();
     log('[SUCCESS] Found %o article results found', json.length);
@@ -39,6 +43,9 @@ async function getDocument(token, id) {
         'Cache-Control': 'no-cache',
         'Content-Type': 'application/json',
       },
+      retryOn: [401],
+      retries: 3,
+      retryDelay: 1000,
     });
     const json = await response.json();
     log('[SUCCESS] Search article loaded');

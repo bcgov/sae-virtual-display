@@ -31,15 +31,17 @@ describe('services/help-provider', () => {
         'https://help-api/api/search',
         'post',
       );
-      expect(fetchMock.mock.calls[0][1]).toEqual({
-        method: 'POST',
-        headers: {
-          Authorization: 'Bearer 123',
-          'Cache-Control': 'no-cache',
-        },
-        body:
-          '{"keywords":"onboarding","content":false,"doc":false,"tag":true,"attachment":false}',
-      });
+      expect(fetchMock.mock.calls[0][1]).toEqual(
+        expect.objectContaining({
+          method: 'POST',
+          headers: {
+            Authorization: 'Bearer 123',
+            'Cache-Control': 'no-cache',
+          },
+          body:
+            '{"keywords":"onboarding","content":false,"doc":false,"tag":true,"attachment":false}',
+        }),
+      );
     });
 
     it('should throw on search failure', async () => {

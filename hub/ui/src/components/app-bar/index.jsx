@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@atlaskit/button';
 import DropdownMenu, {
   DropdownItemGroup,
@@ -69,7 +69,9 @@ function AppBar({ isHelpEnabled, onStartTour, user }) {
                 <DropdownItem data-testid="username">
                   Signed in as {user}
                 </DropdownItem>
-                <DropdownItem onClick={onHelpToggle}>Help</DropdownItem>
+                <DropdownItem data-testid="help-button" onClick={onHelpToggle}>
+                  Help
+                </DropdownItem>
                 <DropdownItem href="/hub/logout">Logout</DropdownItem>
               </DropdownItemGroup>
             </DropdownMenu>
