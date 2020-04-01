@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+from datetime import datetime, timezone
 import base64
 from os import listdir
 import logging
@@ -155,8 +156,15 @@ aws_session_token <- "{token}"
             token=creds['SessionToken']
         )
 
+        self.info("minio/s3 expiration " + str(creds['Expiration']))
         self.info("minio/s3 access key " + creds['AccessKeyId'])
         
+        def diff_dates(date1, date2):
+            return abs(date2-date1)
+
+        minutes = divmod(diff_dates(datetime.now(timezone.utc), creds['Expiration']).seconds, 60)  
+        self.info("minio/s3 expires in %d mins %d secs" % (minutes[0], minutes[1]))
+
         secret_data['aws-credentials'] = base64.b64encode(aws_credentials.encode('utf-8')).decode('utf-8')
         secret_data['aws-credentials-r'] = base64.b64encode(aws_credentials_r.encode('utf-8')).decode('utf-8')
 
