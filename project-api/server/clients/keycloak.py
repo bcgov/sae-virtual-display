@@ -126,21 +126,48 @@ class KeycloakClient():
         url = "%s/auth/admin/realms/%s/users/%s" % (self.addr, self.realm, id)
         return self._del(url)
 
-    def add_user (self, name, email, first_name, last_name):
-        if len(self._find_user(name)) != 0:
+    def add_user (self, name, email, first_name, last_name, user_attributes):
+        user = self._find_user(name)
+        if len(user) != 0:
             log.debug("Username already exists %s" % name)
-            return
+            return self.update_user(user[0], name, email, first_name, last_name, user_attributes)
 
         data = {
             "username": name,
             "email": email,
             "firstName": first_name,
             "lastName": last_name,
-            "enabled": True
+            "enabled": True,
+            "attributes": {}
         }
+
+        for k,v in user_attributes.items():
+            log.debug("Added [%s] %s to %s" % (k, v, name))
+            data['attributes'][k] = [v]
 
         url = "%s/auth/admin/realms/%s/users" % (self.addr, self.realm)
         return self._add(url, data)
+
+    def update_user (self, user, name, email, first_name, last_name, user_attributes):
+        data = {
+            "email": email,
+            "firstName": first_name,
+            "lastName": last_name
+        }
+        log.debug(str(user))
+
+        for k,v in user_attributes.items():
+            log.debug("Added [%s] %s to %s" % (k, v, name))
+            if "attributes" not in user:
+                user['attributes'] = {}
+            user['attributes'][k] = [v]
+
+        for k,v in data.items():
+            log.debug("Updating [%s] %s" % (k, v))
+            user[k] = v
+            
+        url = "%s/auth/admin/realms/%s/users/%s" % (self.addr, self.realm, user['id'])
+        return self._put(url, json.dumps(user))
 
     def get_project (self, name):
         idref = self._find(name)
@@ -228,14 +255,14 @@ class KeycloakClient():
             log.error("[%s] %s" % (r.status_code, r.text))
             raise Exception("Failed %s" % url)
 
-    def _put (self, url):
+    def _put (self, url, data = None):
         self.check_session()
         headers = {
             'Content-Type':  "application/json",
             'Authorization': "Bearer %s" % self.access_token
         }
 
-        r = requests.put(url, headers = headers)
+        r = requests.put(url, data = data, headers = headers)
         if r.status_code == 204:
             log.debug("[%s] %s" % (r.status_code, r.text))
         else:

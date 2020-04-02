@@ -32,8 +32,12 @@ def add_user(username: str) -> object:
 
     groups = content['groups']
 
+    user_attributes = {}
+    if "user_attributes" in content:
+        user_attributes = content['user_attributes']
+
     try:
-        keycloak_cli.add_user(username, content['email'], content['first_name'], content['last_name'])
+        keycloak_cli.add_user(username, content['email'], content['first_name'], content['last_name'], user_attributes)
         for group in groups:
             keycloak_cli.add_group(group)
             keycloak_cli.join_group(group, username)
