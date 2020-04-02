@@ -13,6 +13,8 @@ The User Guide Bridge is a simple microservice designed to route formatted help 
 
 Create a `default.json` file from `default.json.template` under the config directory and edit the values to ones for your environment. See configuration options below.
 
+Run `$ npm install` to install dependencies.
+
 Run `$ npm start` to run the development version of the server. Nodemon is used to restart the server on file changes.
 
 ### Production
@@ -35,3 +37,4 @@ Run `npm run start:prod` to run the production configured server.
 ## Developer Guidelines
 
 This project uses Eslint for linting, Prettier for code formatting and Jest for testing. It is recommended for continuity and to lighten the number of lines of code added to a Git commit that these plugins are enabled in your IDE of choice.
+
