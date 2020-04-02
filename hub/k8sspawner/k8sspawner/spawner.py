@@ -140,7 +140,9 @@ class K8sSpawner(KubeSpawner):
             self.log.error("Notification to %s failed" % url)
             traceback.print_exc(file=sys.stdout)
 
-    def gen_user(self, user_project_id, groups):
+    def gen_user(self, user_project_id, user_profile):
+
+        groups = user_profile['groups']
 
         url = "%s/v1/internalusers/%s" % (os.environ['PROJECT_API_URL'], user_project_id)
         token = os.environ['PROJECT_API_TOKEN']
@@ -151,16 +153,22 @@ class K8sSpawner(KubeSpawner):
             }
             payload = {
                 'groups': groups,
-                'first_name': "",
-                'last_name': "",
-                'email': ""
+                'first_name': user_profile['first_name'],
+                'last_name': user_profile['last_name'],
+                'email': user_profile['email']
             }
+            if "businessCategory" in user_profile:
+                payload["user_attributes"] = {
+                    "businessCategory": user_profile["businessCategory"]
+                }
+
             r = requests.put(url, data = json.dumps(payload), headers = headers)
             if r.status_code == 200:
-                self.log.debug("[%s] %s" % (r.status_code, r.text))
+                self.log.debug("PUT /v1/internalusers/%s [%s] %s" % (user_project_id, r.status_code, r.text))
             else:
                 self.log.error("Internal user setup failed - %s" % url)
                 self.log.error("[%s] %s" % (r.status_code, r.text))
+                self.publish_event({"action": "bbsae_spawn", "project": "", "actor": 'hub', "success": False, "message": "Failed setting up user %s" % user_project_id})
         except:
             self.log.error("Internal user setup failed - %s" % url)
             traceback.print_exc(file=sys.stdout)
@@ -198,7 +206,7 @@ class K8sSpawner(KubeSpawner):
         project_id = self._expand_user_properties('{group}')
         user_project_id = self._expand_user_properties('{username}-{group}')
 
-        self.gen_user (user_project_id, user_profile['groups'])
+        self.gen_user (user_project_id, user_profile)
 
         # Handle the scenario where the user_options for image can come through on
         # the POST as an array or a single string.
