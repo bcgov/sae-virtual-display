@@ -153,8 +153,8 @@ class K8sSpawner(KubeSpawner):
             }
             payload = {
                 'groups': groups,
-                'first_name': user_profile['first_name'],
-                'last_name': user_profile['last_name'],
+                'first_name': user_profile['given_name'],
+                'last_name': user_profile['family_name'],
                 'email': user_profile['email']
             }
             if "businessCategory" in user_profile:
@@ -183,6 +183,8 @@ class K8sSpawner(KubeSpawner):
         self.log.info(".. as user " + self.user.name)
 
         user_profile = auth_state['oauth_user']
+
+        self.log.info(".. as user " + str(user_profile))
 
         # Force the selected project to be the user's group from the auth_state
         self.user_options['groups']  = user_profile['groups']
