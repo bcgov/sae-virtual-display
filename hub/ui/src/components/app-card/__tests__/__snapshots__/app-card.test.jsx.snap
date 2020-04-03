@@ -75,6 +75,18 @@ exports[`app-card app-card/index should render 1`] = `
   transition: opacity 0.25s ease-out;
 }
 
+.c11 .c2 {
+  opacity: 0;
+}
+
+.c11 .c2 {
+  opacity: 1;
+}
+
+.c11:hover .c2 {
+  opacity: 1;
+}
+
 .c1 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -301,7 +313,7 @@ exports[`app-card app-card/index should render 1`] = `
 `;
 
 exports[`app-card app-card/loading should render 1`] = `
-.c0 {
+.c2 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -314,24 +326,32 @@ exports[`app-card app-card/loading should render 1`] = `
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
   color: #6B778C;
-  height: 84px;
-  overflow: hidden;
 }
 
-.c0 .sc-fzXfLT {
+.c2 .c4 {
   opacity: 0;
 }
 
-.c0 {
+.c2 {
   cursor: pointer;
 }
 
-.c0:hover {
+.c2:hover {
   box-shadow: 0 8px 16px -4px rgba(9,30,66,0.25),0 0 1px rgba(9,30,66,0.31);
 }
 
-.c0:hover .sc-fzXfLT {
+.c2:hover .c4 {
   opacity: 1;
+}
+
+.c1:hover .c3 {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c0 {
+  height: 84px;
+  overflow: hidden;
 }
 
 .c0:hover {
@@ -384,7 +404,7 @@ exports[`app-card app-card/loading should render 1`] = `
 }
 
 <div
-  class="sc-fzXfLU c0"
+  class="c0 c1 c2"
   data-testid="app-card-loading"
 >
   <div />

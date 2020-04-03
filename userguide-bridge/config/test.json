@@ -1,0 +1,8 @@
+{
+  "host": "https://help-api/api",
+  "port": "3001",
+  "token": "123",
+  "logLevel": "dev",
+  "morganFormat": "dev",
+  "whitelist": ["http://localhost:8080"]
+}

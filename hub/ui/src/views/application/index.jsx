@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react';
 import AppCard from '@src/components/app-card';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import useServer from '@src/hooks/use-server';
 import useEventSource from '@src/hooks/use-eventsource';
 
-function ApplicationView({ data = {}, onShutdownComplete, onSpawnComplete }) {
+function ApplicationView({
+  data = {},
+  hasHelp,
+  onShutdownComplete,
+  onSpawnComplete,
+}) {
   const { request, ...es } = useEventSource(data.name);
   const server = useServer(data.name, {
     onStart: request,
@@ -21,7 +27,7 @@ function ApplicationView({ data = {}, onShutdownComplete, onSpawnComplete }) {
     }
   }, [es.status, onSpawnComplete]);
 
-  return (
+  const element = (
     <AppCard
       data={data}
       error={error}
@@ -33,6 +39,12 @@ function ApplicationView({ data = {}, onShutdownComplete, onSpawnComplete }) {
       onLaunch={() => ready && url && window.open(url)}
     />
   );
+
+  if (hasHelp) {
+    return <SpotlightTarget name="app-card">{element}</SpotlightTarget>;
+  }
+
+  return element;
 }
 
 export default ApplicationView;

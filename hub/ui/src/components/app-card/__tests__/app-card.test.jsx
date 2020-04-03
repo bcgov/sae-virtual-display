@@ -33,20 +33,15 @@ describe('app-card', () => {
         <AppCard ready data={data} onLaunch={onLaunch} />,
       );
       fireEvent.click(getByText('Launch'));
-
       expect(onLaunch).toHaveBeenCalled();
     });
 
     it('should stop event bubbling on info button', () => {
       const onStart = jest.fn();
       const { getByText } = render(
-        <AppCard
-          data={{ ...data, container: 'http://test.com' }}
-          onStart={onStart}
-        />,
+        <AppCard data={{ ...data, container: '/test' }} onStart={onStart} />,
       );
       fireEvent.click(getByText('View Info'));
-
       expect(onStart).not.toHaveBeenCalled();
     });
 

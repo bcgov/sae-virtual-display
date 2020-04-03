@@ -58,10 +58,6 @@ export const Container = styled.nav`
     display: flex;
     align-items: center;
   }
-
-  p {
-    margin: 0 20px 0 0;
-  }
 `;
 
 export const Icon = styled.div`
@@ -78,6 +74,22 @@ export const Brand = styled(Link)`
 
   :hover {
     text-decoration: none;
+  }
+`;
+
+export const MainMenu = styled.div`
+  margin: 4px 0 0 20px;
+`;
+
+export const MainMenuButton = styled.div`
+  height: 30px;
+  display: inline-block;
+  color: #fff;
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover {
+    opacity: 0.75;
   }
 `;
 

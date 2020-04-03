@@ -41,6 +41,14 @@ matrix:
       cd /home/travis/build/bcgov/sae-virtual-display/project-api
       bash ../.travis/docker_quayio_push vdi-project-api
 
+  - name: Userguide Bridge API
+    stage: Virtual Display Components
+    language: python
+    script:
+    - |-
+      cd /home/travis/build/bcgov/sae-virtual-display/userguide-bridge
+      bash ../.travis/docker_quayio_push vdi-userguide-bridge-api
+
   - name: Session // RStudio
     stage: Virtual Display Components
     language: python

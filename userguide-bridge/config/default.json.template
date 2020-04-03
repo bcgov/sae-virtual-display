@@ -1,0 +1,7 @@
+{
+  "host": "https://[host]/api/fetch/page/",
+  "port": "3000",
+  "token": "retrieve a token",
+  "morganFormat": "dev",
+  "whitelist": ["UI URL"]
+}

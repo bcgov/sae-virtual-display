@@ -65,8 +65,14 @@
         workbench.default(config);
       })({
         announcement: '{{ announcement | safe }}',
+        appName: 'bbsae',
         baseURL: '/hub/api',
         staticURL: '{{static_url('')}}',
+        help: {
+          url: '{{userguide_url}}',
+          onboarding: 'onboarding',
+          main: 'documentation'
+        },
         user: '{{user.name}}',
         apps: apps,
         projects: spawnOptions.projects

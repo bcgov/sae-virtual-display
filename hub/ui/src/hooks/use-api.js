@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useReducer } from 'react';
+import { useContext, useEffect, useReducer } from 'react';
 import { camelizeKeys } from 'humps';
 import template from 'lodash/template';
 import WorkbenchContext from '@src/utils/context';
