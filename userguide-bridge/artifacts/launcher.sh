@@ -9,7 +9,7 @@ cat > ./config/production.json <<EOF
   "token": "${HELP_API_TOKEN}",
   "logLevel": "prod",
   "morganFormat": "combined",
-  "whitelist": ["${CORS_WHITELIST}"]
+  "whitelist": [${CORS_WHITELIST}]
 }
 EOF
 
