@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated \
@@ -10,7 +10,8 @@ RUN apt-get update \
         openssh-server \
         x11-apps \
         xserver-xephyr \
-        xterm
+        xterm \
+        gnupg2
 
 RUN curl https://winswitch.org/gpg.asc | apt-key add - \
  && echo "deb http://winswitch.org/ xenial main" > /etc/apt/sources.list.d/winswitch.list \
