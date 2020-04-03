@@ -26,10 +26,10 @@ async function search(token, keyword) {
       retryDelay: 1000,
     });
     const json = await response.json();
-    log('[SUCCESS] Found %o article results found', json.length);
+    log('[SUCCESS] Found %o article results', json.length);
     return json;
   } catch (err) {
-    log('[FAILED] Search article %o', err.message);
+    log('[FAILED] Unable to find articles. Reason: %o', err.message);
     throw new Error(err);
   }
 }
