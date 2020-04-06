@@ -13,6 +13,7 @@ import { Container } from './styles';
 const defaultState = {
   hideIdle: false,
   search: '',
+  sort: 'name',
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -26,6 +27,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         search: action.payload,
+      };
+
+    case 'sort':
+      return {
+        ...state,
+        sort: action.payload,
       };
 
     default:
@@ -57,15 +64,16 @@ function ServersView() {
     })
     .filter(d => (state.search.trim() ? d.label.search(regex) >= 0 : true))
     .filter(d => (state.hideIdle ? d.ready : true));
-  const sorted = sortBy(items, ['name']);
+  const sorted = sortBy(items, state.sort);
 
   return (
     <Container>
       <div>
         <ServersFilters
           hideIdle={state.hideIdle}
+          onFilter={() => dispatch({ type: 'toggle' })}
           onSearch={value => dispatch({ type: 'search', payload: value })}
-          onToggle={() => dispatch({ type: 'toggle' })}
+          onSort={value => dispatch({ type: 'sort', payload: value })}
           status={status}
         />
         <div>

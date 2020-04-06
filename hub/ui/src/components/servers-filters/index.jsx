@@ -1,14 +1,30 @@
-import React from 'react';
-import Button, { ButtonGroup } from '@atlaskit/button';
+import React, { useState } from 'react';
+import {
+  DropdownMenuStateless,
+  DropdownItemRadio,
+  DropdownItemGroupRadio,
+} from '@atlaskit/dropdown-menu';
 import Spinner from '@atlaskit/spinner';
 import { SpotlightTarget } from '@atlaskit/onboarding';
 import Textfield from '@atlaskit/textfield';
-import WatchIcon from '@atlaskit/icon/glyph/watch';
-import WatchFilledIcon from '@atlaskit/icon/glyph/watch-filled';
 
 import { Container } from './styles';
 
-function Filters({ hideIdle, onSearch, onToggle, status }) {
+function Filters({ hideIdle, onSearch, onFilter, onSort, status }) {
+  const [open, setOpen] = useState(false);
+
+  function onSelect(event) {
+    const [action, value] = event.split(':');
+    return () => {
+      setOpen(false);
+      if (action === 'filter') {
+        onFilter();
+      } else {
+        onSort(value);
+      }
+    };
+  }
+
   return (
     <Container>
       <SpotlightTarget name="filter-apps">
@@ -21,14 +37,40 @@ function Filters({ hideIdle, onSearch, onToggle, status }) {
       </SpotlightTarget>
       {status === 'loading' && <Spinner />}
       <SpotlightTarget name="toggle-apps">
-        <ButtonGroup>
-          <Button
-            iconBefore={hideIdle ? <WatchIcon /> : <WatchFilledIcon />}
-            onClick={onToggle}
+        <div>
+          <DropdownMenuStateless
+            isOpen={open}
+            onOpenChange={({ isOpen }) => setOpen(isOpen)}
+            position="bottom right"
+            triggerType="button"
+            trigger="Filter/Sort"
           >
-            {hideIdle ? 'Show All Apps' : 'Show Running Apps Only'}
-          </Button>
-        </ButtonGroup>
+            <DropdownItemGroupRadio id="sort" title="Sort">
+              <DropdownItemRadio
+                defaultSelected
+                id="name"
+                onClick={onSelect('sort:name')}
+              >
+                Alphabetically
+              </DropdownItemRadio>
+              <DropdownItemRadio id="ready" onClick={onSelect('sort:ready')}>
+                Active
+              </DropdownItemRadio>
+            </DropdownItemGroupRadio>
+            <DropdownItemGroupRadio id="filter" title="Filter">
+              <DropdownItemRadio
+                defaultSelected
+                id="all"
+                onClick={onSelect('filter')}
+              >
+                All
+              </DropdownItemRadio>
+              <DropdownItemRadio id="running" onClick={onSelect('filter')}>
+                Running Only
+              </DropdownItemRadio>
+            </DropdownItemGroupRadio>
+          </DropdownMenuStateless>
+        </div>
       </SpotlightTarget>
     </Container>
   );
