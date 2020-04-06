@@ -1,4 +1,4 @@
-FROM jupyter/all-spark-notebook:1386e2046833
+FROM jupyter/all-spark-notebook:dc9744740e12
 
 USER root
 
@@ -87,11 +87,18 @@ RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc &&
 ## COPY artifacts/* /usr/share/xpra/www/.
 ## RUN rm -f /usr/share/xpra/www/*.br /usr/share/xpra/www/*.gz
 
+### AWS aws2 command for S3/Minio communication
+RUN apt-get update && apt-get install -y curl unzip less
+RUN curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+ && unzip awscliv2.zip \
+ && ./aws/install \
+ && rm -rf awscliv2.zip aws
+
 #############################################################################
 #############################################################################
 
 COPY artifacts/start-wrapper.sh /usr/local/bin
-COPY artifacts/launcher.sh /usr/local/bin/launcher.sh
+COPY artifacts/launcher.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/launcher.sh \
  && chmod +x /usr/local/bin/start-wrapper.sh
 
@@ -100,6 +107,6 @@ USER $NB_USER
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
 RUN export PSWD=`printf "from notebook.auth import passwd\nprint(passwd(\"\"))" | python3` && \
-    echo "c.NotebookApp.password = u'$PSWD'" >> ~/.jupyter/jupyter_notebook_config.py
+    echo "c.NotebookApp.password = u''\nc.NotebookApp.token = u''" >> ~/.jupyter/jupyter_notebook_config.py
 
 ENTRYPOINT ["/usr/local/bin/start-wrapper.sh"]
