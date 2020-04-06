@@ -2,6 +2,7 @@ import React, { useContext, useReducer } from 'react';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import ServersFilters from '@src/components/servers-filters';
+import sortBy from 'lodash/sortBy';
 import useApi from '@src/hooks/use-api';
 import WorkbenchContext from '@src/utils/context';
 import { uid } from 'react-uid';
@@ -36,6 +37,7 @@ function ServersView() {
   const { apps } = useContext(WorkbenchContext);
   const { status, data, refresh } = useApi('users/{user}');
   const [state, dispatch] = useReducer(reducer, defaultState);
+  const regex = new RegExp(state.search, 'i');
   const items = apps
     .map(d => {
       const server = get(data, `servers.${d.name}`, {});
@@ -53,10 +55,9 @@ function ServersView() {
         server,
       );
     })
-    .filter(d =>
-      state.search.trim() ? d.label.search(state.search) >= 0 : true,
-    )
+    .filter(d => (state.search.trim() ? d.label.search(regex) >= 0 : true))
     .filter(d => (state.hideIdle ? d.ready : true));
+  const sorted = sortBy(items, ['name']);
 
   return (
     <Container>
@@ -68,7 +69,7 @@ function ServersView() {
           status={status}
         />
         <div>
-          {items.map((d, index) => (
+          {sorted.map((d, index) => (
             <Application
               key={uid(d)}
               hasHelp={index === 0}

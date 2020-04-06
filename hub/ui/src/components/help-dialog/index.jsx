@@ -44,11 +44,8 @@ function HelpDialog({ data = [], onClose, request, status }) {
         <HelpContent data-testid="help-content">
           {data.map(section => (
             <Section key={section.id} level={section.page.level}>
-              {console.log(section.page)}
               <header>
-                {section.page.numbering && (
-                  <Lozenge appearance="new">{section.page.numbering}</Lozenge>
-                )}
+                <Lozenge appearance="new">{section.page.numbering}</Lozenge>
                 <h4>{section.page.title}</h4>
               </header>
               {section.page.body && (
