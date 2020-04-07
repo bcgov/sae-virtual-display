@@ -63,10 +63,10 @@ function Filters({ hideIdle, onSearch, onFilter, onSort, status }) {
                 id="all"
                 onClick={onSelect('filter')}
               >
-                All
+                All Applications
               </DropdownItemRadio>
-              <DropdownItemRadio id="running" onClick={onSelect('filter')}>
-                Running Only
+              <DropdownItemRadio id="active" onClick={onSelect('filter')}>
+                Active
               </DropdownItemRadio>
             </DropdownItemGroupRadio>
           </DropdownMenuStateless>

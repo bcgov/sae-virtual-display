@@ -1,8 +1,9 @@
 import React, { useContext, useReducer } from 'react';
+import Empty from '@src/components/empty';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import ServersFilters from '@src/components/servers-filters';
-import sortBy from 'lodash/sortBy';
+import orderBy from 'lodash/orderBy';
 import useApi from '@src/hooks/use-api';
 import WorkbenchContext from '@src/utils/context';
 import { uid } from 'react-uid';
@@ -15,6 +16,7 @@ const defaultState = {
   search: '',
   sort: 'name',
 };
+
 const reducer = (state, action) => {
   switch (action.type) {
     case 'toggle':
@@ -64,7 +66,8 @@ function ServersView() {
     })
     .filter(d => (state.search.trim() ? d.label.search(regex) >= 0 : true))
     .filter(d => (state.hideIdle ? d.ready : true));
-  const sorted = sortBy(items, state.sort);
+  const sortOrder = state.sort === 'ready' ? 'desc' : 'asc';
+  const sorted = orderBy(items, [state.sort], [sortOrder]);
 
   return (
     <Container>
@@ -77,6 +80,7 @@ function ServersView() {
           status={status}
         />
         <div>
+          {sorted.length === 0 && <Empty status={status} />}
           {sorted.map((d, index) => (
             <Application
               key={uid(d)}
