@@ -49,11 +49,14 @@ ENV PYTHON_VERSION=3.7.7
 RUN apt update && apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev curl \
  && curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz \
  && tar -xf Python-${PYTHON_VERSION}.tar.xz \
- && (cd Python-${PYTHON_VERSION} && ./configure --enable-optimizations && make -j 4 && make altinstall) \
- && update-alternatives --install /usr/bin/python python /usr/local/bin/python3.7 10
+ && (cd Python-${PYTHON_VERSION} && ./configure --enable-optimizations && make -j 4 && make altinstall)
+RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3.7 0 \
+ && update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.7 0 \
+ && update-alternatives --install /opt/bitnami/python/bin/python python /usr/local/bin/python3.7 0 \
+ && update-alternatives --install /opt/bitnami/python/bin/python3 python3 /usr/local/bin/python3.7 0
 
-RUN ln -s /usr/share/pyshared/lsb_release.py /usr/local/lib/python3.7/site-packages/lsb_release.py \
- && pip3 install --upgrade pip
+#RUN ln -s /usr/share/pyshared/lsb_release.py /usr/local/lib/python3.7/site-packages/lsb_release.py \
+# && pip3 install --upgrade pip
 
 # RUN mv /opt/bitnami/spark /opt/bitnami/spark.oem && \
 #     cp -r /spark/spark-2.4.4 /opt/bitnami/spark
