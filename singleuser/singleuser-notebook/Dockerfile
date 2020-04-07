@@ -106,7 +106,4 @@ USER $NB_USER
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
-RUN export PSWD=`printf "from notebook.auth import passwd\nprint(passwd(\"\"))" | python3` && \
-    echo "c.NotebookApp.password = u''\nc.NotebookApp.token = u''" >> ~/.jupyter/jupyter_notebook_config.py
-
 ENTRYPOINT ["/usr/local/bin/start-wrapper.sh"]
