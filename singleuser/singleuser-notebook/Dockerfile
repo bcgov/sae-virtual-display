@@ -77,11 +77,6 @@ RUN apt-get update && apt-get install libnss3-tools
 RUN apt-get update && apt-get install -y postgresql-client
 
 ##
-## Minio CLIENT
-##
-RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc && mv mc /usr/local/bin/mc
-
-##
 ## XPRA UI Customization
 ## (removed for notebook because it is using xpra 3)
 ## COPY artifacts/* /usr/share/xpra/www/.
@@ -103,6 +98,8 @@ RUN chmod +x /usr/local/bin/launcher.sh \
  && chmod +x /usr/local/bin/start-wrapper.sh
 
 USER $NB_USER
+
+ENV SPARK_VERSION=2.4.5
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 

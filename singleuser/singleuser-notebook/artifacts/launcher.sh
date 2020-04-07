@@ -14,6 +14,8 @@ echo 'alias s3="aws s3 --endpoint $MINIO_ADDR"' >> /home/jovyan/.profile
 NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 echo "c.NotebookApp.token = u'${NEW_UUID}'" >> ~/.jupyter/jupyter_notebook_config.py
 
+echo "TOKEN=${NEW_UUID}"
+
 JUPYTER_ENABLE_LAB=1 tini -g -- start-notebook.sh --port=4444 &
 
 sleep 3
