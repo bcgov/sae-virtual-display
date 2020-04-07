@@ -9,6 +9,11 @@ unset JUPYTERHUB_ADMIN_ACCESS
 unset JUPYTERHUB_API_TOKEN
 unset JPY_API_TOKEN
 
+# Because the singleuser POD does not have DNS records created for it, we use an IP address
+# so that the Spark workers can communicate with the driver running in POD
+export SPARK_DRIVER_HOST=`hostname -I | xargs`
+export SPARK_MASTER_URL="spark://spark-master-svc:7077"
+
 echo 'alias s3="aws s3 --endpoint $MINIO_ADDR"' >> /home/jovyan/.profile
 
 NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
