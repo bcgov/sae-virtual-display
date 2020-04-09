@@ -172,7 +172,8 @@ RUN chmod +x /usr/local/bin/launcher.sh \
  && chmod +x /usr/local/bin/start-wrapper.sh /usr/local/bin/s3_sync \
  && mkdir $XDG_RUNTIME_DIR \
  && chmod 0700 $XDG_RUNTIME_DIR \
- && chown $NB_USER $XDG_RUNTIME_DIR
+ && chown $NB_USER $XDG_RUNTIME_DIR \
+ && chown -R jovyan:conda /opt/miniconda
 
 USER $NB_USER
 
