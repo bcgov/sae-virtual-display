@@ -33,6 +33,7 @@ function Filters({ hideIdle, onSearch, onFilter, onSort, status }) {
           placeholder="Filter"
           onChange={event => onSearch(event.target.value)}
           width="medium"
+          testId="server-filters-search"
         />
       </SpotlightTarget>
       {status === 'loading' && <Spinner />}
@@ -44,6 +45,7 @@ function Filters({ hideIdle, onSearch, onFilter, onSort, status }) {
             position="bottom right"
             triggerType="button"
             trigger="Filter/Sort"
+            testId="server-filters-dropdown"
           >
             <DropdownItemGroupRadio id="sort" title="Sort">
               <DropdownItemRadio

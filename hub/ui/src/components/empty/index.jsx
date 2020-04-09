@@ -17,7 +17,7 @@ function Empty({ status }) {
   }
 
   return (
-    <Container>
+    <Container data-testid="empty">
       {icon}
       <h3>{title}</h3>
       <Text>{text}</Text>

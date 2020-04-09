@@ -70,4 +70,15 @@ describe('views/app', () => {
     });
     expect(queryByText('Onboarding Enabled')).toBeNull();
   });
+
+  it('should render announcement', () => {
+    const announcement = 'Announcement Text';
+    const { queryByText } = render(
+      <WorkbenchContext.Provider value={{ ...context, announcement }}>
+        <App />
+      </WorkbenchContext.Provider>,
+    );
+
+    expect(queryByText(announcement)).toBeInTheDocument();
+  });
 });
