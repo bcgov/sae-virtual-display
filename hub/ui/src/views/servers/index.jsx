@@ -7,7 +7,8 @@ import { uid } from 'react-uid';
 
 import Application from '../application';
 import { Container } from './styles';
-import { defaultState, reducer, processData } from './utils';
+import { processData } from './utils';
+import { defaultState, reducer } from './reducer';
 
 function ServersView() {
   const { apps } = useContext(WorkbenchContext);
@@ -32,7 +33,6 @@ function ServersView() {
               key={uid(d)}
               hasHelp={index === 0}
               data={d}
-              onClick={() => alert('open app in new tab')}
               onSpawnComplete={refresh}
               onShutdownComplete={refresh}
             />

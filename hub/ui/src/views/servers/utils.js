@@ -2,37 +2,6 @@ import get from 'lodash/get';
 import merge from 'lodash/merge';
 import orderBy from 'lodash/orderBy';
 
-export const defaultState = {
-  hideIdle: false,
-  search: '',
-  sort: 'name',
-};
-
-export const reducer = (state, action) => {
-  switch (action.type) {
-    case 'toggle':
-      return {
-        ...state,
-        hideIdle: !state.hideIdle,
-      };
-
-    case 'search':
-      return {
-        ...state,
-        search: action.payload,
-      };
-
-    case 'sort':
-      return {
-        ...state,
-        sort: action.payload,
-      };
-
-    default:
-      throw new Error();
-  }
-};
-
 export const processData = (state, apps, data) => {
   const { search, sort, hideIdle } = state;
   const regex = new RegExp(search, 'i');
