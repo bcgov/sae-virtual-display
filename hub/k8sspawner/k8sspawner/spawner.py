@@ -27,14 +27,12 @@ from kubernetes.client import V1PersistentVolume
 from k8sspawner.gen_identity import GenIdentity
 
 class K8sSpawner(KubeSpawner):
-    vdi_applications = List(
-        [],
-        config=True,
-        help="""
-        List of Virtual Display applications that can be selected.
-        """
-    )
+
    
+    def get_applications(self):
+      with open('/vdi/applications.json') as infile:
+        return json.load(infile)
+        
     @gen.coroutine
     def get_options_form(self):
 
@@ -47,7 +45,7 @@ class K8sSpawner(KubeSpawner):
 
         options = {
             "projects": groups,
-            "applications": self.vdi_applications
+            "applications": self.get_applications()
         }
         return json.dumps(options)
 
@@ -254,7 +252,7 @@ class K8sSpawner(KubeSpawner):
 
         self.log.info("image (default) " + self.image)
 
-        for a in self.vdi_applications:
+        for a in self.get_applications():
             if a["name"] == containerImage:
                 self.log.info("Using image " + a["container"])
                 self.image = a["container"]
