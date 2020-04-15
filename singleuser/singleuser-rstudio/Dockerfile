@@ -96,6 +96,9 @@ RUN groupadd conda && \
     chgrp conda -R /opt/miniconda && \
     chmod 770 -R /opt/miniconda
 
+#RUN usermod -a -G conda $NB_USER
+RUN adduser $NB_USER conda
+
 ENV PATH=$PATH:/opt/miniconda/bin
 
 RUN conda init
@@ -133,7 +136,7 @@ RUN mkdir -p $HADOOP_HOME && \
  && rm -rf $HADOOP_HOME/share/doc \
  && rmdir /tmp/hadoop-$HADOOP_VERSION
 
-ENV SPARK_VERSION=2.4.4
+ENV SPARK_VERSION=2.4.5
 ENV SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-without-hadoop
 ENV SPARK_HOME=/spark/spark-${SPARK_VERSION}
 #ENV SPARK_DIST_CLASSPATH=$(hadoop classpath)
@@ -160,8 +163,6 @@ RUN curl -sO https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOO
 ##
 ## Add the runtime scripts to start the X-Windows emulator and RStudio
 ##
-ENV LANG=en_US.UTF8
-ENV JAVA_HOME=/home/$NB_USER/miniconda3
 ENV XDG_RUNTIME_DIR=/tmp/runtime-$NB_USER
 
 COPY artifacts/start-wrapper.sh /usr/local/bin
@@ -172,12 +173,14 @@ RUN chmod +x /usr/local/bin/launcher.sh \
  && mkdir $XDG_RUNTIME_DIR \
  && chmod 0700 $XDG_RUNTIME_DIR \
  && chown $NB_USER $XDG_RUNTIME_DIR \
- && usermod -a -G conda $NB_USER
+ && chown -R jovyan:conda /opt/miniconda
 
 USER $NB_USER
 
 RUN mkdir -p $HOME/.pki/nssdb && certutil -d $HOME/.pki/nssdb -N
 
+ENV LANG=en_US.UTF8
+ENV JAVA_HOME=/opt/miniconda/bin
 ENV LD_LIBRARY_PATH=/opt/miniconda/lib/R/lib
 ENV PATH=$PATH:/opt/miniconda/bin
 RUN conda init

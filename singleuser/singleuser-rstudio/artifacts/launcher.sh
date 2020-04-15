@@ -28,5 +28,8 @@ geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x3\0\0\0\0\0\0\0\0\0\x1f\0\0\x6r\0\0\x3\x3
 
 " > /home/jovyan/.config/RStudio/desktop.ini
 
-DISPLAY=:100 rstudio &
+echo "Starting RStudio as '`whoami`' with groups [`groups`]"
 
+R --version
+
+DISPLAY=:100 rstudio &
