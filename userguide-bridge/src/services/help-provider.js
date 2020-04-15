@@ -6,8 +6,9 @@ const log = require('../utils/log');
 
 const host = config.get('host');
 
-async function search(token, keyword) {
+async function search(token, terms = []) {
   try {
+    const keywords = terms.map(a => `"${a}"`).join(' ');
     const response = await fetch(`${host}/search`, {
       method: 'POST',
       headers: {
@@ -15,7 +16,7 @@ async function search(token, keyword) {
         'Cache-Control': 'no-cache',
       },
       body: JSON.stringify({
-        keywords: keyword,
+        keywords,
         content: false,
         doc: false,
         tag: true,

@@ -26,7 +26,7 @@ fetchMock
 describe('services/help-provider', () => {
   describe('#search', () => {
     it('should search', async () => {
-      await expect(search('123', 'onboarding')).resolves.toEqual(results);
+      await expect(search('123', ['app1', 'app2'])).resolves.toEqual(results);
       expect(fetchMock).toHaveLastFetched(
         'https://help-api/api/search',
         'post',
@@ -38,8 +38,9 @@ describe('services/help-provider', () => {
             Authorization: 'Bearer 123',
             'Cache-Control': 'no-cache',
           },
+          // prettier-ignore
           body:
-            '{"keywords":"onboarding","content":false,"doc":false,"tag":true,"attachment":false}',
+            '{"keywords":"\\\"app1\\\" \\\"app2\\\"","content":false,"doc":false,"tag":true,"attachment":false}'
         }),
       );
     });
