@@ -10,9 +10,9 @@ COPY server/requirements.txt /app/
 RUN (cd /app && pip3 install -r requirements.txt)
 
 # Install MC Minio client for configuring policies
-RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && \
-    chmod +x mc && \
-    mv mc /usr/local/bin/mc
+RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2020-04-02T21-50-12Z && \
+    chmod +x mc.RELEASE.2020-04-02T21-50-12Z && \
+    mv mc.RELEASE.2020-04-02T21-50-12Z /usr/local/bin/mc
 
 COPY server /app
 
