@@ -1,14 +1,16 @@
 from flask import Blueprint, jsonify, session, request, redirect, url_for, render_template
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 import logging
+import sys
 import json
 import config
+import requests
 import oauthlib
 import datetime
 import traceback
 import urllib.parse
 from datetime import timezone
-from activity.activity import activity
+from activity.activity import activity, utc_to_local
 
 from clients.keycloak import KeycloakClient
 from clients.vault import VaultClient
@@ -76,9 +78,77 @@ def main():
     if not 'groups' in session:
         return render_template('error.html', message = "Access Denied", username = session['username'], logout_url=admin_logout_url())
 
+    conf = config.Config()
+    vault_cli = VaultClient(conf.data['vault']['addr'], conf.data['vault']['token'])
+
     message = False
 
-    return render_template('index.html', message=message, logout_url=admin_logout_url(), username=session['username'], tab={"activity":"show active"})
+    return render_template('index.html', message=message, apps_release=vault_cli.get_package_release(), pending_approval=vault_cli.get_package_requests(), logout_url=admin_logout_url(), username=session['username'], tab={"activity":"show active"})
+
+@admin.route('/approve',
+           methods=['POST'], strict_slashes=False)
+def approve_packages() -> object:
+    """
+    Approve application changes
+    """
+    data = request.form.to_dict()
+
+    conf = config.Config()
+
+    if not admin.session.authorized:
+        return redirect(url_for("keycloak.login"))
+
+    if not 'groups' in session:
+        return render_template('error.html', message = "Access Denied", username = session['username'], logout_url=admin_logout_url())
+
+    try:
+        validate (data, ['commit_sha','answer'])
+        commit_sha = data['commit_sha']
+        answer = data['answer']
+
+        # answer: approve | reject
+        # In the case of approve, call the callback_url
+        # In the case of reject, record in activity log
+        #
+
+        vault_cli = VaultClient(conf.data['vault']['addr'], conf.data['vault']['token'])
+
+        
+        pkg_request = vault_cli.get_package_requests()
+        if pkg_request is None:
+            return do_render_template(success=True, action="approve", tab={"approvals":"show active"}, message="Request already approved.")
+
+        if answer == "approve":
+            callback_url = pkg_request['approval_callback_url']
+            receipt = call_callback (callback_url)
+
+            pkg_request['approve_result'] = {
+                "performed_by": session['username'],
+                "answer": answer,
+                "timestamp": utc_to_local(datetime.datetime.now()).isoformat(),
+                "tekton_receipt": receipt
+            }
+
+            vault_cli.update_package_request(pkg_request)
+
+        else:
+            vault_cli.delete_package_request()
+
+        msg = "Approved changes (%s)." % commit_sha
+        if answer == "reject":
+            msg = "Rejected changes (%s)." % commit_sha
+
+        activity ('approve_bbsae_apps', '', '', session['username'], True, msg)
+
+        return do_render_template(success=True, action="approve", tab={"approvals":"show active"}, message=msg)
+
+    except BaseException as error:
+        print("Exception %s" % error)
+        traceback.print_exc(file=sys.stdout)
+        return do_render_template(success=False, action="approve", tab={"approvals":"show active"}, message="Failed to approve. %s" % (error))
+
+
+
 
 @admin.route('/activity',
            methods=['GET'], strict_slashes=False)
@@ -121,14 +191,25 @@ def view_projects() -> object:
 
 def do_render_template(**args):
 
-    if 'repository' in args['data']:
-        team = get_sae_project(session['groups'])
-        actor = session['username']
-        activity (args['action'], args['data']['repository'], team, actor, args['success'], args['message'])
-    linked_repos = get_linked_repos()
-    return render_template('index.html', **args, repo_list=linked_repos, unlinked_repo_list=get_unlinked_repos(), noshares_repo_list=get_noshares_repos(linked_repos), groups=session['groups'], project=get_sae_project(session['groups']))
+    conf = config.Config()
+
+    vault_cli = VaultClient(conf.data['vault']['addr'], conf.data['vault']['token'])
+    return render_template('index.html', **args, apps_release=vault_cli.get_package_release(), pending_approval=vault_cli.get_package_requests(), logout_url=admin_logout_url(), username=session['username'])
 
 
 def admin_logout_url():
     return "%s/auth/realms/%s/protocol/openid-connect/logout?%s" % (oauth_url, oauth_realm, urllib.parse.urlencode({'redirect_uri':url_for("keycloak.logout", _external=True)}) )
 
+def validate (data, names):
+    for name in names:
+        if (name not in data or data[name] == ""):
+            raise Exception ("%s is required." % name)
+
+def call_callback (url):
+    r = requests.get(url)
+    if r.status_code == 201:
+        log.debug("[%s] %s" % (r.status_code, r.text))
+        return r.json()
+    else:
+        log.error("[%s] %s" % (r.status_code, r.text))
+        raise Exception("Failed to do package approval callback.")

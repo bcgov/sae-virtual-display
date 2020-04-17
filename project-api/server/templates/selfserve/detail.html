@@ -39,10 +39,6 @@
             .mark-pending * {
                 fill:gray;
                 margin: 5px;
-                color: #999;
-            }
-            .status>svg {
-                display: inline-block;
             }
         </style>
         <title>Browser-Based Secure Analytics Environment</title>
@@ -70,44 +66,33 @@
                             {{ message }}
                         </div>
                     {% endif %}
-                    
-                    <div class="card m-3" role="alert" id="message">
-                        <div class="card-body">
-                        <div class="status mark-check">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 8 8">
-                                <path d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm2 1.78l.72.72-3.22 3.22-1.72-1.72.72-.72 1 1 2.5-2.5z" />
-                            </svg>    
-                            <span>Self-registration complete.</span>                        
+
+                    <div class="alert alert-info m-3" role="alert" id="progress" style="display:none; vertical-align:middle">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="sr-only">Loading...</span>
                         </div>
-                        {% if is_project_assigned %}
-                        <div class="status mark-check">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 8 8">
-                                <path d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm2 1.78l.72.72-3.22 3.22-1.72-1.72.72-.72 1 1 2.5-2.5z" />
-                            </svg>    
-                            <span>Project has been asigned.</span>                        
-                        </div>
-                        <div class="status mark-check">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 8 8">
-                                <path d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm2 1.78l.72.72-3.22 3.22-1.72-1.72.72-.72 1 1 2.5-2.5z" />
-                            </svg>    
-                            <span>Go to the <a href="{{ hub_redirect_url }}">Virtual Display Hub</a> to launch applications.</span>                           
-                        </div>
-                        {% else %}
-                        <div class="status mark-pending">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 8 8">
-                                <path d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 1l3 3-3 3v-2h-3v-2h3v-2z" />
-                            </svg> 
-                            <span>Project assignment pending.</span>                           
-                        </div>
-                        <div class="status mark-pending">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 8 8">
-                                <path d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm-1.5 1.78l1.5 1.5 1.5-1.5.72.72-1.5 1.5 1.5 1.5-.72.72-1.5-1.5-1.5 1.5-.72-.72 1.5-1.5-1.5-1.5.72-.72z" />
-                            </svg>
-                            <span>Go to the Virtual Display Hub to launch applications.</span>                           
-                        </div>
-                        {% endif %}
+                        <span class="">Please wait... it can take a minute or two.</span>
                     </div>
-                    
+
+                    <div class="card m-3">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link {{tab['registration']}}" id="registration-tab" data-toggle="tab" href="#registration" role="tab" aria-controls="registration" aria-selected="false">Registration</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade {{tab['registration']}}" id="registration" role="tabpanel" aria-labelledby="registration-tab">
+                                        <h3>Groups</h3>
+                                        <div id="registration_root"></div>
+                                        <h3>Identity Claims</h3>
+                                        <pre>{{ jwt_info }}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
             </div>
 

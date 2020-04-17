@@ -20,6 +20,7 @@ client_id = conf['oauth']['client_id']
 client_secret = conf['oauth']['client_secret']
 oauth_url = conf['oauth']['url']
 oauth_realm = conf['oauth']['realm']
+hub_redirect_url = conf['hub_redirect_url']
 
 selfserve = OAuth2ConsumerBlueprint(
     "kc", 'selfserve',
@@ -50,6 +51,7 @@ def _selfserve():
         else:
             groups = []
         session['groups'] = groups
+        session['policy'] = resp.json()['policy']
         session['username'] = resp.json()['preferred_username']
         session['jwt_info'] = json.dumps(resp.json(), indent=4, sort_keys=True)
 
@@ -70,9 +72,11 @@ def main():
     message = None
 
     if len(session['groups']) == 0:
-        message = "You currently do not have any projects assigned to your account."
+        message = "You currently do not have any projects assigned to your account.  Contact your project administrator to get your account added to the project."
 
-    return render_template('selfserve/index.html', message=message, logout_url=logout_url(), jwt_info=session['jwt_info'], username=session['username'], tab={"registration":"show active"})
+    is_project_assigned = session['policy'] != 'no-access'
+
+    return render_template('selfserve/index.html', hub_redirect_url=hub_redirect_url, is_project_assigned=is_project_assigned, message=message, logout_url=logout_url(), jwt_info=session['jwt_info'], username=session['username'], tab={"registration":"show active"})
 
 @selfserve.route('/groups',
            methods=['GET'], strict_slashes=False)

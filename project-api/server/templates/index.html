@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -14,6 +14,15 @@
                 return true;
             }
         </script>
+        <style type="text/css">
+            .diff {
+                background-color: #444;
+                color: white;
+                font-weight: 600;
+                padding: 10px;
+                white-space: normal;
+            }
+        </style>
         <title>Browser-Based Secure Analytics Environment Administration</title>
     </head>
     <body>
@@ -72,136 +81,61 @@
                                         <a class="nav-link {{tab['config']}}" id="projects-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="false">Config</a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link {{tab['approvals']}}" id="approvals-tab" data-toggle="tab" href="#approvals" role="tab" aria-controls="approvals" aria-selected="false">Approvals
+                                        {% if pending_approval and not pending_approval.approve_result %}<span class="badge badge-pill badge-primary">1</span>{% endif %}
+
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link {{tab['activity']}}" id="activity-tab" data-toggle="tab" href="#activity" role="tab" aria-controls="activity" aria-selected="false">Activity</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="card-body">
                             <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade {{tab['create']}}" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="tab-pane fade {{tab['approvals']}}" id="approvals" role="tabpanel" aria-labelledby="approvals-tab">
 
-                                    <h2>Create Repository</h2>
+                                    <h2>Approvals</h2>
 
-                                    <form action="/v1/selfserve/projectsc/repository" method="POST" onSubmit="return submitted()">
-                                        <p>SAE Project: <b>{{ project }}</b></p>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Repository</label>
-                                            <input type="text" class="form-control" id="repository" name="repository" aria-describedby="emailHelp" placeholder="Enter repository">
-                                            <small id="emailHelp" class="form-text text-muted">Name of the new repository.</small>
+                                    {% if pending_approval and pending_approval.approve_result %}
+                                        <div class="alert alert-primary m-3" role="alert" id="message">
+                                            Approval completed.  Pending pipeline to publish changes.
                                         </div>
-                                        <div class="form-group form-check">
-                                            <input class="form-check-input" type="checkbox" name="private" value="private" id="private_repo">
-                                            <label class="form-check-label" for="private_repo">
-                                                Make repository private to your project (SAE project repository)
-                                            </label>
-                                            <small id="emailHelp" class="form-text text-muted">SAE project repositories have Issues and WIKI enabled but are only accessible to your project team.  If you do not select this option, your repository will be a SAE shared repository that will be accessible to all DIP projects.</small>
-                                        </div>                                        
-                                        <button type="submit" class="btn btn-primary" id="submit_button">Submit</button>
-                                    </form>
-                                </div>
-                                <div class="tab-pane fade {{tab['rename']}}" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-
-                                    <h2>Rename Repository</h2>
-                                    <form action="/v1/selfserve/projectsc/repository/rename" method="POST" onSubmit="return submitted()">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Select Existing Repository:</label>
-                                            {% for value in repo_list %}
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="repository" id="rename_{{ value.name }}" value="{{ value.name }}">
-                                                    <label class="form-check-label" for="rename_{{ value.name }}">
-                                                            {{ value.name }} <span class="badge badge-pill badge-light">shared: {{value.share_count}}</span>
-                                                                    {% if value.private %}
-                                                                        <span class="badge badge-pill badge-secondary">private</span>
-                                                                    {% endif %}
-                                                    </label>
-                                                </div>
-                                            {% endfor %}
-                                            {% if repo_list.__len__() == 0 %}
-                                            <p><i>No linked repositories found.</i></p>
-                                            {% endif %}
-                                    </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">New Repository Name</label>
-                                            <input type="text" class="form-control" id="repository" name="newRepository" aria-describedby="emailHelp" placeholder="Enter repository">
-                                            <small id="emailHelp" class="form-text text-muted">Name of the new repository.</small>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </form>
-                                </div>
-                                <div class="tab-pane fade {{tab['join']}}" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                    <h2>Join Repository</h2>
-                                    <form action="/v1/selfserve/projectsc/repository/join" method="POST" onSubmit="return submitted()">
-                                        <p>SAE Project: <b>{{ project }}</b></p>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Select Existing Repository:</label>
-                                            {% for value in unlinked_repo_list %}
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="repository" id="join_{{ value.name }}" value="{{ value.name }}">
-                                                    <label class="form-check-label" for="join_{{ value.name }}">
-                                                            {{ value.name }} <span class="badge badge-pill badge-light">shared: {{value.share_count}}</span>
-                                                                {% if value.private %}
-                                                                    <span class="badge badge-pill badge-secondary">private</span>
-                                                                {% endif %}
-                                                    </label>
-                                                </div>
-                                            {% endfor %}
-                                            {% if unlinked_repo_list.__len__() == 0 %}
-                                                <p><i>No unlinked repositories found.</i></p>
-                                            {% endif %}
-
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </form>                                    
-                                </div>
-                                <div class="tab-pane fade {{tab['leave']}}" id="leave" role="tabpanel" aria-labelledby="leave-tab">
-                                        <h2>Leave Repository</h2>
-                                        <form action="/v1/selfserve/projectsc/repository/leave" method="POST" onSubmit="return submitted()">
-                                            <p>SAE Project: <b>{{ project }}</b></p>
+                                        <pre class="diff">{{ pending_approval.approve_result }}</pre>
+                                    {% elif pending_approval %}
+                                        <form action="/admin/approve" method="POST" onSubmit="return submitted()">
+                                            <input type="hidden" name="commit_sha" value="{{ pending_approval.commit_sha }}"/>
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">Select Existing Repository:</label>
-                                                {% for value in repo_list %}
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="repository" id="leave_{{ value.name }}" value="{{ value.name }}">
-                                                        <label class="form-check-label" for="leave_{{ value.name }}">
-                                                                {{ value.name }} <span class="badge badge-pill badge-light">shared: {{value.share_count}}</span>
-                                                                {% if value.private %}
-                                                                    <span class="badge badge-pill badge-secondary">private</span>
-                                                                {% endif %}
-                                                        </label>
-                                                    </div>
-                                                {% endfor %}
-                                                {% if repo_list.__len__() == 0 %}
-                                                <p><i>No linked repositories found.</i></p>
-                                                {% endif %}
+                                                <pre class="diff">
+                                                    {{ pending_approval.comparison }}
+                                                </pre>
                                             </div>
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <div class="form-group form-check">
+                                                <input class="form-check-input" type="radio" name="answer" value="approve" id="approve">
+                                                <label class="form-check-label" for="approve">
+                                                    Approve
+                                                </label>
+                                            </div>
+                                            <div class="form-group form-check">
+                                                <input class="form-check-input" type="radio" name="answer" value="reject" id="reject">
+                                                <label class="form-check-label" for="reject">
+                                                    Reject
+                                                </label>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" id="submit_button">Submit</button>
                                         </form>                                    
-                                </div>
-                                <div class="tab-pane fade {{tab['delete']}}" id="delete" role="tabpanel" aria-labelledby="delete-tab">
-
-                                    <h2>Delete Repository</h2>
-                                    <form action="/v1/selfserve/projectsc/repository/delete" method="POST" onSubmit="return submitted()">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Select Repository (only showing repos not sharing with any SAE projects):</label>
-                                            {% for value in noshares_repo_list %}
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="repository" id="delete_{{ value.name }}" value="{{ value.name }}">
-                                                    <label class="form-check-label" for="delete_{{ value.name }}">
-                                                            {{ value.name }}
-                                                                    {% if value.private %}
-                                                                        <span class="badge badge-pill badge-secondary">private</span>
-                                                                    {% endif %}
-                                                    </label>
-                                                </div>
-                                            {% endfor %}
-                                            {% if noshares_repo_list.__len__() == 0 %}
-                                            <p><i>No repositories found.</i></p>
-                                            {% endif %}
+                                    {% else %}
+                                        <div class="alert alert-primary m-3" role="alert" id="message">
+                                            No approvals pending.
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </form>
+                                        <h4>Latest release details:</h4>
+                                        <pre class="diff">
+                                                {{ apps_release }}
+                                        </pre>
+                                {% endif %}
+                                    
                                 </div>
-                                <div class="tab-pane fade {{tab['projects']}}" id="projects" role="tabpanel" aria-labelledby="projects-tab">
+                                 <div class="tab-pane fade {{tab['projects']}}" id="projects" role="tabpanel" aria-labelledby="projects-tab">
                                         <h2>Projects</h2>
                                         <div id="projects_root"></div>
                                 </div>

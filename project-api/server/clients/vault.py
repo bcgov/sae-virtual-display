@@ -15,7 +15,9 @@ class VaultClient():
         return {
             "jwt_roles": self.get_roles(),
             "pki_roles": self.get_pki_roles(),
-            "policies": self.get_policies()
+            "policies": self.get_policies(),
+            "applications_released": self.get_package_release(),
+            "applications_request": self.get_package_requests()
         }
 
     def get_roles(self):
@@ -77,6 +79,30 @@ class VaultClient():
         self._add_policy(project_id)
         self._add_role(project_id)
         self._add_pki_role(project_id)
+
+    def update_package_request (self, data):
+        url = "%s/v1/secret/bbsae/applications_request" % (self.addr)
+        self._put(url, data, 204)
+
+    def delete_package_request (self):
+        url = "%s/v1/secret/bbsae/applications_request" % (self.addr)
+        self._delete(url)
+
+    def get_package_requests (self):
+        try:
+            request = self._get("%s/v1/secret/bbsae/applications_request" % (self.addr))
+            return request['data']
+        except Exception as ex:
+            log.warn("No package request recorded.")
+            return None
+
+    def get_package_release (self):
+        try:
+            request = self._get("%s/v1/secret/bbsae/applications_released" % (self.addr))
+            return request['data']
+        except Exception as ex:
+            log.warn("No package release recorded.")
+            return {}
 
     def _delete (self, url):
         headers = {
@@ -191,3 +217,15 @@ path "pki_int/issue/$role" {
         else:
             log.error("[%s] %s" % (r.status_code, r.text))
             raise Exception("Failed to add policy for project %s" % project_id)
+
+    def _put(self, url, payload, expected_status):
+        headers = {
+            'Content-Type':  "application/json",
+            'X-Vault-Token': self.token
+        }
+        r = requests.put(url, data = json.dumps(payload), headers = headers)
+        if r.status_code == expected_status:
+            log.debug("[%s] %s" % (r.status_code, r.text))
+        else:
+            log.error("[%s] %s" % (r.status_code, r.text))
+            raise Exception("Failed call to Vault")

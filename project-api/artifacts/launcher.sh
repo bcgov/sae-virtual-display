@@ -41,8 +41,8 @@ cat > ./config/default.json <<EOF
         "url": "${NOTIFY_URL}",
         "token": "${NOTIFY_TOKEN}"
     },
-    "group_exclusions": [${GROUP_EXCLUSIONS}]
-
+    "group_exclusions": [${GROUP_EXCLUSIONS}],
+    "hub_redirect_url": "${HUB_REDIRECT_URL}"
 }
 EOF
 
