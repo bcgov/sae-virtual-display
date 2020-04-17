@@ -30,7 +30,6 @@ export const CardIcon = styled.div`
   width: 50px;
   margin: 10px;
   display: flex;
-  align-items: center;
   justify-content: center;
 `;
 

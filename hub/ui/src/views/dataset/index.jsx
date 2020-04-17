@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import { BreadcrumbsStateless, BreadcrumbsItem } from '@atlaskit/breadcrumbs';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import Loading from '@src/components/core/loading';
 import Lozenge from '@atlaskit/lozenge';
 import PageHeader from '@atlaskit/page-header';
+import useDataCatalogue from '@src/hooks/use-data-catalogue';
 
-import Loading from '../core/loading';
 import BreadcrumbLink from './breadcrumb-link';
 import { Content, Hgroup, TagsContainer } from './styles';
-import useDataCatalogue from '../../hooks/useDataCatalogue';
 
 function Dataset() {
   const params = useParams();
-  const [data, loading, error] = useDataCatalogue(
-    `package_show?id=${params.id}`
+  const { data, status, error } = useDataCatalogue(
+    `package_show?id=${params.id}`,
   );
   const breadcrumbs = (
     <BreadcrumbsStateless>
@@ -35,8 +35,10 @@ function Dataset() {
 
   return (
     <ak-grid type="fluid">
-      {error && <div className="row text-center text-danger">{error}</div>}
-      {loading && <Loading />}
+      {status === 'error' && (
+        <div className="row text-center text-danger">{error}</div>
+      )}
+      {status === 'loading' && <Loading />}
       {data.id && (
         <div className="row">
           <PageHeader

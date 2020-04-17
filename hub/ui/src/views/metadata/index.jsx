@@ -1,15 +1,14 @@
 import React from 'react';
+import Loading from '@src/components/core/loading';
 import PageHeader from '@atlaskit/page-header';
+import useDataCatalogue from '@src/hooks/use-data-catalogue';
 
 import Card from './card';
-import CoreImage from '../core/image';
-import Loading from '../core/loading';
 import { Intro, CardsList } from './styles';
-import useDataCatalogue from '../../hooks/useDataCatalogue';
 
 function Metadata() {
-  const [data, loading, error] = useDataCatalogue(
-    'group_show?id=data-innovation-program&include_datasets=true'
+  const { data, status, error } = useDataCatalogue(
+    'package_search?q=data-innovation-program',
   );
 
   React.useEffect(() => {
@@ -22,24 +21,20 @@ function Metadata() {
         <PageHeader
           bottomBar={
             <Intro>
-              <aside>
-                <CoreImage fluid src={data.imageDisplayUrl} width={150} />
-              </aside>
-              <p>{data.description}</p>
+              <p>This is a list of metadata</p>
             </Intro>
           }
         >
-          {data.title}
+          Metadata
         </PageHeader>
         <CardsList>
-          {error && (
+          {status === 'error' && (
             <div className="list-group-item list-group-item-danger">
               {error}
             </div>
           )}
-          {loading && <Loading />}
-          {data.packages &&
-            data.packages.map(d => <Card key={d.id} data={d} />)}
+          {status === 'loading' && <Loading />}
+          {data.results && data.results.map(d => <Card key={d.id} data={d} />)}
         </CardsList>
       </ak-grid-column>
     </ak-grid>

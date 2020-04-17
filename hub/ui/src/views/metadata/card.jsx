@@ -24,9 +24,9 @@ function Card({ data }) {
               {data.title}
             </Link>
           </h3>
-          <Lozenge appearance="moved">{data.sector}</Lozenge>
+          {data.sector && <Lozenge appearance="moved">{data.sector}</Lozenge>}
         </CardHeader>
-        <p>{data.lineageStatement}</p>
+        <p>{data.notes}</p>
         <CardFooter>
           <small>
             Record published: {data.recordCreateDate} &bull;
