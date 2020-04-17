@@ -7,6 +7,7 @@ const auth = require('./middleware/auth');
 const v1 = require('./routes/api/v1');
 
 // Config
+const applications = config.get('applications');
 const token = config.get('token');
 const whitelist = config.get('whitelist');
 const format = config.get('morganFormat');
@@ -30,6 +31,7 @@ app.use(
   auth({
     token,
     app,
+    applications,
   }),
 );
 app.use(cors(corsOptions));

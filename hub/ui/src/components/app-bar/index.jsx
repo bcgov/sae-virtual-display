@@ -9,15 +9,7 @@ import SettingsIcon from '@atlaskit/icon/glyph/settings';
 import WorkbenchIcon from '@atlaskit/icon/glyph/dashboard';
 import Help from '@src/views/help';
 
-import NavButton from './nav-button';
-import {
-  Brand,
-  Container,
-  Icon,
-  MainMenu,
-  MainMenuButton,
-  Nav,
-} from './styles';
+import { Brand, Container, Icon, MainMenu, MainMenuButton } from './styles';
 
 function AppBar({ isHelpEnabled, onStartTour, user }) {
   const [open, toggleOpen] = useState(false);
@@ -37,11 +29,6 @@ function AppBar({ isHelpEnabled, onStartTour, user }) {
             </Icon>
             Virtual Display Hub
           </Brand>
-          <Nav>
-            <NavButton exact href="/">
-              Home
-            </NavButton>
-          </Nav>
         </div>
         <div>
           {isHelpEnabled && (

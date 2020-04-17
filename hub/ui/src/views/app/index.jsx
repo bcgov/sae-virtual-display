@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import Announcement from '@src/components/announcement';
 import AppBar from '@src/components/app-bar';
 import { SpotlightManager, SpotlightTransition } from '@atlaskit/onboarding';
 import useHelp from '@src/hooks/use-help';
@@ -10,7 +11,7 @@ import Servers from '../servers';
 import { Main } from './styles';
 
 function App() {
-  const { help, user } = useContext(WorkbenchContext);
+  const { announcement, help, user } = useContext(WorkbenchContext);
   const { data, request } = useHelp(help.onboarding);
   const [isHelpEnabled, setHelpEnabled] = useState(false);
 
@@ -34,7 +35,8 @@ function App() {
           onStartTour={onToggleOnboarding}
           user={user}
         />
-        <Main>
+        <Main hasBanner={!!announcement}>
+          {announcement && <Announcement message={announcement} />}
           <Switch>
             <Route exact path="/">
               <Servers />

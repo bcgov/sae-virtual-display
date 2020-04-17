@@ -1,6 +1,5 @@
 import React, { useContext, useReducer } from 'react';
-import get from 'lodash/get';
-import merge from 'lodash/merge';
+import Empty from '@src/components/empty';
 import ServersFilters from '@src/components/servers-filters';
 import useApi from '@src/hooks/use-api';
 import WorkbenchContext from '@src/utils/context';
@@ -8,72 +7,32 @@ import { uid } from 'react-uid';
 
 import Application from '../application';
 import { Container } from './styles';
-
-const defaultState = {
-  hideIdle: false,
-  search: '',
-};
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'toggle':
-      return {
-        ...state,
-        hideIdle: !state.hideIdle,
-      };
-
-    case 'search':
-      return {
-        ...state,
-        search: action.payload,
-      };
-
-    default:
-      throw new Error();
-  }
-};
+import { processData } from './utils';
+import { defaultState, reducer } from './reducer';
 
 function ServersView() {
   const { apps } = useContext(WorkbenchContext);
   const { status, data, refresh } = useApi('users/{user}');
   const [state, dispatch] = useReducer(reducer, defaultState);
-  const items = apps
-    .map(d => {
-      const server = get(data, `servers.${d.name}`, {});
-      return merge(
-        {
-          lastActivity: new Date().toISOString(),
-          pending: '',
-          progressUrl: '',
-          started: new Date().toISOString(),
-          state: {},
-          ready: false,
-          url: '',
-        },
-        d,
-        server,
-      );
-    })
-    .filter(d =>
-      state.search.trim() ? d.label.search(state.search) >= 0 : true,
-    )
-    .filter(d => (state.hideIdle ? d.ready : true));
+  const listItems = processData(state, apps, data);
 
   return (
     <Container>
       <div>
         <ServersFilters
           hideIdle={state.hideIdle}
+          onFilter={() => dispatch({ type: 'toggle' })}
           onSearch={value => dispatch({ type: 'search', payload: value })}
-          onToggle={() => dispatch({ type: 'toggle' })}
+          onSort={value => dispatch({ type: 'sort', payload: value })}
           status={status}
         />
         <div>
-          {items.map((d, index) => (
+          {listItems.length === 0 && <Empty status={status} />}
+          {listItems.map((d, index) => (
             <Application
               key={uid(d)}
               hasHelp={index === 0}
               data={d}
-              onClick={() => alert('open app in new tab')}
               onSpawnComplete={refresh}
               onShutdownComplete={refresh}
             />
