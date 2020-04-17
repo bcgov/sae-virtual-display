@@ -35,7 +35,7 @@ function AppBar({ isHelpEnabled, onStartTour, user }) {
             <Icon>
               <WorkbenchIcon primaryColor="#FFAB00" />
             </Icon>
-            SAE Virtual Display
+            Virtual Display Hub
           </Brand>
           <Nav>
             <NavButton exact href="/">

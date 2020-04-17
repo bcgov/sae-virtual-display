@@ -16,7 +16,7 @@ function Dashboard() {
   const [isSpawning, setIsSpawning] = useState(true);
 
   useEffect(() => {
-    document.title = 'SAE Virtual Display | Spawn';
+    document.title = 'Virtual Display Hub | Spawn';
   }, []);
 
   function onSubmit(event) {
