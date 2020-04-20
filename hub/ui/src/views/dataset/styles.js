@@ -1,4 +1,10 @@
 import styled from 'styled-components';
+import { colors } from '@atlaskit/theme';
+
+export const Container = styled.article`
+  padding: 20px 40px;
+  background: ${colors.background};
+`;
 
 export const Hgroup = styled.hgroup`
   p {

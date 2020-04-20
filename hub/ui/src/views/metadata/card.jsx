@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Lozenge from '@atlaskit/lozenge';
-import Spreadsheet48Icon from '@atlaskit/icon-file-type/glyph/spreadsheet/48';
+import FileIcon from '@atlaskit/icon-file-type/glyph/generic/24';
 
 import {
   CardHeader,
@@ -13,20 +12,15 @@ import {
 
 function Card({ data }) {
   return (
-    <CardContainer>
+    <CardContainer to={`/metadata/${data.id}`}>
       <CardIcon>
-        <Spreadsheet48Icon />
+        <FileIcon />
       </CardIcon>
       <CardContent>
         <CardHeader>
-          <h3>
-            <Link to={`metadata/${data.id}`} className="list-group-item">
-              {data.title}
-            </Link>
-          </h3>
+          <h5>{data.title}</h5>
           {data.sector && <Lozenge appearance="moved">{data.sector}</Lozenge>}
         </CardHeader>
-        <p>{data.notes}</p>
         <CardFooter>
           <small>
             Record published: {data.recordCreateDate} &bull;

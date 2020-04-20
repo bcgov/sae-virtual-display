@@ -1,34 +1,48 @@
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { colors } from '@atlaskit/theme';
 
-export const Intro = styled.hgroup`
+export const Container = styled.div`
+  width: 100vw;
+  height: calc(100vh - 50px);
   display: flex;
-
-  aside {
-    margin-right: 20px;
-  }
-
-  p {
-    flex: 1;
-  }
-`;
-
-export const CardsList = styled.div`
-  margin: 40px 0;
-  clear: both;
   overflow: hidden;
+  background: ${colors.background};
 `;
 
-export const CardContainer = styled.div`
-  margin-bottom: 20px;
+export const List = styled.nav`
+  width: 400px;
+  overflow-y: auto;
+  border-right: 2px solid ${colors.backgroundHover};
+  background: ${colors.background};
+`;
+
+export const Content = styled.div`
+  flex: 1;
+  overflow-y: auto;
+`;
+
+export const CardContainer = styled(NavLink)`
   display: flex;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  border-radius: 5px;
-  background: #fff;
+  background: ${colors.background};
+  border-bottom: 1px solid ${colors.backgroundHover};
+  cursor: pointer;
+
+  &,
+  &:focus {
+    outline: none;
+  }
+
+  &.active,
+  &:hover {
+    text-decoration: none;
+    background: ${colors.backgroundHover};
+  }
 `;
 
 export const CardIcon = styled.div`
-  width: 50px;
-  margin: 10px;
+  width: 30px;
+  margin: 10px 0 10px 10px;
   display: flex;
   justify-content: center;
 `;
