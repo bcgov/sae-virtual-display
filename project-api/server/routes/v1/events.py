@@ -11,8 +11,8 @@ log = logging.getLogger(__name__)
 
 events = Blueprint('events', 'events')
 
-@auth
 @events.route('', methods=['POST'], strict_slashes=False)
+@auth
 def record_event() -> object:
     """
     Record an event

@@ -212,7 +212,7 @@ def validate (data, names):
 
 def call_callback (url):
     r = requests.get(url)
-    if r.status_code == 201:
+    if r.status_code >= 200 and r.status_code < 300:
         log.debug("[%s] %s" % (r.status_code, r.text))
         return r.json()
     else:

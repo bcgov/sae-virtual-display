@@ -12,8 +12,8 @@ log = logging.getLogger(__name__)
 
 approvals = Blueprint('approvals', 'approvals')
 
-@auth
 @approvals.route('requests', methods=['POST'], strict_slashes=False)
+@auth
 def record_approval_request() -> object:
     """
     Record an approval request
@@ -45,8 +45,8 @@ def record_approval_request() -> object:
 
     return jsonify({})
 
-@auth
 @approvals.route('requests', methods=['GET'], strict_slashes=False)
+@auth
 def get_approval_request() -> object:
     """
     Get the approval requests
