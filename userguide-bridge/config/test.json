@@ -2,6 +2,7 @@
   "host": "https://help-api/api",
   "port": "3001",
   "token": "123",
+  "applications": ["app1", "app2"],
   "logLevel": "dev",
   "morganFormat": "dev",
   "whitelist": ["http://localhost:8080"]

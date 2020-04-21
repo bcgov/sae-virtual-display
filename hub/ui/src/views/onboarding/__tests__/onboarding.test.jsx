@@ -89,8 +89,9 @@ describe('views/onboarding', () => {
     expect(dialog).not.toContainElement(finishButton);
   });
 
-  it('should render content after being enabled', async () => {
+  it('should move through the whole tour', async () => {
     const onComplete = jest.fn();
+    global.dispatchEvent = jest.fn();
     const { getByTestId, getByText } = render(
       <Wrapper>
         <Onboarding enabled data={data} onComplete={onComplete} />
@@ -107,11 +108,34 @@ describe('views/onboarding', () => {
     act(() => {
       fireEvent.click(nextButton);
     });
+    expect(global.dispatchEvent).toHaveBeenCalled();
+
     const finishButton = getByText('Finish');
     expect(finishButton).toBeInTheDocument();
     act(() => {
       fireEvent.click(finishButton);
     });
     expect(onComplete).toHaveBeenCalled();
+  });
+
+  it('should move back if requested', () => {
+    const { getByText, queryByText } = render(
+      <Wrapper>
+        <Onboarding enabled data={data} />
+      </Wrapper>,
+    );
+    const nextButton = getByText('Next');
+
+    act(() => {
+      fireEvent.click(nextButton);
+    });
+
+    const prevButton = getByText('Prev');
+
+    act(() => {
+      fireEvent.click(prevButton);
+    });
+
+    expect(queryByText('Prev')).not.toBeInTheDocument();
   });
 });

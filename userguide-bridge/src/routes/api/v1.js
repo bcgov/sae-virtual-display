@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 router.get('/article/:app/:keyword', async (req, res, next) => {
   const { token } = req;
   const { apps } = req.app.locals;
-  const { keyword } = req.params;
+  const { app, keyword } = req.params;
 
   if (!apps) {
     res.sendStatus(404);
@@ -19,7 +19,9 @@ router.get('/article/:app/:keyword', async (req, res, next) => {
   }
 
   try {
-    const result = apps.find(d => d.tags.includes(keyword));
+    const result = apps
+      .filter(d => d.tags.includes(app))
+      .find(d => d.tags.includes(keyword));
     const id = result && result.documentId;
     const document = await getDocument(token, id);
 

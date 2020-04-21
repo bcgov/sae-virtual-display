@@ -6,8 +6,9 @@ const log = require('../utils/log');
 
 const host = config.get('host');
 
-async function search(token, keyword) {
+async function search(token, terms = []) {
   try {
+    const keywords = terms.map(a => `"${a}"`).join(' ');
     const response = await fetch(`${host}/search`, {
       method: 'POST',
       headers: {
@@ -15,7 +16,7 @@ async function search(token, keyword) {
         'Cache-Control': 'no-cache',
       },
       body: JSON.stringify({
-        keywords: keyword,
+        keywords,
         content: false,
         doc: false,
         tag: true,
@@ -26,10 +27,10 @@ async function search(token, keyword) {
       retryDelay: 1000,
     });
     const json = await response.json();
-    log('[SUCCESS] Found %o article results found', json.length);
+    log('[SUCCESS] Found %o article results', json.length);
     return json;
   } catch (err) {
-    log('[FAILED] Search article %o', err.message);
+    log('[FAILED] Unable to find articles. Reason: %o', err.message);
     throw new Error(err);
   }
 }
