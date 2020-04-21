@@ -41,6 +41,13 @@ cat > ./config/default.json <<EOF
         "url": "${NOTIFY_URL}",
         "token": "${NOTIFY_TOKEN}"
     },
+    "smtp": {
+        "server": "${SMTP_SERVER}",
+        "from_addr": "${SMTP_FROM}"
+    },
+    "requests": {
+        "notification_email": "${REQUESTS_NOTIFY_EMAIL}"
+    },
     "group_exclusions": [${GROUP_EXCLUSIONS}],
     "hub_redirect_url": "${HUB_REDIRECT_URL}"
 }

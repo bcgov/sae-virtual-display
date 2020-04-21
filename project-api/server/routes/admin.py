@@ -7,6 +7,8 @@ import config
 import requests
 import oauthlib
 import datetime
+import random
+import string
 import traceback
 import urllib.parse
 from datetime import timezone
@@ -119,14 +121,17 @@ def approve_packages() -> object:
             return do_render_template(success=True, action="approve", tab={"approvals":"show active"}, message="Request already approved.")
 
         if answer == "approve":
-            callback_url = pkg_request['approval_callback_url']
+            code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))
+            callback_url = "%s&code=%s" % (pkg_request['approval_callback_url'], code)
+            log.debug("Callback %s" % callback_url)
             receipt = call_callback (callback_url)
 
             pkg_request['approve_result'] = {
                 "performed_by": session['username'],
                 "answer": answer,
                 "timestamp": utc_to_local(datetime.datetime.now()).isoformat(),
-                "tekton_receipt": receipt
+                "tekton_receipt": receipt,
+                "code": code
             }
 
             vault_cli.update_package_request(pkg_request)

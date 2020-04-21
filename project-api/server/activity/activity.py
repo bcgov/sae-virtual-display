@@ -8,6 +8,7 @@ import requests
 import logging
 import traceback
 from datetime import timezone
+from notifications.notifications import Notify
 
 conf = config.Config().data
 log = logging.getLogger(__name__)
@@ -28,12 +29,22 @@ def activity (action, repo, project, actor, success, message):
         }
         f.write(json.dumps(payload) + os.linesep)
 
+        webhook(payload)
         notify(payload)
 
 def utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 def notify(payload):
+
+    try:
+        if payload['success'] == True and payload['action'] == 'bbsae_apps_request':
+            Notify().send_pending_request_email(payload['message'])
+    except:
+        log.error("Email notification failed.")
+        traceback.print_exc(file=sys.stdout)
+
+def webhook(payload):
     if conf['notification']['enabled'] == False:
         return
 
@@ -47,8 +58,8 @@ def notify(payload):
         if r.status_code == 200:
             log.debug("[%s] %s" % (r.status_code, r.text))
         else:
-            log.error("Notification to %s failed" % url)
+            log.error("Webhook to %s failed" % url)
             log.error("[%s] %s" % (r.status_code, r.text))
     except:
-        log.error("Notification to %s failed" % url)
+        log.error("Webhook to %s failed" % url)
         traceback.print_exc(file=sys.stdout)

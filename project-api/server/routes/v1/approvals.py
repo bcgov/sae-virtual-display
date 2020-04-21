@@ -44,3 +44,20 @@ def record_approval_request() -> object:
         activity ('bbsae_apps_request', '', '', 'api', True, 'Initiated new apps approval for commit %s' % content['commit_sha'])
 
     return jsonify({})
+
+@auth
+@approvals.route('requests', methods=['GET'], strict_slashes=False)
+def get_approval_request() -> object:
+    """
+    Get the approval requests
+    """
+
+    conf = config.Config()
+
+    vault_cli = VaultClient(conf.data['vault']['addr'], conf.data['vault']['token'])
+    
+    pkg_request = vault_cli.get_package_requests()
+    if pkg_request is None:
+        return jsonify([])
+    else:
+        return jsonify([pkg_request])
