@@ -21,7 +21,7 @@ def record_approval_request() -> object:
     content = request.json
 
     missing = []
-    required = ["commit_sha"]
+    required = ['commit_sha', 'requestor', 'diff', 'applications', 'approval_callback_url']
     for r in required:
         if r not in content:
             missing.append(r)
