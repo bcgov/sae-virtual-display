@@ -61,3 +61,21 @@ def get_approval_request() -> object:
         return jsonify([])
     else:
         return jsonify([pkg_request])
+
+@approvals.route('requests/<string:code>', methods=['DELETE'], strict_slashes=False)
+@auth
+def delete_request(code: str) -> object:
+    """
+    Delete an approval request
+    """
+
+    conf = config.Config()
+
+    vault_cli = VaultClient(conf.data['vault']['addr'], conf.data['vault']['token'])
+    
+    pkg_request = vault_cli.get_package_requests()
+    if pkg_request is not None:
+        if pkg_request['approve_result']['code'] == code:
+            vault_cli.delete_package_request()
+
+    return jsonify({})
