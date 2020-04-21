@@ -122,9 +122,8 @@ def approve_packages() -> object:
 
         if answer == "approve":
             code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))
-            callback_url = "%s&code=%s" % (pkg_request['approval_callback_url'], code)
-            log.debug("Callback %s" % callback_url)
-            receipt = call_callback (callback_url)
+            log.debug("Callback %s" % pkg_request['approval_callback_url'])
+            receipt = call_callback (pkg_request['approval_callback_url'], code)
 
             pkg_request['approve_result'] = {
                 "performed_by": session['username'],
@@ -210,8 +209,14 @@ def validate (data, names):
         if (name not in data or data[name] == ""):
             raise Exception ("%s is required." % name)
 
-def call_callback (url):
-    r = requests.get(url)
+def call_callback (url, code):
+    code_payload = {
+        "code": code
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    r = requests.post(url, headers = headers, data = json.dumps(code_payload))
     if r.status_code >= 200 and r.status_code < 300:
         log.debug("[%s] %s" % (r.status_code, r.text))
         return r.json()
