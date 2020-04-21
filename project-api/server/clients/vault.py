@@ -2,6 +2,8 @@ import logging
 import config
 import requests
 import json
+import sys
+import traceback
 from string import Template
 
 log = logging.getLogger(__name__)
@@ -91,9 +93,13 @@ class VaultClient():
     def get_package_requests (self):
         try:
             request = self._get("%s/v1/secret/bbsae/applications_request" % (self.addr))
+            if 'applications' in request['data']:
+                request['data']['applications_formatted'] = json.dumps(request['data']['applications'], indent=4)
             return request['data']
         except Exception as ex:
-            log.warn("No package request recorded.")
+            log.error("Exception %s" % ex)
+            traceback.print_exc(file=sys.stdout)
+            log.warn("No package request.")
             return None
 
     def get_package_release (self):
@@ -101,6 +107,8 @@ class VaultClient():
             request = self._get("%s/v1/secret/bbsae/applications_released" % (self.addr))
             return request['data']
         except Exception as ex:
+            log.error("Exception %s" % ex)
+            traceback.print_exc(file=sys.stdout)
             log.warn("No package release recorded.")
             return {}
 
