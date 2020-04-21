@@ -77,5 +77,6 @@ def delete_request(code: str) -> object:
     if pkg_request is not None:
         if pkg_request['approve_result']['code'] == code:
             vault_cli.delete_package_request()
+            return jsonify({"status":"deleted"})
 
-    return jsonify({})
+    return jsonify({"status":"nochange"})
