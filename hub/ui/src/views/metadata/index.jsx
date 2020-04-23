@@ -1,15 +1,15 @@
 import React from 'react';
-import Loading from '@src/components/core/loading';
+import DatasetsList from '@src/components/datasets-list';
 import { Route } from 'react-router-dom';
-import useDataCatalogue from '@src/hooks/use-data-catalogue';
+import MetadataNav from '@src/components/metadata-nav';
+import useMetadata from '@src/hooks/use-metadata';
 
-import Card from './card';
 import Dataset from '../dataset';
-import { Container, Content, List } from './styles';
+import { Container, Content } from './styles';
 
 function Metadata() {
-  const { data, status, error } = useDataCatalogue(
-    'package_search?q=data-innovation-program',
+  const { data, status, error } = useMetadata(
+    'group_package_show?id=data-innovation-program',
   );
 
   React.useEffect(() => {
@@ -18,13 +18,10 @@ function Metadata() {
 
   return (
     <Container>
-      <List>
-        {status === 'error' && (
-          <div className="list-group-item list-group-item-danger">{error}</div>
-        )}
-        {status === 'loading' && <Loading />}
-        {data.results && data.results.map(d => <Card key={d.id} data={d} />)}
-      </List>
+      <MetadataNav />
+      {status === 'loaded' && (
+        <DatasetsList data={data} status={status} error={error} />
+      )}
       <Content>
         <Route path="/metadata/:id">
           <Dataset />

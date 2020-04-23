@@ -23,7 +23,7 @@ function Card({ data }) {
         </CardHeader>
         <CardFooter>
           <small>
-            Record published: {data.recordCreateDate} &bull;
+            {data.recordCreateDate} &bull;
             {data.numResources} resources available
           </small>
         </CardFooter>

@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import has from 'lodash/has';
 import { useEffect, useReducer } from 'react';
 import { camelizeKeys } from 'humps';
 
@@ -13,7 +14,7 @@ export function reducer(state, action) {
     case 'SUCCESS':
       return {
         ...state,
-        status: 'success',
+        status: 'loaded',
         data: action.payload,
       };
 
@@ -29,9 +30,9 @@ export function reducer(state, action) {
   }
 }
 
-function useDataCatalogue(query) {
+function useMetadata(query) {
   const [state, dispatch] = useReducer(reducer, {
-    data: {},
+    data: null,
     status: 'idle',
     error: null,
   });
@@ -63,7 +64,7 @@ function useDataCatalogue(query) {
   }
 
   useEffect(() => {
-    if (!state.data[query]) {
+    if (!has(state, `data${query}`)) {
       fetchData();
     }
 
@@ -74,8 +75,8 @@ function useDataCatalogue(query) {
 
   return {
     ...state,
-    data: get(state, ['data', query], {}),
+    data: get(state, ['data', query]),
   };
 }
 
-export default useDataCatalogue;
+export default useMetadata;
