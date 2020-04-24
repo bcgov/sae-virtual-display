@@ -1,16 +1,11 @@
 import React from 'react';
-import Loading from '@src/components/core/loading';
 
 import Card from './card';
-import { Container, ErrorMessage } from './styles';
+import { Container } from './styles';
 
-function DatasetsList({ data = [], error, status }) {
+function DatasetsList({ data = [] }) {
   return (
-    <Container>
-      {status === 'error' && <ErrorMessage>{error}</ErrorMessage>}
-      {status === 'loading' && <Loading />}
-      {data && data.map(d => <Card key={d.id} data={d} />)}
-    </Container>
+    <Container>{data && data.map(d => <Card key={d.id} data={d} />)}</Container>
   );
 }
 
