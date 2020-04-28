@@ -7,8 +7,7 @@ export const Container = styled.nav`
   flex-direction: column;
   background: ${colors.linkActive};
 
-  & button {
+  & a {
     margin: 10px 0;
-    color: #fff !important;
   }
 `;

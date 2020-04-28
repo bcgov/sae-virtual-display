@@ -1,10 +1,11 @@
 import React from 'react';
 import DatasetsList from '@src/components/datasets-list';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import MetadataNav from '@src/components/metadata-nav';
 import useMetadata from '@src/hooks/use-metadata';
 
 import Dataset from '../dataset';
+import MetadataSearch from '../metadata-search';
 import { Container, Content } from './styles';
 
 function Metadata() {
@@ -23,9 +24,14 @@ function Metadata() {
         <DatasetsList data={data} status={status} error={error} />
       )}
       <Content>
-        <Route path="/metadata/:id">
-          <Dataset />
-        </Route>
+        <Switch>
+          <Route path="/metadata/search">
+            <MetadataSearch />
+          </Route>
+          <Route path="/metadata/:id">
+            <Dataset />
+          </Route>
+        </Switch>
       </Content>
     </Container>
   );
