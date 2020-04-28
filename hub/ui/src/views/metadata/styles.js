@@ -11,5 +11,11 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   flex: 1;
+  justify-content: center;
   overflow-y: auto;
+`;
+
+export const ContentContainer = styled.div`
+  margin: 0 auto;
+  max-width: 960px;
 `;

@@ -34,6 +34,38 @@ export default {
             description: 'This is a description for a nested item',
             name: 'MOH_products_metadata',
           },
+          {
+            id: 'r4',
+            size: 1569,
+            format: 'csv',
+            state: 'active',
+            description: 'This is a description for a nested item',
+            name: 'MOH_products_metadata',
+          },
+          {
+            id: 'r5',
+            size: 1569,
+            format: 'csv',
+            state: 'active',
+            description: 'This is a description for a nested item',
+            name: 'MOH_products_metadata',
+          },
+          {
+            id: 'r6',
+            size: 1569,
+            format: 'csv',
+            state: 'active',
+            description: 'This is a description for a nested item',
+            name: 'MOH_products_metadata',
+          },
+          {
+            id: 'r7',
+            size: 1569,
+            format: 'csv',
+            state: 'active',
+            description: 'This is a description for a nested item',
+            name: 'MOH_products_metadata',
+          },
         ],
         num_resources: 3,
         tags: [
@@ -63,7 +95,7 @@ export default {
           },
         ],
         notes:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus gravida velit id libero laoreet, quis finibus sem ultricies. Mauris euismod sagittis porttitor. Quisque interdum eleifend pulvinar. ',
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus gravida velit id libero laoreet, quis finibus sem ultricies. Mauris euismod sagittis porttitor. Quisque interdum eleifend pulvinar.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus gravida velit id libero laoreet, quis finibus sem ultricies. Mauris euismod sagittis porttitor. Quisque interdum eleifend pulvinar.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus gravida velit id libero laoreet, quis finibus sem ultricies. Mauris euismod sagittis porttitor. Quisque interdum eleifend pulvinar. ',
         title: 'Metadata for Health Program',
       },
       {

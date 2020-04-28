@@ -1,7 +1,14 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
-import { useEffect, useReducer } from 'react';
+import { useCallback, useEffect, useReducer } from 'react';
 import { camelizeKeys } from 'humps';
+
+const store = new Map();
+
+const initialState = {
+  status: 'idle',
+  error: null,
+};
 
 export function reducer(state, action) {
   switch (action.type) {
@@ -15,7 +22,6 @@ export function reducer(state, action) {
       return {
         ...state,
         status: 'loaded',
-        data: action.payload,
       };
 
     case 'FAILED':
@@ -30,52 +36,57 @@ export function reducer(state, action) {
   }
 }
 
-function useMetadata(query) {
-  const [state, dispatch] = useReducer(reducer, {
-    data: null,
-    status: 'idle',
-    error: null,
-  });
+function useMetadata(key, query) {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const controller = new AbortController();
   const { signal } = controller;
 
-  async function fetchData() {
-    dispatch({ type: 'LOADING' });
+  const lookupKey = Array.isArray(key) ? key.join() : key;
 
-    try {
-      const res = await fetch(
-        `https://catalogue.data.gov.bc.ca/api/3/action/${query}`,
-        { signal },
-      );
+  const request = useCallback(
+    async query => {
+      dispatch({ type: 'LOADING' });
 
-      if (res.ok) {
-        const { result } = await res.json();
-        const response = camelizeKeys(result);
-        dispatch({ type: 'SUCCESS', payload: { [query]: response } });
-      } else {
-        dispatch({
-          type: 'FAILED',
-          payload: `${res.status} - ${res.statusText}`,
-        });
+      try {
+        const res = await fetch(
+          `https://catalogue.data.gov.bc.ca/api/3/action/${query}`,
+          { signal },
+        );
+
+        if (res.ok) {
+          const { result } = await res.json();
+          const response = camelizeKeys(result);
+          store.set(lookupKey, response);
+          dispatch({ type: 'SUCCESS' });
+        } else {
+          dispatch({
+            type: 'FAILED',
+            payload: `${res.status} - ${res.statusText}`,
+          });
+        }
+      } catch (err) {
+        dispatch({ type: 'FAILED', payload: err.message });
       }
-    } catch (err) {
-      dispatch({ type: 'FAILED', payload: err.message });
-    }
-  }
+    },
+    [dispatch, signal],
+  );
 
   useEffect(() => {
-    if (!has(state, `data${query}`)) {
-      fetchData();
+    if (query) {
+      request(query);
     }
-
-    return () => {
-      controller.abort();
-    };
   }, []);
+
+  // useEffect(() => {
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, [controller]);
 
   return {
     ...state,
-    data: get(state, ['data', query]),
+    data: store.get(lookupKey),
+    request,
   };
 }
 

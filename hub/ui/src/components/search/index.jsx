@@ -5,6 +5,7 @@ import TextField from '@atlaskit/textfield';
 import { colors } from '@atlaskit/theme';
 
 import { Container, Form, FormIcon, ResultsList } from './styles';
+import Loading from './loading';
 import SearchEmpty from './empty';
 import SearchResult from './result';
 
@@ -28,6 +29,7 @@ function Search({ data = [], onSearch, status }) {
     <Container>
       <Form onSubmit={onSubmit}>
         <TextField
+          autoFocus
           ref={inputRef}
           isDisabled={isLoading}
           elemAfterInput={
@@ -42,6 +44,7 @@ function Search({ data = [], onSearch, status }) {
           placeholder="Enter a search term (resource or dataset)"
         />
       </Form>
+      {isLoading && <Loading />}
       {data.length <= 0 && isLoaded && <SearchEmpty data={term} />}
       {data.length > 0 && isLoaded && (
         <ResultsList>

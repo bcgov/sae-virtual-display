@@ -6,10 +6,11 @@ import useMetadata from '@src/hooks/use-metadata';
 
 import Dataset from '../dataset';
 import MetadataSearch from '../metadata-search';
-import { Container, Content } from './styles';
+import { Container, Content, ContentContainer } from './styles';
 
 function Metadata() {
   const { data, status, error } = useMetadata(
+    'metadata',
     'group_package_show?id=data-innovation-program',
   );
 
@@ -24,14 +25,16 @@ function Metadata() {
         <DatasetsList data={data} status={status} error={error} />
       )}
       <Content>
-        <Switch>
-          <Route path="/metadata/search">
-            <MetadataSearch />
-          </Route>
-          <Route path="/metadata/:id">
-            <Dataset />
-          </Route>
-        </Switch>
+        <ContentContainer>
+          <Switch>
+            <Route path="/metadata/search">
+              <MetadataSearch />
+            </Route>
+            <Route path="/metadata/:id">
+              <Dataset />
+            </Route>
+          </Switch>
+        </ContentContainer>
       </Content>
     </Container>
   );

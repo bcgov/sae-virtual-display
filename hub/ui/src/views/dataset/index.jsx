@@ -8,9 +8,16 @@ import PackageView from '../package';
 
 function DatasetView() {
   const [selectedPackage, onSelectPackage] = useState(null);
-  const params = useParams();
+  const { id } = useParams();
   const location = useLocation();
-  const { data, status, error } = useMetadata(`package_show?id=${params.id}`);
+  const { data, request, status, error } = useMetadata(
+    ['metadata', id],
+    `package_show?id=${id}`,
+  );
+
+  useEffect(() => {
+    request(`package_show?id=${id}`);
+  }, [id]);
 
   useEffect(() => {
     if (data) {
