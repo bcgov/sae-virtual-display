@@ -160,6 +160,9 @@ RUN curl -sO https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOO
  && curl -sO https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/${AWS_SDK_VERSION}/aws-java-sdk-core-${AWS_SDK_VERSION}.jar \
  && mv aws-java-sdk-*.jar $SPARK_HOME/jars/.
 
+## SonaType Jake for scanning conda python libraries
+RUN apt-get install -y jake
+
 ##
 ## Add the runtime scripts to start the X-Windows emulator and RStudio
 ##

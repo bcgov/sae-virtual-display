@@ -85,7 +85,7 @@ def main():
 
     message = False
 
-    return render_template('index.html', message=message, apps_release=vault_cli.get_package_release(), pending_approval=vault_cli.get_package_requests(), logout_url=admin_logout_url(), username=session['username'], tab={"activity":"show active"})
+    return render_template('index.html', message=message, apps_release=json.dumps(vault_cli.get_package_release(), indent=4), pending_approval=vault_cli.get_package_requests(), logout_url=admin_logout_url(), username=session['username'], tab={"activity":"show active"})
 
 @admin.route('/approve',
            methods=['POST'], strict_slashes=False)
@@ -142,7 +142,7 @@ def approve_packages() -> object:
         if answer == "reject":
             msg = "Rejected changes (%s)." % commit_sha
 
-        activity ('approve_bbsae_apps', '', '', session['username'], True, msg)
+        activity ('%s_bbsae_apps_req' % answer, '', '', session['username'], True, msg)
 
         return do_render_template(success=True, action="approve", tab={"approvals":"show active"}, message=msg)
 
