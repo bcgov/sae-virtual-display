@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@atlaskit/button';
 import AllIcon from '@atlaskit/icon/glyph/backlog';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import StarIcon from '@atlaskit/icon/glyph/star-large';
@@ -6,7 +7,7 @@ import StarIcon from '@atlaskit/icon/glyph/star-large';
 import NavButton from '../nav-button';
 import { Container } from './styles';
 
-function MetadataNav() {
+function MetadataNav({ onToggleStarred, starred }) {
   return (
     <Container>
       <NavButton
@@ -20,10 +21,11 @@ function MetadataNav() {
         iconBefore={<SearchIcon primaryColor="#fff" />}
         href="/metadata/search"
       />
-      <NavButton
+      <Button
         appearance="subtle"
+        isSelected={starred}
         iconBefore={<StarIcon primaryColor="#fff" />}
-        href="/metadata/starred"
+        onClick={onToggleStarred}
       />
     </Container>
   );

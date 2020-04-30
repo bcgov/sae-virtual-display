@@ -5,7 +5,7 @@ import { colors } from '@atlaskit/theme';
 
 export const Container = styled.nav`
   width: 400px;
-  overflow-y: auto;
+  overflow-y: ${props => (props.loading ? 'hidden' : 'auto')};
   border-right: 2px solid ${colors.backgroundHover};
   background: ${colors.background};
 `;

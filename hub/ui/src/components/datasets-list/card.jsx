@@ -20,12 +20,13 @@ import {
 function Card({ data, onStarred, starred }) {
   function onStarClick(event) {
     event.stopPropagation();
-    onStarred();
+    onStarred(data.id);
     return false;
   }
 
+  console.log(starred);
   return (
-    <CardContainer starred={starred} to={`/metadata/${data.id}`}>
+    <CardContainer to={`/metadata/${data.id}`}>
       <CardIcon>
         <FileIcon />
         <StarredButton

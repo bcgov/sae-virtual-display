@@ -2,7 +2,7 @@ import React from 'react';
 import times from 'lodash/times';
 import { uid } from 'react-uid';
 
-import { LoadingBar, LoadingContainer, ResourcesList } from './styles';
+import { LoadingBar, LoadingContainer } from '../core/loading/styles';
 
 function Loading({ total = 3 }) {
   const elements = [];

@@ -4,6 +4,7 @@ import StoryRouter from 'storybook-react-router';
 
 import DatasetsList from './';
 import Card from './card';
+import Loading from './loading';
 import data, { item } from './__tests__/data';
 
 export default {
@@ -18,6 +19,7 @@ const defaultProps = {
 
 export const Default = () => <DatasetsList data={data} />;
 export const ListItem = () => <Card {...defaultProps} data={item} />;
+export const LoadingState = () => <Loading />;
 export const ListItemStarred = () => (
   <Card {...defaultProps} starred data={item} />
 );
