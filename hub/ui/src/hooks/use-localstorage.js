@@ -1,21 +1,37 @@
-import { useCallback, useMemo } from 'react';
-import isNil from 'lodash/isNil';
+import { useCallback, useEffect, useState } from 'react';
+import EventEmitter from 'events';
+import isEqual from 'lodash/isEqual';
+import uniqueId from 'lodash/uniqueId';
 
-function useLocationStorage(key, defaultValue) {
-  const storedValue = localStorage.getItem(key);
-  const value = useMemo(() => {
-    console.log(storedValue);
-    return isNil(storedValue) ? defaultValue : JSON.parse(storedValue);
-  }, [defaultValue, storedValue]);
+const events = new EventEmitter();
+const defaultConfig = {
+  initialValue: null,
+};
 
-  const save = useCallback(
-    value => {
-      if (!isNil(value)) {
-        localStorage.setItem(key, JSON.stringify(value));
+function useLocationStorage(key, config = defaultConfig) {
+  const id = uniqueId('ls');
+  const initialValue =
+    JSON.parse(localStorage.getItem(key)) || defaultConfig.initialValue;
+  const [value, save] = useState(initialValue);
+  const eventHandler = useCallback(
+    (sourceId, newValue) => {
+      if (id !== sourceId && !isEqual(value, newValue)) {
+        save(newValue);
       }
     },
-    [key],
+    [id, save, value],
   );
+
+  useEffect(() => {
+    if (!isEqual(value, initialValue)) {
+      localStorage.setItem(key, JSON.stringify(value));
+      events.emit('store', id, value);
+    }
+  }, [id, initialValue, key, save, value]);
+
+  useEffect(() => () => events.off('store', eventHandler), [eventHandler]);
+
+  events.on('store', eventHandler);
 
   return [value, save];
 }

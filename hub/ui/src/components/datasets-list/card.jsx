@@ -3,10 +3,8 @@ import CalendarIcon from '@atlaskit/icon/glyph/calendar-filled';
 import Lozenge from '@atlaskit/lozenge';
 import FileIcon from '@atlaskit/icon-file-type/glyph/generic/24';
 import DocumentIcon from '@atlaskit/icon/glyph/media-services/unknown';
-import StarFilledIcon from '@atlaskit/icon/glyph/star-filled';
-import StarIcon from '@atlaskit/icon/glyph/star';
+import StarredView from '@src/views/starred';
 import truncate from 'lodash/truncate';
-import { colors } from '@atlaskit/theme';
 
 import {
   CardHeader,
@@ -14,33 +12,14 @@ import {
   CardIcon,
   CardContent,
   CardFooter,
-  StarredButton,
 } from './styles';
 
-function Card({ data, onStarred, starred }) {
-  function onStarClick(event) {
-    event.stopPropagation();
-    onStarred(data.id);
-    return false;
-  }
-
-  console.log(starred);
+function Card({ data, starred }) {
   return (
-    <CardContainer to={`/metadata/${data.id}`}>
+    <CardContainer starred={starred} to={`/metadata/${data.id}`}>
       <CardIcon>
         <FileIcon />
-        <StarredButton
-          appearance="subtle"
-          spacing="compact"
-          iconBefore={
-            starred ? (
-              <StarFilledIcon primaryColor={colors.yellow} />
-            ) : (
-              <StarIcon primaryColor={colors.subtleText} />
-            )
-          }
-          onClick={onStarClick}
-        />
+        <StarredView id={data.id} />
       </CardIcon>
       <CardContent>
         <CardHeader>

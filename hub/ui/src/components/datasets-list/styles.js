@@ -1,7 +1,13 @@
-import Button from '@atlaskit/button';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
+
+const NavLinkWrapper = ({ className, children, to }) => (
+  <NavLink to={to} className={className}>
+    {children}
+  </NavLink>
+);
 
 export const Container = styled.nav`
   width: 400px;
@@ -10,22 +16,14 @@ export const Container = styled.nav`
   background: ${colors.background};
 `;
 
-export const StarredButton = styled(Button)`
-  margin-top: 5px;
-
-  &:hover {
-    background-color: transparent;
-  }
-`;
-
-export const CardContainer = styled(NavLink)`
+export const CardContainer = styled(NavLinkWrapper)`
   display: flex;
   background: ${colors.background};
   border-bottom: 1px solid ${colors.backgroundHover};
   cursor: pointer;
   color: ${colors.text};
 
-  & ${StarredButton} {
+  & button {
     opacity: ${props => (props.starred ? 1 : 0)};
   }
 
@@ -40,7 +38,7 @@ export const CardContainer = styled(NavLink)`
     color: ${colors.text};
     background: ${colors.backgroundHover};
 
-    & ${StarredButton} {
+    & button {
       opacity: 1;
     }
   }

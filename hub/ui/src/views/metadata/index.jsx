@@ -4,15 +4,15 @@ import DatasetsListLoading from '@src/components/datasets-list/loading';
 import { Route, Switch } from 'react-router-dom';
 import MetadataNav from '@src/components/metadata-nav';
 import useMetadata from '@src/hooks/use-metadata';
+import useLocalStorage from '@src/hooks/use-localstorage';
 
 import Dataset from '../dataset';
 import MetadataSearch from '../metadata-search';
 import { Container, Content, ContentContainer } from './styles';
-import useLocalStorage from '@src/hooks/use-localstorage';
 
 function Metadata() {
-  const [starred, save] = useLocalStorage('starred', []);
-  const [showStarred, toggleStarred] = useState(false);
+  const [starred] = useLocalStorage('starred', []);
+  const [showStarred, toggleShowStarred] = useState(false);
   const { data, status, error } = useMetadata(
     'metadata',
     'group_package_show?id=data-innovation-program',
@@ -23,14 +23,14 @@ function Metadata() {
   }, []);
 
   function onToggleStarred() {
-    toggleStarred(state => !state);
+    toggleShowStarred(state => !state);
   }
 
-  function onStarDataset(id) {
-    save(
-      starred.includes(id) ? starred.filter(d => d !== id) : [...starred, id],
-    );
-  }
+  // function onStarDataset(id) {
+  //   save(
+  //     starred.includes(id) ? starred.filter(d => d !== id) : [...starred, id],
+  //   );
+  // }
 
   return (
     <Container>
@@ -44,7 +44,6 @@ function Metadata() {
           })}
           error={error}
           starred={starred}
-          onStarred={onStarDataset}
         />
       )}
       <Content>

@@ -3,10 +3,12 @@ import Loading from '@src/components/core/loading';
 import { useLocation, useParams } from 'react-router-dom';
 import useMetadata from '@src/hooks/use-metadata';
 import Dataset from '@src/components/dataset';
+import useLocalStorage from '@src/hooks/use-localstorage';
 
 import PackageView from '../package';
 
 function DatasetView() {
+  const [starred, save] = useLocalStorage('starred', []);
   const [selectedPackage, onSelectPackage] = useState(null);
   const { id } = useParams();
   const location = useLocation();
@@ -25,6 +27,12 @@ function DatasetView() {
     }
   }, [data]);
 
+  function onStarDataset(id) {
+    save(
+      starred.includes(id) ? starred.filter(d => d !== id) : [...starred, id],
+    );
+  }
+
   return (
     <>
       <PackageView
@@ -40,6 +48,7 @@ function DatasetView() {
           data={data}
           location={location}
           onSelectPackage={onSelectPackage}
+          onStarred={onStarDataset}
         />
       )}
     </>
