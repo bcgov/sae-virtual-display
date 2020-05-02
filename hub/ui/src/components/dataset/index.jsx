@@ -1,16 +1,17 @@
 import React from 'react';
 import { BreadcrumbsStateless, BreadcrumbsItem } from '@atlaskit/breadcrumbs';
-import CsvIcon from '@atlaskit/icon-file-type/glyph/spreadsheet/48';
 import Lozenge from '@atlaskit/lozenge';
 import PageHeader from '@atlaskit/page-header';
 import StarredView from '@src/views/starred';
 
 import BreadcrumbLink from './breadcrumb-link';
+import ResourceItem from './resource-item';
 import {
   Container,
   Content,
   Divider,
   Hgroup,
+  InfoList,
   ResourcesList,
   TagsContainer,
 } from './styles';
@@ -41,20 +42,27 @@ function Dataset({ data = {}, location, onSelectPackage, params }) {
               bottomBar={
                 <Hgroup>
                   <div>
-                    <p>
-                      <strong>Published by</strong>{' '}
-                      {data.organization.fullTitle} <br />
-                      <strong>Licensed under</strong>{' '}
-                      <Lozenge appearance="new">{data.licenseTitle}</Lozenge>
-                    </p>
+                    <InfoList>
+                      <dt>Publish date</dt>
+                      <dd>{data.recordPublishDate}</dd>
+                      <dt>Published by</dt>
+                      <dd>{data.organization.fullTitle}</dd>
+                      <dt>Licensed under</dt>
+                      <dd>
+                        <Lozenge appearance="new">{data.licenseTitle}</Lozenge>
+                      </dd>
+                      <dt>Tags</dt>
+                      <dd>
+                        <TagsContainer>
+                          {data.tags.map(t => (
+                            <Lozenge appearance="default" key={t.id}>
+                              {t.displayName}
+                            </Lozenge>
+                          ))}
+                        </TagsContainer>
+                      </dd>
+                    </InfoList>
                   </div>
-                  <TagsContainer>
-                    {data.tags.map(t => (
-                      <Lozenge appearance="default" key={t.id}>
-                        {t.displayName}
-                      </Lozenge>
-                    ))}
-                  </TagsContainer>
                 </Hgroup>
               }
             >
@@ -73,17 +81,18 @@ function Dataset({ data = {}, location, onSelectPackage, params }) {
                 <ResourcesList>
                   {data.resources &&
                     data.resources.map(d => (
-                      <figure key={d.id} onClick={() => onSelectPackage(d)}>
-                        <CsvIcon />
-                        <p>{`${d.name}.${d.format}`}</p>
-                      </figure>
+                      <ResourceItem
+                        key={d.id}
+                        data={d}
+                        onClick={onSelectPackage}
+                      />
                     ))}
                 </ResourcesList>
               </section>
               <Divider />
               <section>
                 <h4>Additional Information</h4>
-                <dl>
+                <InfoList>
                   <dt>Purpose</dt>
                   <dd>{data.purpose}</dd>
                   <dt>More Information</dt>
@@ -94,7 +103,7 @@ function Dataset({ data = {}, location, onSelectPackage, params }) {
                       </a>
                     ))}
                   </dd>
-                </dl>
+                </InfoList>
               </section>
             </Content>
           </div>

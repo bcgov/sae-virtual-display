@@ -11,7 +11,7 @@ const defaultConfig = {
 function useLocationStorage(key, config = defaultConfig) {
   const id = uniqueId('ls');
   const initialValue =
-    JSON.parse(localStorage.getItem(key)) || defaultConfig.initialValue;
+    JSON.parse(localStorage.getItem(key)) || config.initialValue;
   const [value, save] = useState(initialValue);
   const eventHandler = useCallback(
     (sourceId, newValue) => {

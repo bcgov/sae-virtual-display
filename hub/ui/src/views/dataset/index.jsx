@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Loading from '@src/components/core/loading';
+import Dataset from '@src/components/dataset';
+import DatasetLoading from '@src/components/dataset/loading';
 import { useLocation, useParams } from 'react-router-dom';
 import useMetadata from '@src/hooks/use-metadata';
-import Dataset from '@src/components/dataset';
 import useLocalStorage from '@src/hooks/use-localstorage';
 
 import PackageView from '../package';
@@ -42,7 +42,7 @@ function DatasetView() {
       {status === 'error' && (
         <div className="row text-center text-danger">{error}</div>
       )}
-      {status === 'loading' && <Loading />}
+      {status === 'loading' && <DatasetLoading />}
       {status === 'loaded' && (
         <Dataset
           data={data}

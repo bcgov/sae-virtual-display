@@ -3,7 +3,7 @@ import StarButton from '@src/components/core/buttons/star';
 import useLocalStorage from '@src/hooks/use-localstorage';
 
 function StarredView({ id }) {
-  const [starred, save] = useLocalStorage('starred', []);
+  const [starred, save] = useLocalStorage('starred', { initialValue: [] });
   const isStarred = starred.includes(id);
 
   function onClick(id) {
