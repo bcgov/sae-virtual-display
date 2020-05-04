@@ -17,7 +17,7 @@ const defaultProps = {
   onStarred: action('starred'),
 };
 
-export const Default = () => <DatasetsList data={data} />;
+export const Default = () => <DatasetsList data={data} starred={[]} />;
 export const ListItem = () => <Card {...defaultProps} data={item} />;
 export const LoadingState = () => <Loading />;
 export const ListItemStarred = () => (

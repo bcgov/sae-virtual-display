@@ -61,6 +61,7 @@ export const Divider = styled.hr`
 
 export const ResourcesList = styled.div`
   display: flex;
+  justify-content: flex-start;
   flex-wrap: wrap;
 `;
 

@@ -12,8 +12,18 @@ const NavLinkWrapper = ({ className, children, to }) => (
 export const Container = styled.nav`
   width: 400px;
   overflow-y: ${props => (props.loading ? 'hidden' : 'auto')};
+  position: relative;
   border-right: 2px solid ${colors.backgroundHover};
   background: ${colors.background};
+`;
+
+export const Header = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid ${colors.backgroundHover};
 `;
 
 export const CardContainer = styled(NavLinkWrapper)`
