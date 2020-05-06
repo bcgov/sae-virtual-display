@@ -1,5 +1,8 @@
 import React from 'react';
 import { BreadcrumbsStateless, BreadcrumbsItem } from '@atlaskit/breadcrumbs';
+import Button, { ButtonGroup } from '@atlaskit/button';
+import ChevronLeftIcon from '@atlaskit/icon/glyph/chevron-left-large';
+import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right-large';
 import Lozenge from '@atlaskit/lozenge';
 import PageHeader from '@atlaskit/page-header';
 import StarredView from '@src/views/starred';
@@ -7,6 +10,7 @@ import StarredView from '@src/views/starred';
 import BreadcrumbLink from './breadcrumb-link';
 import ResourceItem from './resource-item';
 import {
+  BreadcrumbsContainer,
   Container,
   Content,
   Divider,
@@ -16,20 +20,34 @@ import {
   TagsContainer,
 } from './styles';
 
-function Dataset({ data = {}, location, onSelectPackage, params }) {
+function Dataset({
+  data = {},
+  location,
+  onSelectPackage,
+  onChangeDataset,
+  params,
+}) {
+  const onNavClick = dir => () => onChangeDataset(data.id, dir);
+
   const breadcrumbs = (
-    <BreadcrumbsStateless>
-      <BreadcrumbsItem
-        component={BreadcrumbLink}
-        text="Metadata"
-        href="/metadata"
-      />
-      <BreadcrumbsItem
-        component={BreadcrumbLink}
-        text={data.sector}
-        href={`${location.pathname}?sector=${data.sector}`}
-      />
-    </BreadcrumbsStateless>
+    <BreadcrumbsContainer>
+      <BreadcrumbsStateless>
+        <BreadcrumbsItem
+          component={BreadcrumbLink}
+          text="Metadata"
+          href="/metadata"
+        />
+        <BreadcrumbsItem
+          component={BreadcrumbLink}
+          text={data.sector}
+          href={`${location.pathname}?sector=${data.sector}`}
+        />
+      </BreadcrumbsStateless>
+      <ButtonGroup>
+        <Button iconBefore={<ChevronLeftIcon />} onClick={onNavClick(-1)} />
+        <Button iconBefore={<ChevronRightIcon />} onClick={onNavClick(1)} />
+      </ButtonGroup>
+    </BreadcrumbsContainer>
   );
 
   return (

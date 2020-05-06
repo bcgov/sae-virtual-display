@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import DatasetsList from '@src/components/datasets-list';
 import DatasetsListLoading from '@src/components/datasets-list/loading';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import MetadataEmpty from '@src/components/empty/metadata';
 import MetadataNav from '@src/components/metadata-nav';
 import orderBy from 'lodash/orderBy';
@@ -13,6 +13,7 @@ import MetadataSearch from '../metadata-search';
 import { Container, Content, ContentContainer } from './styles';
 
 function Metadata() {
+  const history = useHistory();
   const [starred] = useLocalStorage('starred', { initialValue: [] });
   const [sortSettings, saveSortSettings] = useLocalStorage('filter', {
     initialValue: {
@@ -44,6 +45,23 @@ function Metadata() {
       );
     }
   }, [data, filter, regex, showStarred, starred, sortSettings]);
+  const onChangeDataset = useCallback(
+    (id, dir) => {
+      const ids = datasets.map(d => d.id);
+      const index = ids.indexOf(id);
+      let nextIndex = index + dir;
+
+      if (nextIndex < 0) {
+        nextIndex = ids.length - 1;
+      } else if (nextIndex === datasets.length) {
+        nextIndex = 0;
+      }
+
+      const nextId = ids[nextIndex];
+      history.push(`/metadata/${nextId}`);
+    },
+    [datasets],
+  );
 
   React.useEffect(() => {
     document.title = 'Workbench | Metadata';
@@ -81,7 +99,7 @@ function Metadata() {
               <MetadataSearch />
             </Route>
             <Route path="/metadata/:id">
-              <Dataset />
+              <Dataset onChangeDataset={onChangeDataset} />
             </Route>
           </Switch>
         </ContentContainer>

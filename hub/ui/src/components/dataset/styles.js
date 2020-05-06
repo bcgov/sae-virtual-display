@@ -10,6 +10,11 @@ export const Container = styled.article`
   }
 `;
 
+export const BreadcrumbsContainer = styled.hgroup`
+  display: flex;
+  justify-content: space-between;
+`;
+
 export const Hgroup = styled.hgroup`
   p {
     margin-bottom: 10px;
