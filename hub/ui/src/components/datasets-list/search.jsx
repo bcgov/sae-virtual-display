@@ -6,12 +6,19 @@ import {
   DropdownItemGroupRadio,
 } from '@atlaskit/dropdown-menu';
 import FilterIcon from '@atlaskit/icon/glyph/filter';
+import Lozenge from '@atlaskit/lozenge';
 import TextField from '@atlaskit/textfield';
 import ClearIcon from '@atlaskit/icon/glyph/cross-circle';
 
-import { Header, SearchField } from './styles';
+import { Header, SearchField, Sector } from './styles';
 
-function DatasetsListSearch({ onFilter, onSort, sortBy }) {
+function DatasetsListSearch({
+  onClearSector,
+  onFilter,
+  onSort,
+  sector,
+  sortBy,
+}) {
   const inputRef = useRef();
   const [open, setOpen] = useState(false);
 
@@ -41,64 +48,82 @@ function DatasetsListSearch({ onFilter, onSort, sortBy }) {
 
   return (
     <Header>
-      <SearchField>
-        <TextField
-          ref={inputRef}
-          elemAfterInput={
-            inputRef.current &&
-            inputRef.current.value && (
-              <Button
-                appearance="subtle"
-                iconBefore={<ClearIcon />}
-                onClick={onClear}
-                spacing="compact"
-              />
-            )
-          }
-          placeholder="Filter Datasets"
-          onChange={onChange}
-        />
-      </SearchField>
-      <DropdownMenuStateless
-        isOpen={open}
-        onOpenChange={({ isOpen }) => setOpen(isOpen)}
-        position="bottom right"
-        trigger={<Button iconBefore={<FilterIcon />} />}
-        testId="datasets-filters-dropdown"
-      >
-        <DropdownItemGroupRadio id="datasets-sortby" title="Sorty By">
-          <DropdownItemRadio
-            defaultSelected={sortBy.sortBy === 'name'}
-            id="name"
-            onClick={onSelect('sortBy:name')}
+      <hgroup>
+        <SearchField>
+          <TextField
+            ref={inputRef}
+            elemAfterInput={
+              inputRef.current &&
+              inputRef.current.value && (
+                <Button
+                  appearance="subtle"
+                  iconBefore={<ClearIcon />}
+                  onClick={onClear}
+                  spacing="compact"
+                />
+              )
+            }
+            placeholder="Filter Datasets"
+            onChange={onChange}
+          />
+        </SearchField>
+        <DropdownMenuStateless
+          isOpen={open}
+          onOpenChange={({ isOpen }) => setOpen(isOpen)}
+          position="bottom right"
+          trigger={<Button iconBefore={<FilterIcon />} />}
+          testId="datasets-filters-dropdown"
+        >
+          <DropdownItemGroupRadio id="datasets-sortby" title="Sort By">
+            <DropdownItemRadio
+              defaultSelected={sortBy.sortBy === 'name'}
+              id="name"
+              onClick={onSelect('sortBy:name')}
+            >
+              Name
+            </DropdownItemRadio>
+            <DropdownItemRadio
+              defaultSelected={sortBy.sortBy === 'recordPublishDate'}
+              id="published"
+              onClick={onSelect('sortBy:recordPublishDate')}
+            >
+              Date Published
+            </DropdownItemRadio>
+          </DropdownItemGroupRadio>
+          <DropdownItemGroupRadio
+            id="datasets-direction"
+            title="Sort Direction"
           >
-            Name
-          </DropdownItemRadio>
-          <DropdownItemRadio
-            defaultSelected={sortBy.sortBy === 'recordPublishDate'}
-            id="published"
-            onClick={onSelect('sortBy:recordPublishDate')}
+            <DropdownItemRadio
+              defaultSelected={sortBy.sortDir === 'asc'}
+              id="asc"
+              onClick={onSelect('sortDir:asc')}
+            >
+              Ascending
+            </DropdownItemRadio>
+            <DropdownItemRadio
+              defaultSelected={sortBy.sortDir === 'desc'}
+              id="desc"
+              onClick={onSelect('sortDir:desc')}
+            >
+              Descending
+            </DropdownItemRadio>
+          </DropdownItemGroupRadio>
+        </DropdownMenuStateless>
+      </hgroup>
+      {sector && (
+        <Sector>
+          <h5>
+            Sector: <Lozenge appearance="moved">{sector}</Lozenge>
+          </h5>
+          <Button
+            iconBefore={<ClearIcon />}
+            onClick={() => onClearSector(null)}
           >
-            Date Published
-          </DropdownItemRadio>
-        </DropdownItemGroupRadio>
-        <DropdownItemGroupRadio id="datasets-direction" title="Sort Direction">
-          <DropdownItemRadio
-            defaultSelected={sortBy.sortDir === 'asc'}
-            id="asc"
-            onClick={onSelect('sortDir:asc')}
-          >
-            Ascending
-          </DropdownItemRadio>
-          <DropdownItemRadio
-            defaultSelected={sortBy.sortDir === 'desc'}
-            id="desc"
-            onClick={onSelect('sortDir:desc')}
-          >
-            Descending
-          </DropdownItemRadio>
-        </DropdownItemGroupRadio>
-      </DropdownMenuStateless>
+            Clear
+          </Button>
+        </Sector>
+      )}
     </Header>
   );
 }

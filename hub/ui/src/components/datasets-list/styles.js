@@ -21,11 +21,14 @@ export const Header = styled.header`
   position: sticky;
   top: 0;
   z-index: 1;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
   background-color: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid ${colors.backgroundHover};
+
+  & hgroup {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+  }
 `;
 
 export const SearchField = styled.div`
@@ -33,6 +36,12 @@ export const SearchField = styled.div`
   margin-right: 10px;
 `;
 
+export const Sector = styled.hgroup`
+  justify-content: space-between;
+  border-top: 1px solid ${colors.backgroundHover};
+`;
+
+// Card layouts
 export const CardContainer = styled(NavLinkWrapper)`
   display: flex;
   background: ${colors.background};
@@ -41,6 +50,7 @@ export const CardContainer = styled(NavLinkWrapper)`
   color: ${colors.text};
 
   & button {
+    margin-top: 5px;
     opacity: ${props => (props.starred ? 1 : 0)};
   }
 

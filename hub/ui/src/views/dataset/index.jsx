@@ -7,7 +7,7 @@ import useLocalStorage from '@src/hooks/use-localstorage';
 
 import PackageView from '../package';
 
-function DatasetView({ onChangeDataset }) {
+function DatasetView({ onChangeDataset, onSelectSector }) {
   const [starred, save] = useLocalStorage('starred', []);
   const [selectedPackage, onSelectPackage] = useState(null);
   const { id } = useParams();
@@ -48,6 +48,7 @@ function DatasetView({ onChangeDataset }) {
           data={data}
           location={location}
           onChangeDataset={onChangeDataset}
+          onSelectSector={onSelectSector}
           onSelectPackage={onSelectPackage}
           onStarred={onStarDataset}
         />

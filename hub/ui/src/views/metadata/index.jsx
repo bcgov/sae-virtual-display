@@ -21,6 +21,7 @@ function Metadata() {
       sortDir: 'asc',
     },
   });
+  const [sector, setSector] = useState();
   const [filter, setFilter] = useState('');
   const [showStarred, toggleShowStarred] = useState(false);
   const { data, status, error } = useMetadata(
@@ -31,6 +32,7 @@ function Metadata() {
   const datasets = useMemo(() => {
     if (data) {
       const filteredData = data.filter(d => {
+        if (sector) return d.sector === sector;
         if (showStarred) return starred.includes(d.id);
         if (filter) {
           return d.name.search(regex) >= 0;
@@ -44,7 +46,7 @@ function Metadata() {
         [sortSettings.sortDir],
       );
     }
-  }, [data, filter, regex, showStarred, starred, sortSettings]);
+  }, [data, filter, regex, sector, showStarred, starred, sortSettings]);
   const onChangeDataset = useCallback(
     (id, dir) => {
       const ids = datasets.map(d => d.id);
@@ -60,7 +62,7 @@ function Metadata() {
       const nextId = ids[nextIndex];
       history.push(`/metadata/${nextId}`);
     },
-    [datasets],
+    [datasets, history],
   );
 
   React.useEffect(() => {
@@ -75,6 +77,10 @@ function Metadata() {
     toggleShowStarred(state => !state);
   }
 
+  function onSelectSector(sector) {
+    setSector(sector);
+  }
+
   return (
     <Container>
       <MetadataNav starred={showStarred} onToggleStarred={onToggleStarred} />
@@ -83,8 +89,10 @@ function Metadata() {
         <DatasetsList
           data={datasets}
           error={error}
+          onClearSector={onSelectSector}
           onFilter={onFilter}
           onSort={saveSortSettings}
+          sector={sector}
           sortBy={sortSettings}
           starred={starred}
         />
@@ -99,7 +107,10 @@ function Metadata() {
               <MetadataSearch />
             </Route>
             <Route path="/metadata/:id">
-              <Dataset onChangeDataset={onChangeDataset} />
+              <Dataset
+                onChangeDataset={onChangeDataset}
+                onSelectSector={onSelectSector}
+              />
             </Route>
           </Switch>
         </ContentContainer>

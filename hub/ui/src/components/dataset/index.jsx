@@ -23,12 +23,16 @@ import {
 function Dataset({
   data = {},
   location,
-  onSelectPackage,
   onChangeDataset,
+  onSelectSector,
+  onSelectPackage,
   params,
 }) {
   const onNavClick = dir => () => onChangeDataset(data.id, dir);
-
+  const onSectorClick = event => {
+    event.preventDefault();
+    onSelectSector(data.sector);
+  };
   const breadcrumbs = (
     <BreadcrumbsContainer>
       <BreadcrumbsStateless>
@@ -37,11 +41,7 @@ function Dataset({
           text="Metadata"
           href="/metadata"
         />
-        <BreadcrumbsItem
-          component={BreadcrumbLink}
-          text={data.sector}
-          href={`${location.pathname}?sector=${data.sector}`}
-        />
+        <BreadcrumbsItem text={data.sector} onClick={onSectorClick} />
       </BreadcrumbsStateless>
       <ButtonGroup>
         <Button iconBefore={<ChevronLeftIcon />} onClick={onNavClick(-1)} />
