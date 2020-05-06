@@ -22,8 +22,15 @@ export const Header = styled.header`
   top: 0;
   z-index: 1;
   padding: 1rem;
+  display: flex;
+  align-items: center;
   background-color: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid ${colors.backgroundHover};
+`;
+
+export const SearchField = styled.div`
+  flex: 1;
+  margin-right: 10px;
 `;
 
 export const CardContainer = styled(NavLinkWrapper)`

@@ -14,18 +14,18 @@ function useLocationStorage(key, config = defaultConfig) {
     JSON.parse(localStorage.getItem(key)) || config.initialValue;
   const [value, save] = useState(initialValue);
   const eventHandler = useCallback(
-    (sourceId, newValue) => {
-      if (id !== sourceId && !isEqual(value, newValue)) {
+    (sourceKey, sourceId, newValue) => {
+      if (key === sourceKey && id !== sourceId && !isEqual(value, newValue)) {
         save(newValue);
       }
     },
-    [id, save, value],
+    [id, key, save, value],
   );
 
   useEffect(() => {
     if (!isEqual(value, initialValue)) {
       localStorage.setItem(key, JSON.stringify(value));
-      events.emit('store', id, value);
+      events.emit('store', key, id, value);
     }
   }, [id, initialValue, key, save, value]);
 
