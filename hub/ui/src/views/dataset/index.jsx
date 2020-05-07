@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Dataset from '@src/components/dataset';
 import DatasetLoading from '@src/components/dataset/loading';
+import last from 'lodash/last';
+import head from 'lodash/head';
 import { useLocation, useParams } from 'react-router-dom';
 import useMetadata from '@src/hooks/use-metadata';
 import useLocalStorage from '@src/hooks/use-localstorage';
@@ -27,6 +29,19 @@ function DatasetView({ onChangeDataset, onSelectSector }) {
     }
   }, [data]);
 
+  function onChangePackage(dir) {
+    const currentIndex = data.resources.indexOf(selectedPackage);
+    const nextIndex = currentIndex + dir;
+
+    if (nextIndex < 0) {
+      onSelectPackage(last(data.resources));
+    } else if (nextIndex === data.resources.length) {
+      onSelectPackage(head(data.resources));
+    } else {
+      onSelectPackage(data.resources[nextIndex]);
+    }
+  }
+
   function onStarDataset(id) {
     save(
       starred.includes(id) ? starred.filter(d => d !== id) : [...starred, id],
@@ -38,6 +53,7 @@ function DatasetView({ onChangeDataset, onSelectSector }) {
       <PackageView
         data={selectedPackage}
         onClose={() => onSelectPackage(null)}
+        onChange={onChangePackage}
       />
       {status === 'error' && (
         <div className="row text-center text-danger">{error}</div>

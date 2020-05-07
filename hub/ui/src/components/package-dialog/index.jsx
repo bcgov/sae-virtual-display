@@ -1,16 +1,31 @@
 import React from 'react';
+import Button, { ButtonGroup } from '@atlaskit/button';
+import ChevronLeftIcon from '@atlaskit/icon/glyph/chevron-left-large';
+import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right-large';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import { uid } from 'react-uid';
 
-function PackageDialog({ data, name, open, onClose, status }) {
+import { Title } from './styles';
+
+function PackageDialog({ data, name, open, onClose, onChange, status }) {
   const actions = [{ text: 'Done', onClick: onClose }];
+  const onNavClick = dir => () => onChange(dir);
+  const Header = () => (
+    <Title>
+      <h2>{name}</h2>
+      <ButtonGroup>
+        <Button iconBefore={<ChevronLeftIcon />} onClick={onNavClick(-1)} />
+        <Button iconBefore={<ChevronRightIcon />} onClick={onNavClick(1)} />
+      </ButtonGroup>
+    </Title>
+  );
 
   return (
     <ModalTransition>
       {open && (
         <ModalDialog
           actions={actions}
-          heading={name}
+          components={{ Header }}
           onClose={onClose}
           width="x-large"
         >
@@ -37,7 +52,7 @@ function PackageDialog({ data, name, open, onClose, status }) {
         </ModalDialog>
       )}
     </ModalTransition>
-  )
+  );
 }
 
 export default PackageDialog;

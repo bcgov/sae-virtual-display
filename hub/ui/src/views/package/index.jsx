@@ -30,7 +30,7 @@ function reducer(state, action) {
   }
 }
 
-function PackageView({ data = {}, onClose }) {
+function PackageView({ data = {}, onClose, onChange }) {
   const [state, dispatch] = useReducer(reducer, {
     error: null,
     data: [],
@@ -59,6 +59,7 @@ function PackageView({ data = {}, onClose }) {
       {...state}
       name={data && data.name}
       open={!isEmpty(data)}
+      onChange={onChange}
       onClose={onClose}
     />
   );
