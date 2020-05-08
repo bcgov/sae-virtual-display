@@ -11,18 +11,21 @@ function DatasetsList({
   onFilter,
   onSort,
   sector,
+  showFilters,
   starred,
   sortBy,
 }) {
   return (
     <Container>
-      <Search
-        onClearSector={onClearSector}
-        onFilter={onFilter}
-        onSort={onSort}
-        sector={sector}
-        sortBy={sortBy}
-      />
+      {showFilters && (
+        <Search
+          onClearSector={onClearSector}
+          onFilter={onFilter}
+          onSort={onSort}
+          sector={sector}
+          sortBy={sortBy}
+        />
+      )}
       {data &&
         data.map(d => (
           <Card key={uid(d.id)} data={d} starred={starred.includes(d.id)} />

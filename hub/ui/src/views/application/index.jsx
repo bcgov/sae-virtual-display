@@ -41,7 +41,7 @@ function ApplicationView({
   );
 
   if (hasHelp) {
-    return <SpotlightTarget name="app-card">{element}</SpotlightTarget>;
+    return <SpotlightTarget name="home-app-card">{element}</SpotlightTarget>;
   }
 
   return element;

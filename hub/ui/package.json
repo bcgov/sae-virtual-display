@@ -35,6 +35,7 @@
     "@atlaskit/tag": "^9.0.9",
     "@atlaskit/tag-group": "^9.0.5",
     "@atlaskit/textfield": "^3.1.4",
+    "@atlaskit/tooltip": "^15.2.6",
     "classnames": "^2.2.6",
     "d3-dsv": "^1.2.0",
     "date-fns": "^2.9.0",

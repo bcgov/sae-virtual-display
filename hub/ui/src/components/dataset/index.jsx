@@ -6,6 +6,7 @@ import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right-large';
 import Lozenge from '@atlaskit/lozenge';
 import PageHeader from '@atlaskit/page-header';
 import StarredView from '@src/views/starred';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 
 import BreadcrumbLink from './breadcrumb-link';
 import ResourceItem from './resource-item';
@@ -43,10 +44,12 @@ function Dataset({
         />
         <BreadcrumbsItem text={data.sector} onClick={onSectorClick} />
       </BreadcrumbsStateless>
-      <ButtonGroup>
-        <Button iconBefore={<ChevronLeftIcon />} onClick={onNavClick(-1)} />
-        <Button iconBefore={<ChevronRightIcon />} onClick={onNavClick(1)} />
-      </ButtonGroup>
+      <SpotlightTarget name="metadata-dataset-pagination">
+        <ButtonGroup>
+          <Button iconBefore={<ChevronLeftIcon />} onClick={onNavClick(-1)} />
+          <Button iconBefore={<ChevronRightIcon />} onClick={onNavClick(1)} />
+        </ButtonGroup>
+      </SpotlightTarget>
     </BreadcrumbsContainer>
   );
 
@@ -85,7 +88,9 @@ function Dataset({
               }
             >
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <StarredView id={data.id} />
+                <SpotlightTarget name="metadata-dataset-starred">
+                  <StarredView id={data.id} />
+                </SpotlightTarget>
                 {data.title}
               </div>
             </PageHeader>
@@ -95,7 +100,9 @@ function Dataset({
               </section>
               <Divider />
               <section>
-                <h4>{`Resources (${data.resources.length})`}</h4>
+                <SpotlightTarget name="metadata-dataset-resources">
+                  <h4>{`Resources (${data.resources.length})`}</h4>
+                </SpotlightTarget>
                 <ResourcesList>
                   {data.resources &&
                     data.resources.map(d => (

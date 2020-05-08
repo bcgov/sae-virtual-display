@@ -53,7 +53,7 @@ function AppBar({ isHelpEnabled, onStartTour, user }) {
               onClick={onStartTour}
               testId="start-tour-btn"
             >
-              Take The Quickstart Tour
+              Show Tips
             </Button>
           )}
           <MainMenu>

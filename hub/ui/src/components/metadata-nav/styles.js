@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
 
 export const Container = styled.nav`
-  padding: 4px;
+  padding: 10px 4px;
   display: flex;
   flex-direction: column;
   background: ${colors.linkActive};

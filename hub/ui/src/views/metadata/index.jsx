@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import DatasetsList from '@src/components/datasets-list';
 import DatasetsListLoading from '@src/components/datasets-list/loading';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import MetadataEmpty from '@src/components/empty/metadata';
 import MetadataNav from '@src/components/metadata-nav';
 import orderBy from 'lodash/orderBy';
@@ -24,6 +24,7 @@ function Metadata() {
   const [sector, setSector] = useState();
   const [filter, setFilter] = useState('');
   const [showStarred, toggleShowStarred] = useState(false);
+  const [showFilters, toggleShowFilters] = useState(false);
   const { data, status, error } = useMetadata(
     'metadata',
     'group_package_show?id=data-innovation-program',
@@ -73,6 +74,10 @@ function Metadata() {
     setFilter(value);
   }
 
+  function onToggleFilters() {
+    toggleShowFilters(state => !state);
+  }
+
   function onToggleStarred() {
     toggleShowStarred(state => !state);
   }
@@ -83,7 +88,12 @@ function Metadata() {
 
   return (
     <Container>
-      <MetadataNav starred={showStarred} onToggleStarred={onToggleStarred} />
+      <MetadataNav
+        onToggleFilters={onToggleFilters}
+        onToggleStarred={onToggleStarred}
+        showFilters={showFilters}
+        showStarred={showStarred}
+      />
       {status === 'loading' && <DatasetsListLoading />}
       {status === 'loaded' && (
         <DatasetsList
@@ -94,6 +104,7 @@ function Metadata() {
           onSort={saveSortSettings}
           sector={sector}
           sortBy={sortSettings}
+          showFilters={showFilters}
           starred={starred}
         />
       )}
@@ -101,6 +112,9 @@ function Metadata() {
         <ContentContainer>
           <Switch>
             <Route exact path="/metadata">
+              {datasets && datasets.length > 0 && (
+                <Redirect to={`/metadata/${datasets[0].id}`} />
+              )}
               <MetadataEmpty />
             </Route>
             <Route path="/metadata/search">

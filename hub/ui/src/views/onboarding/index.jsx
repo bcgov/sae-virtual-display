@@ -2,12 +2,22 @@ import React, { useEffect, useState } from 'react';
 import isNil from 'lodash/isNil';
 import nth from 'lodash/nth';
 import sanitize from 'sanitize-html';
+import split from 'lodash/split';
 import { Spotlight } from '@atlaskit/onboarding';
+import { useLocation } from 'react-router-dom';
 
 function Onboarding({ data = [], enabled, onComplete }) {
+  const { pathname } = useLocation();
   const [index, setIndex] = useState(null);
-  const sections = data.map(d => d.page && d.page.title);
-  const section = nth(data, index);
+  const pageContent = data.filter(d => {
+    const [page] = split(d.page.title, '-');
+    if (pathname === '/') {
+      return page === 'home';
+    }
+    return pathname.includes(page);
+  });
+  const sections = pageContent.map(d => d.page && d.page.title);
+  const section = nth(pageContent, index);
   const target = nth(sections, index);
 
   function handleComplete() {
@@ -29,7 +39,7 @@ function Onboarding({ data = [], enabled, onComplete }) {
   const renderActions = () => {
     const actions = [];
 
-    if (index + 1 < data.length) {
+    if (index + 1 < pageContent.length) {
       actions.push({ onClick: () => setIndex(s => s + 1), text: 'Next' });
     } else {
       actions.push({ onClick: handleComplete, text: 'Finish' });
