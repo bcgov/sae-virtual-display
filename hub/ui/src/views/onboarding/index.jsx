@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { colors } from '@atlaskit/theme';
 import isNil from 'lodash/isNil';
 import nth from 'lodash/nth';
 import sanitize from 'sanitize-html';
@@ -54,7 +55,12 @@ function Onboarding({ data = [], enabled, onComplete }) {
 
   if (!isNil(index) && section) {
     return (
-      <Spotlight actions={renderActions()} target={target} testId="onboarding">
+      <Spotlight
+        actions={renderActions()}
+        target={target}
+        targetBgColor={colors.N0}
+        testId="onboarding"
+      >
         <div
           dangerouslySetInnerHTML={{ __html: sanitize(section.page.body) }}
         />

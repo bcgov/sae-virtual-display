@@ -99,21 +99,21 @@ function Dataset({
                 <p>{data.notes}</p>
               </section>
               <Divider />
-              <section>
-                <SpotlightTarget name="metadata-dataset-resources">
+              <SpotlightTarget name="metadata-dataset-resources">
+                <section>
                   <h4>{`Resources (${data.resources.length})`}</h4>
-                </SpotlightTarget>
-                <ResourcesList>
-                  {data.resources &&
-                    data.resources.map(d => (
-                      <ResourceItem
-                        key={d.id}
-                        data={d}
-                        onClick={onSelectPackage}
-                      />
-                    ))}
-                </ResourcesList>
-              </section>
+                  <ResourcesList>
+                    {data.resources &&
+                      data.resources.map(d => (
+                        <ResourceItem
+                          key={d.id}
+                          data={d}
+                          onClick={onSelectPackage}
+                        />
+                      ))}
+                  </ResourcesList>
+                </section>
+              </SpotlightTarget>
               <Divider />
               <section>
                 <h4>Additional Information</h4>

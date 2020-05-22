@@ -8,7 +8,7 @@ import { colors } from '@atlaskit/theme';
 import { SpotlightTarget } from '@atlaskit/onboarding';
 
 import NavButton from '../nav-button';
-import { Container } from './styles';
+import { Container, NavBarButton } from './styles';
 
 function MetadataNav({
   onToggleFilters,
@@ -21,33 +21,39 @@ function MetadataNav({
 
   return (
     <Container>
-      <Tooltip content="Search" position="right">
-        <NavButton
-          appearance="subtle"
-          iconBefore={<SearchIcon primaryColor="#fff" />}
-          href="/metadata/search"
-        />
-      </Tooltip>
-      <SpotlightTarget name="metadata-filters">
-        <Tooltip content="Filters" position="right">
-          <Button
+      <li>
+        <Tooltip content="Search" position="right">
+          <NavButton
             appearance="subtle"
-            isSelected={showFilters}
-            iconBefore={<FilterIcon primaryColor="#fff" />}
-            onClick={onToggleFilters}
+            iconBefore={<SearchIcon primaryColor="#fff" />}
+            href="/metadata/search"
           />
         </Tooltip>
-      </SpotlightTarget>
-      <SpotlightTarget name="metadata-starred">
-        <Tooltip content={starredTooltipText} position="right">
-          <Button
-            appearance="subtle"
-            isSelected={showStarred}
-            iconBefore={<StarIcon primaryColor={starredColor} />}
-            onClick={onToggleStarred}
-          />
-        </Tooltip>
-      </SpotlightTarget>
+      </li>
+      <li>
+        <SpotlightTarget name="metadata-filters">
+          <Tooltip content="Toggle Filters" position="right">
+            <NavBarButton
+              appearance="subtle"
+              isSelected={showFilters}
+              iconBefore={<FilterIcon primaryColor="#fff" />}
+              onClick={onToggleFilters}
+            />
+          </Tooltip>
+        </SpotlightTarget>
+      </li>
+      <li>
+        <SpotlightTarget name="metadata-starred">
+          <Tooltip content={starredTooltipText} position="right">
+            <NavBarButton
+              appearance="subtle"
+              isSelected={showStarred}
+              iconBefore={<StarIcon primaryColor={starredColor} />}
+              onClick={onToggleStarred}
+            />
+          </Tooltip>
+        </SpotlightTarget>
+      </li>
     </Container>
   );
 }

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
 
 export const Container = styled.nav`
@@ -7,8 +8,11 @@ export const Container = styled.nav`
   flex-direction: column;
   background: ${colors.linkActive};
 
-  & a,
-  & button {
+  & li {
     margin: 10px 0;
   }
+`;
+
+export const NavBarButton = styled(Button)`
+  background: ${props => !props.isSelected && colors.linkActive} !important;
 `;
