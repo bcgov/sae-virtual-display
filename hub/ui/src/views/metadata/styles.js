@@ -1,53 +1,21 @@
 import styled from 'styled-components';
+import { colors } from '@atlaskit/theme';
 
-export const Intro = styled.hgroup`
+export const Container = styled.div`
+  width: 100vw;
+  height: calc(100vh - 50px);
   display: flex;
-
-  aside {
-    margin-right: 20px;
-  }
-
-  p {
-    flex: 1;
-  }
-`;
-
-export const CardsList = styled.div`
-  margin: 40px 0;
-  clear: both;
   overflow: hidden;
+  background: ${colors.background};
 `;
 
-export const CardContainer = styled.div`
-  margin-bottom: 20px;
-  display: flex;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  border-radius: 5px;
-  background: #fff;
-`;
-
-export const CardIcon = styled.div`
-  width: 50px;
-  margin: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const CardContent = styled.div`
+export const Content = styled.div`
   flex: 1;
-  margin: 10px;
+  justify-content: center;
+  overflow-y: auto;
 `;
 
-export const CardHeader = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-export const CardFooter = styled.footer`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #333;
+export const ContentContainer = styled.div`
+  margin: 0 auto;
+  max-width: 960px;
 `;

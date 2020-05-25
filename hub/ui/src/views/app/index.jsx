@@ -6,6 +6,7 @@ import { SpotlightManager, SpotlightTransition } from '@atlaskit/onboarding';
 import useHelp from '@src/hooks/use-help';
 import WorkbenchContext from '@src/utils/context';
 
+import Metadata from '../metadata';
 import Onboarding from '../onboarding';
 import Servers from '../servers';
 import { Main } from './styles';
@@ -40,6 +41,9 @@ function App() {
           <Switch>
             <Route exact path="/">
               <Servers />
+            </Route>
+            <Route path="/metadata">
+              <Metadata />
             </Route>
           </Switch>
         </Main>

@@ -27,7 +27,7 @@ function Filters({ hideIdle, onSearch, onFilter, onSort, status }) {
 
   return (
     <Container>
-      <SpotlightTarget name="filter-apps">
+      <SpotlightTarget name="home-filter-apps">
         <Textfield
           type="search"
           placeholder="Filter"
@@ -37,7 +37,7 @@ function Filters({ hideIdle, onSearch, onFilter, onSort, status }) {
         />
       </SpotlightTarget>
       {status === 'loading' && <Spinner />}
-      <SpotlightTarget name="toggle-apps">
+      <SpotlightTarget name="home-toggle-apps">
         <div>
           <DropdownMenuStateless
             isOpen={open}

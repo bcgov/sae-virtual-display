@@ -1,48 +1,135 @@
-import React from 'react';
-import PageHeader from '@atlaskit/page-header';
+import React, { useCallback, useMemo, useState } from 'react';
+import DatasetsList from '@src/components/datasets-list';
+import DatasetsListLoading from '@src/components/datasets-list/loading';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import MetadataEmpty from '@src/components/empty/metadata';
+import MetadataNav from '@src/components/metadata-nav';
+import orderBy from 'lodash/orderBy';
+import useMetadata from '@src/hooks/use-metadata';
+import useLocalStorage from '@src/hooks/use-localstorage';
 
-import Card from './card';
-import CoreImage from '../core/image';
-import Loading from '../core/loading';
-import { Intro, CardsList } from './styles';
-import useDataCatalogue from '../../hooks/useDataCatalogue';
+import Dataset from '../dataset';
+import MetadataSearch from '../metadata-search';
+import { Container, Content, ContentContainer } from './styles';
 
 function Metadata() {
-  const [data, loading, error] = useDataCatalogue(
-    'group_show?id=data-innovation-program&include_datasets=true'
+  const history = useHistory();
+  const [starred] = useLocalStorage('starred', { initialValue: [] });
+  const [sortSettings, saveSortSettings] = useLocalStorage('filter', {
+    initialValue: {
+      sortBy: 'name',
+      sortDir: 'asc',
+    },
+  });
+  const [sector, setSector] = useState();
+  const [filter, setFilter] = useState('');
+  const [showStarred, toggleShowStarred] = useState(false);
+  const [showFilters, toggleShowFilters] = useState(false);
+  const { data, status, error } = useMetadata(
+    'metadata',
+    'group_package_show?id=data-innovation-program',
+  );
+  const regex = new RegExp(filter, 'i');
+  const datasets = useMemo(() => {
+    if (data) {
+      const filteredData = data.filter(d => {
+        if (sector) return d.sector === sector;
+        if (showStarred) return starred.includes(d.id);
+        if (filter) {
+          return d.name.search(regex) >= 0;
+        }
+        return true;
+      });
+
+      return orderBy(
+        filteredData,
+        [sortSettings.sortBy],
+        [sortSettings.sortDir],
+      );
+    }
+  }, [data, filter, regex, sector, showStarred, starred, sortSettings]);
+  const onChangeDataset = useCallback(
+    (id, dir) => {
+      const ids = datasets.map(d => d.id);
+      const index = ids.indexOf(id);
+      let nextIndex = index + dir;
+
+      if (nextIndex < 0) {
+        nextIndex = ids.length - 1;
+      } else if (nextIndex === datasets.length) {
+        nextIndex = 0;
+      }
+
+      const nextId = ids[nextIndex];
+      history.push(`/metadata/${nextId}`);
+    },
+    [datasets, history],
   );
 
   React.useEffect(() => {
     document.title = 'Workbench | Metadata';
   }, []);
 
+  function onFilter(value) {
+    setFilter(value);
+  }
+
+  function onToggleFilters() {
+    toggleShowFilters(state => !state);
+  }
+
+  function onToggleStarred() {
+    toggleShowStarred(state => !state);
+  }
+
+  function onSelectSector(sector) {
+    setSector(sector);
+  }
+
   return (
-    <ak-grid>
-      <ak-grid-column size="12">
-        <PageHeader
-          bottomBar={
-            <Intro>
-              <aside>
-                <CoreImage fluid src={data.imageDisplayUrl} width={150} />
-              </aside>
-              <p>{data.description}</p>
-            </Intro>
-          }
-        >
-          {data.title}
-        </PageHeader>
-        <CardsList>
-          {error && (
-            <div className="list-group-item list-group-item-danger">
-              {error}
-            </div>
-          )}
-          {loading && <Loading />}
-          {data.packages &&
-            data.packages.map(d => <Card key={d.id} data={d} />)}
-        </CardsList>
-      </ak-grid-column>
-    </ak-grid>
+    <Container>
+      <MetadataNav
+        onToggleFilters={onToggleFilters}
+        onToggleStarred={onToggleStarred}
+        showFilters={showFilters}
+        showStarred={showStarred}
+      />
+      {status === 'loading' && <DatasetsListLoading />}
+      {status === 'loaded' && (
+        <DatasetsList
+          data={datasets}
+          error={error}
+          onClearSector={onSelectSector}
+          onFilter={onFilter}
+          onSort={saveSortSettings}
+          sector={sector}
+          sortBy={sortSettings}
+          showFilters={showFilters}
+          starred={starred}
+        />
+      )}
+      <Content>
+        <ContentContainer>
+          <Switch>
+            <Route exact path="/metadata">
+              {datasets && datasets.length > 0 && (
+                <Redirect to={`/metadata/${datasets[0].id}`} />
+              )}
+              <MetadataEmpty />
+            </Route>
+            <Route path="/metadata/search">
+              <MetadataSearch />
+            </Route>
+            <Route path="/metadata/:id">
+              <Dataset
+                onChangeDataset={onChangeDataset}
+                onSelectSector={onSelectSector}
+              />
+            </Route>
+          </Switch>
+        </ContentContainer>
+      </Content>
+    </Container>
   );
 }
 
