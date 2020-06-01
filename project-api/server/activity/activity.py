@@ -30,6 +30,7 @@ def activity (action, repo, project, actor, success, message):
         f.write(json.dumps(payload) + os.linesep)
 
         webhook(payload)
+        recorder(payload)
         notify(payload)
 
 def utc_to_local(utc_dt):
@@ -62,4 +63,24 @@ def webhook(payload):
             log.error("[%s] %s" % (r.status_code, r.text))
     except:
         log.error("Webhook to %s failed" % url)
+        traceback.print_exc(file=sys.stdout)
+
+def recorder(payload):
+    if conf['recorder_url'] == "":
+        return
+
+    try:
+        url = "%s/api/v1/record/bbsae_activity/bbsae" % conf['recorder_url']
+
+        headers = {
+            'Content-Type':  "application/json",
+        }
+        r = requests.post(url, data = json.dumps(payload), headers = headers)
+        if r.status_code == 204:
+            log.debug("[%s] %s" % (r.status_code, r.text))
+        else:
+            log.error("Recorder to %s failed" % url)
+            log.error("[%s] %s" % (r.status_code, r.text))
+    except:
+        log.error("Recorder to %s failed" % url)
         traceback.print_exc(file=sys.stdout)

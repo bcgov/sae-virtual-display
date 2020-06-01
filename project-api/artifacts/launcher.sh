@@ -49,7 +49,8 @@ cat > ./config/default.json <<EOF
         "notification_email": "${REQUESTS_NOTIFY_EMAIL}"
     },
     "group_exclusions": [${GROUP_EXCLUSIONS}],
-    "hub_redirect_url": "${HUB_REDIRECT_URL}"
+    "hub_redirect_url": "${HUB_REDIRECT_URL}",
+    "recorder_url": "${RECORDER_URL}"
 }
 EOF
 
