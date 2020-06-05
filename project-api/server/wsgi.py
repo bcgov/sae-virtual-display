@@ -16,6 +16,7 @@ from timeit import default_timer as timer
 import config
 import sys
 from app import create_app
+from sched.schedule import start
 
 #from proxy import Proxy
 log = logging.getLogger(__name__)
@@ -51,6 +52,8 @@ def main(port: int = conf.data['apiPort']) -> object:
     if sys.version_info[0] < 3:
         log.error('Server requires Python 3')
         return
+
+    start()
 
     app = create_app()
 

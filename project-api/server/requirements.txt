@@ -4,3 +4,4 @@ flask-compress==1.4.0
 Flask-Dance==2.2.0
 gevent==1.4.0
 requests==2.22.0
+schedule==0.6.0

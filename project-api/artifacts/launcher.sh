@@ -50,7 +50,8 @@ cat > ./config/default.json <<EOF
     },
     "group_exclusions": [${GROUP_EXCLUSIONS}],
     "hub_redirect_url": "${HUB_REDIRECT_URL}",
-    "recorder_url": "${RECORDER_URL}"
+    "recorder_url": "${RECORDER_URL}",
+    "spark_url": "${SPARK_URL}"
 }
 EOF
 
