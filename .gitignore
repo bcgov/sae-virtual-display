@@ -6,4 +6,6 @@ hub/ui/assets/js/bundle.js.map
 kubeconfig
 default.yaml
 LOCAL.md
-
+_tmp
+.terraform
+terraform.tfstate*
