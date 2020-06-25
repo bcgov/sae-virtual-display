@@ -27,25 +27,30 @@ keytool -import -v -noprompt -trustcacerts \
 
 ```
 
-
-## Apply
-
-Create a terraform.tfvars file (see terraform.tfvars.example):
+## Terraform Apply
 
 Run the following commands:
 
 ```
 terraform init
 
-echo "hostRootPath=\"`pwd`/_tmp\"" > terraform.hostpath.auto.tfvars
-
-terraform plan
-
 terraform apply -auto-approve
 
 ```
 
+## Update manual DNS
+
+From the minikube dashboard, find the `Ingress` details for the `vdi` namespace.  Make note of the IP address under "Endpoints".
+
+Update `/etc/hosts`:
+
+```
+192.168.99.101 minio.demo vault.demo hub.demo auth.demo vdi-admin.demo selfreg.demo
+```
+
 ## Vault Setup
+
+Terraform does not support dynamic config of a Provider, so once Vault is deployed, we need to run a separate apply for configuring Vault.
 
 ```
 (cd modules/vault-vdi-setup; terraform12 init; terraform12 apply)
@@ -66,7 +71,7 @@ apiVersion: v1
 metadata:
   name: vdi-applications
 data:
-  applications.json: '[{\"name\":\"browser\",\"label\":\"Google Chrome Browser\",\"logo\":\"browser\",\"container\":\"quay.io/ikethecoder/vdi-session-browser:v1.3.7\"}]'
+  applications.json: '[{\"name\":\"browser\",\"label\":\"Google Chrome Browser\",\"logo\":\"browser\",\"container\":\"quay.io/ikethecoder/vdi-session-browser:v1.3.7\"},{\"name\":\"rstudio\",\"label\":\"RStudio\",\"logo\":\"rstudio\",\"container\":\"quay.io/ikethecoder/vdi-session-rstudio:feature-metadata\"}]'
 " > cmap.yaml
 
 kubectl apply --namespace vdi -f cmap.yaml
@@ -83,6 +88,12 @@ View the `_tmp/readme` file to get credential details for Keycloak.
 Create a user `realm-admin` with password `realm-admin` for the two realms.
 
 Add a role mapping: `Client Roles`: `realm-management`.  Add `manage-users`.
+
+## Enable the cert auth flow for `sae`
+
+From `auth.demo`, go to the `sae` realm.
+
+Update `Authentication` : `Bindings` : `Browser Flow` to "browserclientcert".
 
 ## Enable a project
 
@@ -118,3 +129,5 @@ Go to https://hub.demo
 1) Add identity providers to the `bbsae` realm
 1) Integrate Spark
 1) Integrate NiFi for getting data into the S3 buckets
+1) Add group selector and theme to Keycloak
+1) Integrate self-serve managing R/Python libraries

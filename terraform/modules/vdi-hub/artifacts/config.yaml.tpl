@@ -437,6 +437,35 @@ prePuller:
     image:
       name: jupyterhub/k8s-image-awaiter
       tag: 0.9.0-alpha.1.095.3e95dc3
+  extraImages:
+    hub:
+      name: quay.io/ikethecoder/vdi-hub
+      tag: v1.3.8
+      policy: Always
+    gatekeeper:
+      name: quay.io/ikethecoder/vdi-gatekeeper
+      tag: v1.3.8
+      policy: Always
+    init-identity:
+      name: quay.io/ikethecoder/vdi-init-identity
+      tag: v1.3.8
+      policy: Always
+    identity-watcher:
+      name: quay.io/ikethecoder/vdi-identity-watcher
+      tag: v1.3.8
+      policy: Always
+    session-browser:
+      name: quay.io/ikethecoder/vdi-session-browser
+      tag: v1.3.7
+      policy: Always
+    session-rstudio:
+      name: quay.io/ikethecoder/vdi-session-rstudio
+      tag: v1.3.7
+      policy: Always
+    spark-worker:
+      name: quay.io/ikethecoder/vdi-spark-worker
+      tag: v1.3.7
+      policy: Always
 
 auth:
   type: custom
@@ -598,7 +627,7 @@ singleuser:
     static:
       pvcName:
       subPath: '{username}'
-    capacity: 10Gi
+    capacity: 1Gi
     homeMountPath: /home/jovyan
     dynamic:
       storageClass:

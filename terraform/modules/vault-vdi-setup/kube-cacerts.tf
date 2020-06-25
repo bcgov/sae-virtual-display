@@ -21,7 +21,7 @@ resource "kubernetes_config_map" "capfx" {
   }
 
   binary_data = {
-    "ca_chain.pfx" = "${filebase64("../../_tmp/ca_chain.pfx")}"
+    "ca_chain.pfx" = "${fileexists("../../_tmp/ca_chain.pfx") ? filebase64("../../_tmp/ca_chain.pfx") : ""}"
   }
 }
 
