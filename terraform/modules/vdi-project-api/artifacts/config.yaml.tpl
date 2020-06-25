@@ -1,29 +1,34 @@
 
+image:
+  tag: v1.4.0
+
 projectapi:
+  selfSignedTLS: true
+
   vault:
-    addr: "http://vault.default.svc.cluster.local:8200"
+    addr: "http://vault.vdi.svc.cluster.local:8200"
     token: "root"
 
   minio:
-    addr: "http://minio.default.svc.cluster.local:9000"
-    accessKey: "XCFJR8CNJ1aiFn8XuCxwzwIMCq2UCVeZ"
-    secretKey: "aoqBmSrXqApmrDcipr8Yts7NibhjQuGU3cNRoMwAAF8bBota4FVWC8rlGeiAosX9"
+    addr: "http://minio.vdi.svc.cluster.local:9000"
+    accessKey: "1jGcqGoiIBSA7fpi5ITvWuLyL1PKR4oh"
+    secretKey: "3CA1hAm09gcZl0U4bR7cIYOvjr0lKqJCnAjICFHoKF2vkPh8NeOgrZ501XuXACdK"
 
   keycloak:
     url: "https://auth.demo"
     realm: "bbsae"
-    username: "kcadmin"
-    password: "3AqByHBqTxhbOygbWSQ6Qh2ydy24N3yk"
+    username: "realm-admin"
+    password: "realm-admin"
 
   selfserve:
     clientId: "vdi"
-    clientSecret: "a260fa5a-0c02-4082-97bc-602e735f5a43"
+    clientSecret: "006f5b8b-6120-4afb-be57-e55cbbbc1fae"
 
   keycloakInternal:
     url: "https://auth.demo"
     realm: "sae"
-    username: "kcadmin"
-    password: "3AqByHBqTxhbOygbWSQ6Qh2ydy24N3yk"
+    username: "realm-admin"
+    password: "realm-admin"
 
 ingress:
   enabled: true
@@ -31,7 +36,7 @@ ingress:
     - host: vdi-admin.demo
       paths: ["/"]
     - host: selfreg.demo
-      paths: ["/selfserve"]
+      paths: ["/selfserve","/static"]
   tls:
     - secretName: vdi-tls
       hosts:

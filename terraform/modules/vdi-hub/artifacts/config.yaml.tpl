@@ -387,7 +387,7 @@ hub:
       mountPath: /vdi
   image:
     name: quay.io/ikethecoder/vdi-hub
-    tag: latest
+    tag: ${IMAGE_TAG}
     # pullSecrets:
     #   - secretName
   resources:
@@ -440,31 +440,31 @@ prePuller:
   extraImages:
     hub:
       name: quay.io/ikethecoder/vdi-hub
-      tag: v1.3.8
+      tag: ${IMAGE_TAG}
       policy: Always
     gatekeeper:
       name: quay.io/ikethecoder/vdi-gatekeeper
-      tag: v1.3.8
+      tag: ${IMAGE_TAG}
       policy: Always
     init-identity:
       name: quay.io/ikethecoder/vdi-init-identity
-      tag: v1.3.8
+      tag: ${IMAGE_TAG}
       policy: Always
     identity-watcher:
       name: quay.io/ikethecoder/vdi-identity-watcher
-      tag: v1.3.8
+      tag: ${IMAGE_TAG}
       policy: Always
     session-browser:
       name: quay.io/ikethecoder/vdi-session-browser
-      tag: v1.3.7
+      tag: ${IMAGE_TAG}
       policy: Always
     session-rstudio:
       name: quay.io/ikethecoder/vdi-session-rstudio
-      tag: v1.3.7
+      tag: ${IMAGE_TAG}
       policy: Always
     spark-worker:
       name: quay.io/ikethecoder/vdi-spark-worker
-      tag: v1.3.7
+      tag: ${IMAGE_TAG}
       policy: Always
 
 auth:

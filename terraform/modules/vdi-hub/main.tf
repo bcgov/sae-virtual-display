@@ -10,7 +10,7 @@ data "template_file" "config" {
       domain = var.domain
       token  = random_string.token.result
       USERGUIDE_API_URL = "https://docs.bgddi.com"
-      IMAGE_TAG = "v1.3.7"
+      IMAGE_TAG = "v1.4.0"
       HOMEPAGE_URL = "https://auth.demo/auth/realms/sae/account"
       DOMAIN = var.domain
       OIDC_HOST = "auth.demo"
