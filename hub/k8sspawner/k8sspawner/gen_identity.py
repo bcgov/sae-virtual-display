@@ -3,6 +3,8 @@ import json
 import requests
 import base64
 from os import listdir
+import tempfile
+import shutil
 from urllib.parse import urlencode
 
 import xml.etree.ElementTree as ET
@@ -90,41 +92,48 @@ class GenIdentity():
             self.info("text %s" % x.text)
             raise Exception("Failed to issue certificate")
         j = x.json()
+        self.info("issue_cert SERIAL NUMBER " + j['data']['serial_number'])
 
-        f = open("crt", "w")
+
+        dirpath = tempfile.mkdtemp()
+        self.info("Building creds in %s" % dirpath)
+
+
+        f = open("%s/crt" % dirpath, "w")
         f.write(j['data']['certificate'])
         f.close()
 
-        f = open("key", "w")
+        f = open("%s/key" % dirpath, "w")
         f.write(j['data']['private_key'])
         f.close()
 
-        os.system('openssl pkcs12 -export -out private.pfx -inkey key -in crt -password pass:password')
+        os.system("(cd %s; openssl pkcs12 -export -out private.pfx -inkey key -in crt -password pass:password)" % dirpath)
 
 
-        os.system('rm -rf nssdb')
-        os.system('mkdir nssdb && certutil -d nssdb -N --empty-password')
+        os.system('mkdir %s/nssdb && certutil -d %s/nssdb -N --empty-password' % (dirpath, dirpath))
         print("Created new DB")
-        os.system('ls -la nssdb')
-        os.system('pk12util -v -d sql:nssdb -K password -W password -i private.pfx')
+        os.system('pk12util -v -d sql:%s/nssdb -K password -W password -i %s/private.pfx' % (dirpath, dirpath))
         print("Added private key")
 
-        os.system('echo "password" > pass')
-        os.system('certutil -A -n "ca-vaultpki-root" -t TC -i /cacerts/ca-vaultpki-root.crt -d sql:nssdb')
-        os.system('certutil -A -n "ca-vaultpki-inter" -t TC -i /cacerts/ca-vaultpki-inter.crt -d sql:nssdb')
+        #os.system('echo "password" > pass')
+        os.system('certutil -A -n "ca-vaultpki-root" -t TC -i /cacerts/ca-vaultpki-root.crt -d sql:%s/nssdb' % dirpath)
+        os.system('certutil -A -n "ca-vaultpki-inter" -t TC -i /cacerts/ca-vaultpki-inter.crt -d sql:%s/nssdb' % dirpath)
+        os.system('certutil -L -d sql:%s/nssdb' % dirpath)
 
-        os.system('certutil -L -d sql:nssdb')
-        os.system('ls -la nssdb')
+        os.system('ls -la %s/nssdb' % dirpath)
 
         secret_data = {}
         secret_data['refresh_token'] = base64.b64encode(refresh_token.encode('utf-8')).decode('utf-8')
         secret_data['postgresql.crt'] = base64.b64encode(j['data']['certificate'].encode('utf-8')).decode('utf-8')
         secret_data['postgresql.key'] = base64.b64encode(j['data']['private_key'].encode('utf-8')).decode('utf-8')
 
-        for f in listdir('nssdb'):
-            data = open("nssdb/%s" % f, "rb").read()   
+        for f in listdir('%s/nssdb' % dirpath):
+            data = open("%s/nssdb/%s" % (dirpath, f), "rb").read()   
             b64 = base64.b64encode(data)
             secret_data[f] = b64.decode('utf-8')
+
+        self.info("Deleting temp folder %s" % dirpath)
+        shutil.rmtree(dirpath)
 
         namespace = 'vdi'
         metadata = {'name': "%s-cert" % user_project_id, 'namespace': namespace}
