@@ -24,7 +24,7 @@ user_project_id = os.environ["USER_PROJECT_ID"]
 
 log.info("Identity Watcher Started for %s" % user_project_id)
 
-sleep_time = 0
+sleep_time = int(os.getenv('INITIAL_SLEEP', "60"))
 
 if 'REFRESH_TOKEN_PATH' in os.environ:
     log.info("Read %s", os.environ['REFRESH_TOKEN_PATH'])
