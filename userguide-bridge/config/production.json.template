@@ -1,9 +1,0 @@
-{
-  "host": "http://help-api",
-  "port": "8000",
-  "token": "token",
-  "applications": ["add app names here"],
-  "logLevel": "prod",
-  "morganFormat": "combined",
-  "whitelist": ["hub/ui webapp URL"]
-}
